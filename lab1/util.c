@@ -176,19 +176,13 @@ void sw2led(void)
      GPIOA->BSRR = NUC_GREEN_OFF;
   }
 }
-
-void turnLEDON(void)
-{
-	GPIOA->BSRR = NUC_GREEN_ON;
-}
-	
 	
 void led_flash(void)
 {			
 	    while(1){
 			GPIOA->BSRR = NUC_GREEN_ON;
-			delay(1800);
+			delay(1800000);
 	    GPIOA->BSRR = NUC_GREEN_OFF;
-			delay(1800);
+			delay(1800000);
 			}
 }

@@ -14,7 +14,7 @@ int main(void)
 	while(1)
 	{
 		
-	turnLEDON();
+	led_flash();
 		
 	}
 	
