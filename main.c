@@ -4,54 +4,65 @@
 #include <string.h>
 #include <ctype.h>
 
-// commands for complex arithematic, A,S,M,D,Q
-
 struct Complex {
     double real;
     double imaginary;
 };
 
 // routine prototypes
-void _add_complex(struct Complex z1, struct Complex z2, struct Complex* result);
-void _subtract_complex(struct Complex z1, struct Complex z2, struct Complex* result);
-void _mulitply_complex(struct Complex z1, struct Complex z2, struct Complex* result);
-void _divide_complex(struct Complex z1, struct Complex z2, struct Complex* result);
+void addComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* result);
+void subtractComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* result);
+void multiplyComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* result);
+void divideComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* result);
+void performComplexOperation(char operation, struct Complex z1, struct Complex z2);
+
+struct Complex z1, z2, result;
 
 int main() {
     
-    // while 'q' or "Q" has not been entered, keep reading
-
     return 0;
 }
 
 // Function to add two complex numbers
-void _add_complex(struct Complex z1, struct Complex z2, struct Complex* result)
-{
+void addComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* result){
     result->real = z1.real + z2.real;
     result->imaginary = z1.imaginary + z2.imaginary;
 }
 
 // Function to subtract two complex numbers
-void _subtract_complex(struct Complex z1, struct Complex z2, struct Complex* result)
-{
+void subtractComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* result){
     result->real = z1.real - z2.real;
     result->imaginary = z1.imaginary - z2.imaginary;
 }
 
 // Function to multiply two complex numbers
-void _multiply_complex(struct Complex z1, struct Complex z2, struct Complex* result)
-{
+void multiplyComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* result){
     result->real = (z1.real * z2.real) - (z1.imaginary * z2.imaginary);
     result->imaginary = (z1.real * z2.imaginary) + (z1.imaginary * z2.real);
 }
 
 // Function to divide two complex numbers
-void _divide_complex(struct Complex z1, struct Complex z2, struct Complex* result)
-{
+void divideComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* result){
     double denominator = (z2.real * z2.real) + (z2.imaginary * z2.imaginary);
 
     result->real = ((z1.real * z2.real) + (z1.imaginary * z2.imaginary)) / denominator;
     result->imaginary = ((z1.imaginary * z2.real) - (z1.real * z2.imaginary)) / denominator;
+}
+
+void performComplexOperation(char operation, struct Complex z1, struct Complex z2) {
+
+    if ((operation == 'a') || (operation == 'A')) {
+        addComplexNumbers(z1, z2, &result);
+    } else if ((operation == 's') || (operation == 'S')) {
+        subtractComplexNumbers(z1, z2, &result);
+    } else if ((operation == 'm') || (operation == 'M')) {
+        multiplyComplexNumbers(z1, z2, &result);
+    } else if ((operation == 'd') || (operation == 'D')) {
+        divideComplexNumbers(z1, z2, &result);
+    } else {
+        printf("Invalid operation code\n");
+        return; // return early
+    }
 }
 
 //note 
