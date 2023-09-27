@@ -14,7 +14,8 @@ void addComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* res
 void subtractComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* result);
 void multiplyComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* result);
 void divideComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* result);
-void performComplexOperation(char operation, struct Complex z1, struct Complex z2);
+int performComplexOperation(char operation, struct Complex z1, struct Complex z2);
+void printResult(void);
 
 struct Complex z1, z2, result;
 
@@ -30,13 +31,15 @@ int main() {
     char operation;
     
     while (fgets(buffer, sizeof(buffer), stdin) != NULL){ 
+        
         sscanf(buffer, "%c %lf %lf %lf %lf", &operation, &z1.real, &z1.imaginary, &z2.real, &z2.imaginary);
 
-        if (operation == 'q' || operation == 'Q'){
-            exit(0);
+        int c = performComplexOperation(operation, z1, z2);
+
+        if (!c){
+            printResult();
         } else {
-            performComplexOperation(operation, z1,z2);
-            printf("Complex result: %.2lf + j %.2lf\n", result.real, result.imaginary);
+            exit(0);
         }
     }
     return 0;
@@ -68,7 +71,7 @@ void divideComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* 
     result->imaginary = ((z1.imaginary * z2.real) - (z1.real * z2.imaginary)) / denominator;
 }
 
-void performComplexOperation(char operation, struct Complex z1, struct Complex z2) {
+int performComplexOperation(char operation, struct Complex z1, struct Complex z2) {
 
     if ((operation == 'a') || (operation == 'A')) {
         addComplexNumbers(z1, z2, &result);
@@ -80,7 +83,14 @@ void performComplexOperation(char operation, struct Complex z1, struct Complex z
         divideComplexNumbers(z1, z2, &result);
     } else if ((operation == 'q') || (operation == 'Q'))  {
         printf("Closing calculator...");
+        return 1;
     }
+
+    return 0;
+}
+
+void printResult(void){
+    printf("Complex result: %.2lf + j %.2lf\n", result.real, result.imaginary);
 }
 
 // note 
