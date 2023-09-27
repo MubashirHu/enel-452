@@ -29,18 +29,14 @@ int main() {
     char buffer[1024];
     char operation;
     
-    while (operation != 'q' || operation != 'Q'){
-        if (fgets(buffer, sizeof(buffer), stdin) != NULL){
+    while (fgets(buffer, sizeof(buffer), stdin) != NULL){ 
+        sscanf(buffer, "%c %lf %lf %lf %lf", &operation, &z1.real, &z1.imaginary, &z2.real, &z2.imaginary);
 
-            sscanf(buffer, "%c %lf %lf %lf %lf", &operation, &z1.real, &z1.imaginary, &z2.real, &z2.imaginary);
-
-            if (operation == 'q' || operation == 'Q'){
-                exit(0);
-            } else {
+        if (operation == 'q' || operation == 'Q'){
+            exit(0);
+        } else {
             performComplexOperation(operation, z1,z2);
             printf("Complex result: %.2lf + j %.2lf\n", result.real, result.imaginary);
-
-            }
         }
     }
     return 0;
@@ -85,7 +81,6 @@ void performComplexOperation(char operation, struct Complex z1, struct Complex z
     } else if ((operation == 'q') || (operation == 'Q'))  {
         printf("Closing calculator...");
     }
-
 }
 
 // note 
