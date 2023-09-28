@@ -1,3 +1,13 @@
+/**
+   Programmer: Mubashir Hussain
+   Project: Assignment 1 Complex - Calculator
+   Date: 2023-9-28
+
+   Description: The purpose of this assignment is to make a complex calculator that is capable of computing 
+    basic complex expressions in rectangular form. (a + j b). To achieve successful operation, the four sources of error
+    that have been described in the assignment have been handled.  
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -18,6 +28,7 @@ const char *error_messages[] = {
     "error code 4: divide by zero"
 };
 
+// Struct to define a complex number
 struct Complex {
     double real;
     double imaginary;
@@ -34,18 +45,11 @@ void errorHandle(int errorcode);
 
 struct Complex z1, z2, result;
 
-/*
-fgets() function to read the input as a string in one fell swoop, 
-sscanf() to parse it
-fprintf() to print the output. 
-*/
-
 int main() {
 
     char buffer[512];
     char operation;
     
-
     while (1){
         fprintf(stderr, "Complex Calculator\n");
         fprintf(stderr, "==================\n");
@@ -91,6 +95,26 @@ int main() {
     return 0;
 }
 
+/**
+    printResult(): This function is responsible for outputting the 
+    computed result that is stored in the result struct to stdout.
+
+    parameters : None 
+    Returns : None
+ */
+void printResult(void){
+    printf("%.2lf + j %.2lf\n", result.real, result.imaginary);
+}
+
+/**
+    performComplexOperation(): This function decides which operation should occur based on the command 
+    that the user passes through stdin. 
+
+    Parameters: <1> char - a character to decide which operation
+                <2> struct Complex - a 'Complex' Struct that contains the real and imaginary number to be used as left operand
+                <3> struct Complex - a 'Complex' Struct that contains the real and imaginary number to be used in right operand
+    Return: int 0, showing function is successful
+ */
 int performComplexOperation(char operation, struct Complex z1, struct Complex z2) {
 
     if ((operation == 'a') || (operation == 'A')) {
@@ -110,10 +134,14 @@ int performComplexOperation(char operation, struct Complex z1, struct Complex z2
     return 0;
 }
 
-void printResult(void){
-    printf("%.2lf + j %.2lf\n", result.real, result.imaginary);
-}
+/**
+    errorHandle(): This function prints the error message to stdout based on the errorcode that is passed in. 
+    The errorcode that is passed in will always be the global variable 'errno' unless otherwise stated. After 
+    The error message has been sent, the errno global variable is hard reset to 0.
 
+    Parameters : <1> int errorcode - the code from errno
+    Return: None
+ */
 void errorHandle(int errorcode){
     switch (errorcode){
         case ERR_ILLEGAL_COMMAND:
@@ -133,39 +161,69 @@ void errorHandle(int errorcode){
             errno = 0;
             break;
         default:
-            //works fine
             errno = 0;
             break;
     }
 }
 
-// Function to add two complex numbers
+/**
+    addComplexNumbers(): This function adds the real and imaginary components of the two complex numbers represented by 
+    the complex Struct. 
+
+    Parameters:
+    <1> z1 - A 'Complex' Struct that contains the real and imaginary numbers for the left operand
+    <2> z2 - A 'Complex' Struct that contains the real and imaginary numbers for the right operand
+    <3> result - Pointer to a 'Complex' Struct where the final result is stored
+    Return: None
+ */
 void addComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* result){
     result->real = z1.real + z2.real;
     result->imaginary = z1.imaginary + z2.imaginary;
 }
 
-// Function to subtract two complex numbers
+/**
+    subtractComplexNumbers(): This function subtracts the real and imaginary components of two complex numbers represented by 
+    the 'Complex' Structs.
+
+    Parameters:
+    <1> z1 - A 'Complex' Struct that contains the real and imaginary numbers for the left operand
+    <2> z2 - A 'Complex' Struct that contains the real and imaginary numbers for the right operand
+    <3> result - Pointer to a 'Complex' Struct where the final result is stored
+    Return: None
+*/
 void subtractComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* result){
     result->real = z1.real - z2.real;
     result->imaginary = z1.imaginary - z2.imaginary;
 }
 
-// Function to multiply two complex numbers
+/**
+    multiplyComplexNumbers(): This function multiplies two complex numbers represented by 
+    the 'Complex' Structs.
+
+    Parameters:
+    <1> z1 - A 'Complex' Struct that contains the real and imaginary numbers for the left operand
+    <2> z2 - A 'Complex' Struct that contains the real and imaginary numbers for the right operand
+    <3> result - Pointer to a 'Complex' Struct where the final result is stored 
+    Return: None
+*/
 void multiplyComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* result){
     result->real = (z1.real * z2.real) - (z1.imaginary * z2.imaginary);
     result->imaginary = (z1.real * z2.imaginary) + (z1.imaginary * z2.real);
 }
 
-// Function to divide two complex numbers
+/**
+    divideComplexNumbers(): This function divides two complex numbers represented by 
+    the 'Complex' Structs.
+
+    Parameters:
+    <1> z1 - A 'Complex' Struct that contains the real and imaginary numbers for the numerator
+    <2> z2 - A 'Complex' Struct that contains the real and imaginary numbers for the denominator
+    <3> result - Pointer to a 'Complex' Struct where the final result is stored
+    Return: None
+*/
 void divideComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* result){
     double denominator = (z2.real * z2.real) + (z2.imaginary * z2.imaginary);
 
     result->real = ((z1.real * z2.real) + (z1.imaginary * z2.imaginary)) / denominator;
     result->imaginary = ((z1.imaginary * z2.real) - (z1.real * z2.imaginary)) / denominator;
 }
-
-// note 
-// 1. read from stdin
-// 2. write to stdout, program outputs
-// 3. errors to be shown on stderr, lesser outputs
