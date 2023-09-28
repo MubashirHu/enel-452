@@ -17,6 +17,7 @@ Example commandline entry : a 1 2 3 4
 After every '\n' newline, the result of the computation is shown. After which another entry will be shown.
 
 Note:
-As requirements for this assignment the error messages are sent to stdout instead of stderr but the prompts 
+-As requirements for this assignment the error messages are sent to stdout instead of stderr but the prompts 
 are sent to stderr. 
 
+-Chatgbt was used for the makefile.
