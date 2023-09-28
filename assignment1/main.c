@@ -83,6 +83,8 @@ int main() {
                 errorHandle(errno);
             }
 
+            memset(buffer, '0', 1);
+
             fprintf(stderr, "Enter Complex Expression: ");
         }
     }
