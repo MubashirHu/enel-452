@@ -47,13 +47,13 @@ int main() {
     
     while (fgets(buffer, sizeof(buffer), stdin) != NULL){ 
         
-        int parsed = sscanf(buffer, "%c %lf %lf %lf %lf", &operation, &z1.real, &z1.imaginary, &z2.real, &z2.imaginary);
+        int arguments_parsed = sscanf(buffer, "%c %lf %lf %lf %lf %lf", &operation, &z1.real, &z1.imaginary, &z2.real, &z2.imaginary, &z1.real);
 
         if(z2.real == 0 && z2.imaginary == 0){
             errno = ERR_DIVIDE_BY_ZERO;
-        } else if (parsed < 5 && (operation != 'Q' || operation != 'q')){
+        } else if (arguments_parsed < 5 && (operation != 'Q' && operation != 'q')){
             errno = ERR_MISSING_ARGUMENTS;
-        } else if (parsed > 5){
+        } else if (arguments_parsed > 5){
             errno = ERR_EXTRA_ARGUMENTS;
         }
 
