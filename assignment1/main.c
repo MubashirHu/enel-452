@@ -30,7 +30,7 @@ void multiplyComplexNumbers(struct Complex z1, struct Complex z2, struct Complex
 void divideComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* result);
 int performComplexOperation(char operation, struct Complex z1, struct Complex z2);
 void printResult(void);
-int errorHandle(void);
+void errorHandle(int errorcode);
 
 struct Complex z1, z2, result;
 
@@ -45,27 +45,96 @@ int main() {
     char buffer[512];
     char operation;
     
-    while (fgets(buffer, sizeof(buffer), stdin) != NULL){ 
-        
-        int arguments_parsed = sscanf(buffer, "%c %lf %lf %lf %lf %lf", &operation, &z1.real, &z1.imaginary, &z2.real, &z2.imaginary, &z1.real);
 
-        if(z2.real == 0 && z2.imaginary == 0){
-            errno = ERR_DIVIDE_BY_ZERO;
-        } else if (arguments_parsed < 5 && (operation != 'Q' && operation != 'q')){
-            errno = ERR_MISSING_ARGUMENTS;
-        } else if (arguments_parsed > 5){
-            errno = ERR_EXTRA_ARGUMENTS;
-        }
+    while (1){
+        fprintf(stderr, "Complex Calculator\n");
+        fprintf(stderr, "==================\n");
+        fprintf(stderr, "This calculator can perform various operations on complex numbers.\n");
+        fprintf(stderr, "Supported operations:\n");
+        fprintf(stderr, "  - Addition (a or A)\n");
+        fprintf(stderr, "  - Subtraction (s or S)\n");
+        fprintf(stderr, "  - Multiplication (m or M)\n");
+        fprintf(stderr, "  - Division (d or D)\n");
+        fprintf(stderr, "  - Quit (q or Q)\n");
+        fprintf(stderr, "Enter your operation and complex numbers in the format: <operation> <real1> <imaginary1> <real2> <imaginary2>\n");
+        fprintf(stderr, "For example: 'a 3.5 2.0 1.0 4.5' for addition of (3.5 + 2.0i) and (1.0 + 4.5i).\n");
+        fprintf(stderr, "You can also enter 'q' to quit the calculator.\n");
+        fprintf(stderr, "Please ensure that you provide the correct number of arguments for each operation.\n");
+        fprintf(stderr, "==================\n\n\n");
+        fprintf(stderr, "Enter Complex Expression: ");
 
-        int c = performComplexOperation(operation, z1, z2);
+        while (fgets(buffer, sizeof(buffer), stdin) != NULL){ 
 
-        if (errno == 0 && !c){
-            printResult();
-        } else {
-            errorHandle();
+            int arguments_parsed = sscanf(buffer, "%c %lf %lf %lf %lf %lf", &operation, &z1.real, &z1.imaginary, &z2.real, &z2.imaginary, &z1.real);
+
+            if(z2.real == 0 && z2.imaginary == 0){
+                errno = ERR_DIVIDE_BY_ZERO;
+            } else if (arguments_parsed < 5 && (operation != 'Q' && operation != 'q')){
+                errno = ERR_MISSING_ARGUMENTS;
+            } else if (arguments_parsed > 5){
+                errno = ERR_EXTRA_ARGUMENTS;
+            }
+
+            int c = performComplexOperation(operation, z1, z2);
+
+            if (!c && errno == 0){
+                printResult();
+            } else {
+                errorHandle(errno);
+            }
+
+            fprintf(stderr, "Enter Complex Expression: ");
         }
     }
     return 0;
+}
+
+int performComplexOperation(char operation, struct Complex z1, struct Complex z2) {
+
+    if ((operation == 'a') || (operation == 'A')) {
+        addComplexNumbers(z1, z2, &result);
+    } else if ((operation == 's') || (operation == 'S')) {
+        subtractComplexNumbers(z1, z2, &result);
+    } else if ((operation == 'm') || (operation == 'M')) {
+        multiplyComplexNumbers(z1, z2, &result);
+    } else if ((operation == 'd') || (operation == 'D')) {
+        divideComplexNumbers(z1, z2, &result);
+    } else if ((operation == 'q') || (operation == 'Q'))  {
+        fprintf(stderr, "\n\nClosing Complex - Calculator...\n\n");
+        exit(0);
+    } else {
+        errno = ERR_ILLEGAL_COMMAND;
+    }
+    return 0;
+}
+
+void printResult(void){
+    printf("%.2lf + j %.2lf\n", result.real, result.imaginary);
+}
+
+void errorHandle(int errorcode){
+    switch (errorcode){
+        case ERR_ILLEGAL_COMMAND:
+            printf("%s\n", error_messages[ERR_ILLEGAL_COMMAND]);
+            errno = 0;
+            break;
+        case ERR_MISSING_ARGUMENTS:
+            printf("%s\n", error_messages[ERR_MISSING_ARGUMENTS]);
+            errno = 0;
+            break;
+        case ERR_EXTRA_ARGUMENTS: 
+            printf("%s\n", error_messages[ERR_EXTRA_ARGUMENTS]);
+            errno = 0;
+            break;
+        case ERR_DIVIDE_BY_ZERO: 
+            printf("%s\n", error_messages[ERR_DIVIDE_BY_ZERO]);
+            errno = 0;
+            break;
+        default:
+            //works fine
+            errno = 0;
+            break;
+    }
 }
 
 // Function to add two complex numbers
@@ -92,60 +161,6 @@ void divideComplexNumbers(struct Complex z1, struct Complex z2, struct Complex* 
 
     result->real = ((z1.real * z2.real) + (z1.imaginary * z2.imaginary)) / denominator;
     result->imaginary = ((z1.imaginary * z2.real) - (z1.real * z2.imaginary)) / denominator;
-}
-
-int performComplexOperation(char operation, struct Complex z1, struct Complex z2) {
-
-    if ((operation == 'a') || (operation == 'A')) {
-        addComplexNumbers(z1, z2, &result);
-        return errorHandle();
-    } else if ((operation == 's') || (operation == 'S')) {
-        subtractComplexNumbers(z1, z2, &result);
-        return errorHandle();
-    } else if ((operation == 'm') || (operation == 'M')) {
-        multiplyComplexNumbers(z1, z2, &result);
-        return errorHandle();
-    } else if ((operation == 'd') || (operation == 'D')) {
-        divideComplexNumbers(z1, z2, &result);
-        return errorHandle();
-    } else if ((operation == 'q') || (operation == 'Q'))  {
-        printf("Closing calculator...");
-        exit(0);
-    } else {
-        errno = ERR_ILLEGAL_COMMAND;
-        return errorHandle();
-    }
-    return 0;
-}
-
-void printResult(void){
-    printf("Complex result: %.2lf + j %.2lf\n", result.real, result.imaginary);
-}
-
-int errorHandle(void){
-    switch (errno){
-        case ERR_ILLEGAL_COMMAND:
-            printf("%s\n", error_messages[ERR_ILLEGAL_COMMAND]);
-            errno = 0;
-            return 1;
-        case ERR_MISSING_ARGUMENTS:
-            printf("%s\n", error_messages[ERR_MISSING_ARGUMENTS]);
-            errno = 0;
-            return 1;
-        case ERR_EXTRA_ARGUMENTS: 
-            printf("%s\n", error_messages[ERR_EXTRA_ARGUMENTS]);
-            errno = 0;
-            return 1;
-        case ERR_DIVIDE_BY_ZERO: 
-            printf("%s\n", error_messages[ERR_DIVIDE_BY_ZERO]);
-            errno = 0;
-            return 1;
-        
-        default:
-            //works fine
-            errno = 0;
-            return 0;
-    }
 }
 
 // note 
