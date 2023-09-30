@@ -424,6 +424,61 @@
               <FileType>5</FileType>
               <FilePath>.\351\util.h</FilePath>
             </File>
+            <File>
+              <FileName>UART.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\351\UART.c</FilePath>
+            </File>
+            <File>
+              <FileName>UART.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\351\UART.h</FilePath>
+            </File>
+            <File>
+              <FileName>PWM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\351\PWM.c</FilePath>
+            </File>
+            <File>
+              <FileName>PWM.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\351\PWM.h</FilePath>
+            </File>
+            <File>
+              <FileName>i2c_lcd_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\351\i2c_lcd_driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>i2c_lcd_driver.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\351\i2c_lcd_driver.h</FilePath>
+            </File>
+            <File>
+              <FileName>i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\351\i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>i2c.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\351\i2c.h</FilePath>
+            </File>
+            <File>
+              <FileName>ADC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\351\ADC.c</FilePath>
+            </File>
+            <File>
+              <FileName>ADC.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\351\ADC.h</FilePath>
+            </File>
+            <File>
+              <FileName>IOdef.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\351\IOdef.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
