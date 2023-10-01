@@ -1,6 +1,6 @@
-#include "/351/util.h"
-#include "/351/functions.h"
-#include "/351/GPIO.h"
+#include "../351/util.h"
+#include "../351/functions.h"
+#include "../351/GPIO.h"
 
 int main(void)
 {
