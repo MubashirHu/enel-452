@@ -92,10 +92,10 @@ void clockInit(void)
 		//RCC->CFGR = 0x00040000;// 12 MHz
 		//RCC->CFGR = 0x00080000;// 16 MHz
 		//RCC->CFGR = 0x000c0000;// 20 MHz			
-		RCC->CFGR = 0x00100000;// 24 MHz
+		//RCC->CFGR = 0x00100000;// 24 MHz
 		//RCC->CFGR = 0x00140000;//	28 MHz
 		//RCC->CFGR = 0x00180000;// 32 MHz
-		//RCC->CFGR = 0x001C0000;// 36 MHz			
+		RCC->CFGR = 0x001C0000;// 36 MHz			
 		//RCC->CFGR = 0x00200000;// 40 MHz
 		//RCC->CFGR = 0x00240000;//	44 MHz
 		//RCC->CFGR = 0x00280000;// 48 MHz
