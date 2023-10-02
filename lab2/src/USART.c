@@ -21,12 +21,12 @@ void initializeUSART(void)
 	USART2->CR1 |= USART_CR1_UE; // Enable USART
 	
 	//Configure USART 2 for 115200 bps, 8-bits-no parity, 1 stop bit. (Peripheral clock is 36MHz)
-	USART2->BRR = 0x0135;
-	//USART2->BRR = 0x09c4;
+	//USART2->BRR = 0x0139;
+	USART2->BRR = 0x09c4;
 }
 
 //Create a loop to send a character to the host and make sure that character is printed. This will test the Tx.
-void sendbyte(char c)
+void sendbyte(uint8_t c)
 {
 	// Wait until transmit buffer is empty
     while (!(USART2->SR & USART_SR_TXE));

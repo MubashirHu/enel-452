@@ -92,7 +92,7 @@ void clockInit(void)
 		//RCC->CFGR = 0x00040000;// 12 MHz
 		//RCC->CFGR = 0x00080000;// 16 MHz
 		//RCC->CFGR = 0x000c0000;// 20 MHz			
-		//RCC->CFGR = 0x00100000;// 24 MHz
+		RCC->CFGR = 0x00100000;// 24 MHz
 		//RCC->CFGR = 0x00140000;//	28 MHz
 		//RCC->CFGR = 0x00180000;// 32 MHz
 		//RCC->CFGR = 0x001C0000;// 36 MHz			
@@ -104,7 +104,7 @@ void clockInit(void)
 
 //These are the SYSCLK values when using the PLL with HSE/Bypass as the input. The max value is 72 MHz
 		//RCC->CFGR = 0x00010000;// 16 MHz
-		RCC->CFGR = 0x00050000;// 24 MHz 
+		//RCC->CFGR = 0x00050000;// 24 MHz 
 		//RCC->CFGR = 0x00090000;// 32 MHz
 		//RCC->CFGR = 0x000d0000;// 40 MHz			
 		//RCC->CFGR = 0x00110000;// 48 MHz
@@ -179,6 +179,7 @@ void sw2led(void)
 	
 void led_flash(void)
 {			
+	
 	    while(1){
 			GPIOA->BSRR = NUC_GREEN_ON;
 			delay(1800000);
@@ -186,3 +187,4 @@ void led_flash(void)
 			delay(1800000);
 			}
 }
+

@@ -11,7 +11,10 @@ int main(void)
 	//infinite loop
 	while(1)
 	{
-		sendbyte('a');
+		sendbyte(33);
+		delay(1800000*1);
+		sendbyte(34);
+		delay(1800000*1);
 		
 	}
 	
