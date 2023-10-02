@@ -382,17 +382,52 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>Source Group 1</GroupName>
+          <GroupName>header</GroupName>
           <Files>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\main.c</FilePath>
+              <FileName>CLI.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\headers\CLI.h</FilePath>
+            </File>
+            <File>
+              <FileName>USART.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\headers\USART.h</FilePath>
+            </File>
+            <File>
+              <FileName>MY_STM32_FUNCTIONS.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\headers\MY_STM32_FUNCTIONS.h</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>Libraries</GroupName>
+          <GroupName>src</GroupName>
+          <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>CLI.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\CLI.c</FilePath>
+            </File>
+            <File>
+              <FileName>USART.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\USART.c</FilePath>
+            </File>
+            <File>
+              <FileName>MY_STM32_FUNCTIONS.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\MY_STM32_FUNCTIONS.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>351 libraries</GroupName>
           <Files>
             <File>
               <FileName>functions.h</FileName>

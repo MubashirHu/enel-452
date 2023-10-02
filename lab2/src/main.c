@@ -6,13 +6,12 @@ int main(void)
 {
 	//init
 	clockInit();
-	led_IO_init();
+	initializeUSART();
 
 	//infinite loop
 	while(1)
 	{
-		
-	led_flash();
+		sendbyte('a');
 		
 	}
 	

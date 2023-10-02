@@ -104,13 +104,13 @@ void clockInit(void)
 
 //These are the SYSCLK values when using the PLL with HSE/Bypass as the input. The max value is 72 MHz
 		//RCC->CFGR = 0x00010000;// 16 MHz
-		//RCC->CFGR = 0x00050000;// 24 MHz 
+		RCC->CFGR = 0x00050000;// 24 MHz 
 		//RCC->CFGR = 0x00090000;// 32 MHz
 		//RCC->CFGR = 0x000d0000;// 40 MHz			
 		//RCC->CFGR = 0x00110000;// 48 MHz
 		//RCC->CFGR = 0x00150000;//	56 MHz
 		//RCC->CFGR = 0x00190000;// 64 MHz
-		RCC->CFGR = 0x001d0000;// 72 MHz		
+		//RCC->CFGR = 0x001d0000;// 72 MHz		
 
 
 //ENABLE PLL and wait for it to be ready
