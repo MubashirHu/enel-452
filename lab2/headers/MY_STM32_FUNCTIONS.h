@@ -54,7 +54,9 @@ typedef enum {
 } GPIO_Pin;
 
 void enablePort(char port);
+void disablePort(char port);
 void enableUSART(int usart);
+void disableUSART (int usart);
 
 // Function prototype
 void configureGPIO(GPIO_Port port, GPIO_Pin pin, GPIO_Mode mode, GPIO_Cnf configuration);

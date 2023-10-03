@@ -1,7 +1,5 @@
 #include <stdint.h>
 
-void initializeUSART(void);
-
 /** Configure and enable the device. */
 void serial_open(void);
 /**

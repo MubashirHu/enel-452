@@ -2,7 +2,7 @@
 #include "../headers/USART.h"
 #include "../headers/MY_STM32_FUNCTIONS.h"
 
-void initializeUSART(void)
+void serial_open(void)
 {
 	//Enable port A
 	enablePort('A');
@@ -23,6 +23,27 @@ void initializeUSART(void)
 	//Configure USART 2 for 115200 bps, 8-bits-no parity, 1 stop bit. (Peripheral clock is 36MHz)
 	USART2->BRR = 0x0139;
 	//USART2->BRR = 0x09c4;
+}
+
+void serial_close(void)
+{
+	disablePort('A');
+	disableUSART(2);
+	
+	//Configure PA2 for alternate function output push pull mode, max 50MHz b1011
+	GPIOA->CRL &= ~(GPIO_CRL_CNF2_1 | GPIO_CRL_MODE2);
+	
+	//Configure PA3 for Input with pull-up / pull-down b1000
+	GPIOA->CRL &= ~(GPIO_CRL_CNF3_1);
+	
+	//Enable the USART Tx and Rx in the USART Control register.
+	USART2->CR1 &= ~(USART_CR1_TE | USART_CR1_RE); //Enable Tx and Rx
+	USART2->CR1 &= ~(USART_CR1_UE); // Enable USART
+	
+	//Configure USART 2 for 115200 bps, 8-bits-no parity, 1 stop bit. (Peripheral clock is 36MHz)
+	USART2->BRR = 0x0000;
+	
+	
 }
 
 //Create a loop to send a character to the host and make sure that character is printed. This will test the Tx.

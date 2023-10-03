@@ -6,7 +6,7 @@ int main(void)
 {
 	//init
 	clockInit();
-	initializeUSART();
+	serial_open();
 
 	//infinite loop
 	while(1)

@@ -24,7 +24,31 @@ void enablePort(char port)
 			// set's nothing
 			break;
 	}
-	RCC->APB2ENR |=  RCC_APB2ENR_AFIOEN | RCC_APB2ENR_IOPAEN | RCC_APB2ENR_USART1EN ;
+}
+
+void disablePort(char port)
+{
+	switch(port)
+	{
+		case 'A':
+			RCC->APB2ENR &= ~(RCC_APB2ENR_IOPAEN | RCC_APB2ENR_AFIOEN);
+			break;
+		case 'B':
+			RCC->APB2ENR &= ~(RCC_APB2ENR_IOPBEN | RCC_APB2ENR_AFIOEN);
+			break;
+		case 'C':
+			RCC->APB2ENR &= ~(RCC_APB2ENR_IOPCEN | RCC_APB2ENR_AFIOEN);
+			break;
+		case 'D':
+			RCC->APB2ENR &= ~(RCC_APB2ENR_IOPDEN| RCC_APB2ENR_AFIOEN);
+			break;
+		case 'E':
+			RCC->APB2ENR &= ~(RCC_APB2ENR_IOPEEN| RCC_APB2ENR_AFIOEN);
+			break;
+		default:
+			// set's nothing
+			break;
+	}
 }
 
 void enableUSART (int usart)
@@ -42,6 +66,22 @@ void enableUSART (int usart)
 			break;
 	}
 }
+void disableUSART (int usart)
+{
+	switch(usart)
+	{
+		case 1:
+			RCC->APB2ENR &= ~(RCC_APB2ENR_USART1EN);
+			break;
+		case 2:
+			RCC->APB1ENR &= ~(RCC_APB1ENR_USART2EN);
+			break;
+		case 3:
+			RCC->APB1ENR &= ~(RCC_APB1ENR_USART3EN);
+			break;
+	}
+}
+
 
 // work in progress
 void configureGPIO(GPIO_Port port, GPIO_Pin pin, GPIO_Mode mode, GPIO_Cnf configuration)
