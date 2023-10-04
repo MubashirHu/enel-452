@@ -8,20 +8,19 @@ int main(void)
 	clockInit();
 	serial_open();
 	
-	uint8_t testData[] = "hi";
-  uint16_t dataSize = sizeof(testData) - 1; 
-	
-	CLI_Transmit(testData, dataSize);
-	
-	// wait on user to send data 
-	CLI_Receive(testData, sizeof(testData));
-	
-	// once recieved, echo back each character 
+	while(1)
+	{
+		
+		
+    char receivedChar = getbyte();
+		sendbyte(receivedChar);
 
-		//sendbyte(33);
-		//delay(1800000*1);
-		//sendbyte(34);
-		//delay(1800000*1);
-	
+    // Print the received character for debugging
+
+    // Send back the received character
+    sendbyte(receivedChar);
+		sendbyte('a');
+		
+	}
 	
 }

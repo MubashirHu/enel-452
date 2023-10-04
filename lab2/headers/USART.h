@@ -15,11 +15,11 @@ failure.
 @param b the 8-bit quantity to be sent.
 @pre must have already called serial_open()
 */
-void sendbyte(uint8_t b);
+void sendbyte(char b);
 /**
 Gets an 8-bit character from the serial port, and returns it.
 @pre must have already called serial_open()
 */
-uint8_t getbyte(void);
+char getbyte(void);
 
 

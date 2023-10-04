@@ -14,7 +14,7 @@ void serial_open(void)
 	GPIOA->CRL |= GPIO_CRL_CNF2_1 | GPIO_CRL_MODE2;
 	
 	//Configure PA3 for Input with pull-up / pull-down b1000
-	GPIOA->CRL |= GPIO_CRL_CNF3_1;
+	GPIOA->CRL |= GPIO_CRL_CNF3_0;
 	
 	//Enable the USART Tx and Rx in the USART Control register.
 	USART2->CR1 |= USART_CR1_TE | USART_CR1_RE; //Enable Tx and Rx
@@ -46,7 +46,7 @@ void serial_close(void)
 }
 
 //Create a loop to send a character to the host and make sure that character is printed. This will test the Tx.
-void sendbyte(uint8_t c)
+void sendbyte(char c)
 {
 	// Wait until transmit buffer is empty
     while (!(USART2->SR & USART_SR_TXE));
@@ -56,11 +56,14 @@ void sendbyte(uint8_t c)
 }
 
 //Create a function to receive a character and echo that back to the host to make sure Rx is working.
-uint8_t getbyte(void)
+char getbyte(void)
 {
 	// Wait until receive buffer is not empty
-    while (!(USART2->SR & USART_SR_RXNE));
-    
-    // Return received character
-    return USART2->DR;
+    while (!(USART2->SR & USART_SR_RXNE))
+		{
+			// Return received character
+			//sendbyte('a');
+		}
+	
+		return USART2->DR;
 }
