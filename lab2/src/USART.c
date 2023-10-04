@@ -43,7 +43,6 @@ void serial_close(void)
 	//Configure USART 2 for 115200 bps, 8-bits-no parity, 1 stop bit. (Peripheral clock is 36MHz)
 	USART2->BRR = 0x0000;
 	
-	
 }
 
 //Create a loop to send a character to the host and make sure that character is printed. This will test the Tx.
