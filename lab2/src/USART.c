@@ -1,3 +1,18 @@
+/**
+ * @file USART.c
+ *
+ * @brief Function Definitions for USART (Universal Synchronous Asynchronous Receiver-Transmitter) Module.
+ *
+ * This file includes the implementation of functions corresponding to the prototypes defined
+ * in the `../headers/USART.h` header file. The USART module is responsible for configuring and
+ * managing communication with external devices using the USART protocol.
+ *
+ * @note Functions in this file align with the USART module in `../headers/USART.h`.
+ *
+ * @author Mubashir Hussain
+ * @studentID 200396797
+ */
+
 #include "stm32f10x.h"
 #include "../headers/USART.h"
 #include "../headers/MY_STM32_FUNCTIONS.h"

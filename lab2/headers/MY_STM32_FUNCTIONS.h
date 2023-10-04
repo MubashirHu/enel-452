@@ -1,3 +1,19 @@
+/**
+ * @file MY_STM_32_FUNCTIONS.h
+ *
+ * @brief Utility functions for simplified port and peripheral configuration.
+ *
+ * This header file contains a collection of utility functions designed to simplify the
+ * configuration of ports and peripherals on STM32 microcontrollers. It provides convenient
+ * methods for quickly enabling and disabling various peripherals and simplifying configuration.
+ *
+ * @author Mubashir Hussain
+ * @studentID 200396797
+ */
+
+#ifndef MY_STM32_FUNCTIONS_H
+#define MY_STM32_FUNCTIONS_H
+
 #include <stdint.h>
 // Enumerations for GPIO configuration options
 
@@ -53,10 +69,57 @@ typedef enum {
     // Add other GPIO pins as needed
 } GPIO_Pin;
 
+/**
+ * @brief Enables the specified port.
+ *
+ * This function is used to enable a specific port, which may be associated with hardware
+ * peripherals or GPIO pins, for operation.
+ *
+ * @param port The identifier or name of the port to be enabled.
+ */
 void enablePort(char port);
+
+/**
+ * @brief Disables the specified port.
+ *
+ * This function is used to disable a specific port, which may be associated with hardware
+ * peripherals or GPIO pins, to stop its operation.
+ *
+ * @param port The identifier or name of the port to be disabled.
+ */
 void disablePort(char port);
+
+/**
+ * @brief Enables the specified USART (Universal Synchronous Asynchronous Receiver-Transmitter).
+ *
+ * This function is used to enable a specific USART module for communication.
+ *
+ * @param usart The identifier or index of the USART module to be enabled.
+ */
 void enableUSART(int usart);
+
+/**
+ * @brief Disables the specified USART (Universal Synchronous Asynchronous Receiver-Transmitter).
+ *
+ * This function is used to disable a specific USART module to halt communication through it.
+ *
+ * @param usart The identifier or index of the USART module to be disabled.
+ */
 void disableUSART (int usart);
 
-// Function prototype
+//WIP
+/**
+ * @brief Configures a GPIO (General Purpose Input/Output) pin with specific settings.
+ *
+ * This function configures a GPIO pin on a specified port with the given mode and configuration.
+ * It allows you to set the mode of the pin (input, output, alternate function, etc.) and configure
+ * additional settings as needed.
+ *
+ * @param port The GPIO port to which the pin belongs.
+ * @param pin The GPIO pin number to configure.
+ * @param mode The desired mode for the GPIO pin (e.g., input, output, alternate function).
+ * @param configuration Additional configuration options for the GPIO pin (e.g., pull-up, pull-down).
+ */
 void configureGPIO(GPIO_Port port, GPIO_Pin pin, GPIO_Mode mode, GPIO_Cnf configuration);
+
+#endif //MY_STM32_FUNCTIONS_H

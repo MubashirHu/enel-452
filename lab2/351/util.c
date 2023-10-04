@@ -179,12 +179,22 @@ void sw2led(void)
 	
 void led_flash(void)
 {			
-	
 	    while(1){
 			GPIOA->BSRR = NUC_GREEN_ON;
 			delay(1800000);
 	    GPIOA->BSRR = NUC_GREEN_OFF;
 			delay(1800000);
-			}
+			}	
+}
+
+void onboardLEDconfig(int c)
+{
+	if (c == 1) 
+	{
+		GPIOA->BSRR = NUC_GREEN_ON;
+	} else 
+	{
+		GPIOA->BSRR = NUC_GREEN_OFF;
+	}
 }
 

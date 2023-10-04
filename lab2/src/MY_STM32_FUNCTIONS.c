@@ -1,3 +1,18 @@
+/**
+ * @file MY_STM_32_FUNCTIONS.c
+ *
+ * @brief Function Definitions for STM32 Utility Functions Module.
+ *
+ * This file includes the implementation of functions that correspond to the utility function
+ * prototypes declared in the `../headers/MY_STM_32_FUNCTIONS.h` header file. These utility functions
+ * are designed to simplify the configuration and management of various aspects of STM32 microcontrollers.
+ *
+ * @note Functions in this file align with the utility functions module in `../headers/MY_STM_32_FUNCTIONS.h`.
+ *
+ * @author Mubashir Hussain
+ * @studentID 200396797
+ */
+
 #include "stm32f10x.h"
 #include "../headers/MY_STM32_FUNCTIONS.h"
 
