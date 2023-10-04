@@ -16,7 +16,15 @@ void CLI_Receive(uint8_t *pData, uint16_t Size)
 	{
 		pData[i] = getbyte();
 		
-		CLI_Transmit(&pData[i], 1);
+		// if Enter key is pressed, manually send a carriage and new line byte
+		if(pData[i] == 10 || pData[i] == 13)
+		{
+			sendbyte(13);
+			sendbyte(10);
+			
+		}
+		
+		sendbyte(pData[i]);
 		
 	}
 	

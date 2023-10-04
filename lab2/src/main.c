@@ -7,20 +7,13 @@ int main(void)
 	//init
 	clockInit();
 	serial_open();
+	uint8_t receivedData[512];
+	receivedData[0] = '\0';
 	
 	while(1)
 	{
-		
-		
-    char receivedChar = getbyte();
-		sendbyte(receivedChar);
-
-    // Print the received character for debugging
-
-    // Send back the received character
-    sendbyte(receivedChar);
-		sendbyte('a');
-		
+		CLI_Receive(receivedData, sizeof(receivedData));
 	}
+	
 	
 }
