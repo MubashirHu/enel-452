@@ -61,6 +61,15 @@ public:
     /** Insert a new element at the tail of the queue. */
     void insert(Data d);
 
+    /** 
+     Insert a new element at a specific position of the queue 
+     \post Data element will be inserted IN FRONT of the given position
+     If the position is 0,               data element will be inserted at the front of the queue(the head)
+     If the position is set to size()-1, data element will insert just in front of the tail
+     If the position is set to size(),   data element will be appended to the tail
+    */
+    void insert(Data d, unsigned position);
+
     /**
        Remove the head element of the queue.
 

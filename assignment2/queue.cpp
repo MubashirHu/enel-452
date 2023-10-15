@@ -61,6 +61,12 @@ void Queue::insert(Data d)
     nelements++;
 }
 
+
+void Queue::insert(Data d, unsigned position)
+{
+   
+}
+
 bool Queue::search(Data otherData) const
 {
     QElement* insideEl = head;
