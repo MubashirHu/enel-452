@@ -32,6 +32,27 @@ bool testQueueEquality( Queue & q, std::vector<Data> const & array)
     return true;
 }
 
+void testInsert(void)
+{
+    Queue testq;
+    testq.insert(Data(0,0), testq.size()); //normal append
+    testq.insert(Data(1,1), testq.size());
+    testq.insert(Data(2,2), testq.size());
+    testq.insert(Data(3,3), testq.size()-1); // before tail
+    testq.insert(Data(4,4), 0); // front end
+    testq.insert(Data(5,5), 2); // specific position
+    testq.print();
+    // should produce 0:(4,4) 1:(0,0) 2:(5,5) 3:(1,1) 4:(3,3) 5:(2,2)
+    
+    assert(testq.size() == 6);
+    assert(testq.search(Data(0,0)));
+    assert(testq.search(Data(1,1)));
+    assert(testq.search(Data(2,2)));
+    assert(testq.search(Data(3,3)));
+    assert(testq.search(Data(4,4)));
+    assert(testq.search(Data(5,5)));
+}
+
 int main()
 {
     using namespace std;
@@ -39,7 +60,9 @@ int main()
     cout << "Testing queue.\n";
     Queue q1;
     Queue q;
-    
+
+    testInsert();
+
     q.insert(Data(1,2));
     q.insert(Data(3,4));
     q.insert(Data(5,6));
@@ -52,14 +75,13 @@ int main()
     q1.insert(Data(3,3));
     q1.insert(Data(5,5));
     
-    //q1.print();
+    q1.print();
 
     vector<Data> dataVec;
 
     dataVec.push_back(Data(1,1));
     dataVec.push_back(Data(3,3));
     dataVec.push_back(Data(5,5));
-    
     
     assert(testQueueEquality(q1, dataVec));
 
