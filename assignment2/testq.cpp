@@ -41,12 +41,18 @@ int main()
     Queue q;
 
     q.insert(Data(1,2));//0
+    q.print();
     q.insert(Data(3,4));//1
+    q.print();
     q.insert(Data(5,6));//2
+    q.print();
     q.insert(Data(-2,-3), q.size());
+    q.print();
     q.insert(Data(-4,-5), q.size()-1);
+    q.print();
     q.insert(Data(-4,-5), 0);
-    
+    q.print();
+    q.insert(Data(1000,1000), 1);    
     q.print();
     // should produce 0:(1,2) 1:(-2,-3) 2:(3,4) 3:(-4,-5) 4:(5,6)
 
@@ -54,7 +60,7 @@ int main()
     q1.insert(Data(3,3));
     q1.insert(Data(5,5));
     
-    q1.print();
+    //q1.print();
 
     vector<Data> dataVec;
 

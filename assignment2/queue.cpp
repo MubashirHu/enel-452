@@ -112,7 +112,7 @@ void Queue::insert(Data d, unsigned position)
         }
         nelements++;
     }
-    else if(position > 0 && (position < (size()-1)))
+    else
     {
         QElement* el = new QElement(d);
         QElement* current = head; // Initialize 'current' to the head of the list
@@ -120,8 +120,10 @@ void Queue::insert(Data d, unsigned position)
 
         if (size() > 0)
         {
-            while (current->next != NULL && i < (position - 1))
+            
+            while (current->next != NULL)
             {
+                i++;
                 if (i == position)
                 {
                     el->next = current->next;
@@ -129,7 +131,6 @@ void Queue::insert(Data d, unsigned position)
                     break; // No need to continue iterating
                 }
                 current = current->next;
-                i++;
             }
         }
         else
@@ -137,6 +138,7 @@ void Queue::insert(Data d, unsigned position)
             head = el;
             tail = el;
         }
+        nelements++;
     }
 }
 
