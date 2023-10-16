@@ -32,25 +32,38 @@ bool testQueueEquality( Queue & q, std::vector<Data> const & array)
     return true;
 }
 
-
 int main()
 {
     using namespace std;
 
     cout << "Testing queue.\n";
     Queue q1;
+    Queue q;
+
+    q.insert(Data(1,2));//0
+    q.insert(Data(3,4));//1
+    q.insert(Data(5,6));//2
+    q.insert(Data(-2,-3), q.size());
+    q.insert(Data(-4,-5), q.size()-1);
+    q.insert(Data(-4,-5), 0);
+    
+    q.print();
+    // should produce 0:(1,2) 1:(-2,-3) 2:(3,4) 3:(-4,-5) 4:(5,6)
 
     q1.insert(Data(1,1));
     q1.insert(Data(3,3));
     q1.insert(Data(5,5));
-
+    
     q1.print();
 
     vector<Data> dataVec;
+
+    //dataVec.push_back(Data(21,21));
     dataVec.push_back(Data(1,1));
     dataVec.push_back(Data(3,3));
     dataVec.push_back(Data(5,5));
-
+    
+    
     assert(testQueueEquality(q1, dataVec));
 
     Data d44(4, 4);
