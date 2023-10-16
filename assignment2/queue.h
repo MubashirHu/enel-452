@@ -10,6 +10,11 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
+#define ERR_INSERT_RANGE 1
+
+// Error messages
+extern const char *error_messages[];
+
 /** Data stores an (x,y) int pair.  This might represent a screen
     coordinate, for example.
  */
@@ -70,6 +75,7 @@ public:
     */
     void insert(Data d, unsigned position);
 
+    void errorHandle(int errorcode);
     /**
        Remove the head element of the queue.
 

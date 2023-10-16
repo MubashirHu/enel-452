@@ -56,7 +56,6 @@ int main()
 
     vector<Data> dataVec;
 
-    //dataVec.push_back(Data(21,21));
     dataVec.push_back(Data(1,1));
     dataVec.push_back(Data(3,3));
     dataVec.push_back(Data(5,5));
@@ -67,7 +66,6 @@ int main()
     Data d44(4, 4);
     bool found = q1.search(d44);
     assert(found == false);
-
 
     q1.insert(d44);  // now is (1,1),(3,3),(5,5),(4,4)
     found = q1.search(d44);

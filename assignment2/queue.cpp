@@ -10,6 +10,11 @@
 
 using namespace std;
 
+const char* error_messages[]= {
+    "",
+    "error code 1: insert: range error."
+};
+
 Queue::Queue()
 {
     head = 0;
@@ -63,6 +68,13 @@ void Queue::insert(Data d)
 
 void Queue::insert(Data d, unsigned position)
 {
+    if((position > size()))
+        {
+            errno = ERR_INSERT_RANGE;
+            errorHandle(errno);
+            return;
+        }
+
     if(position == 0)
     {
         QElement* el = new QElement(d);
@@ -130,6 +142,21 @@ void Queue::insert(Data d, unsigned position)
             tail = el;
         }
         nelements++;
+    }
+}
+
+void Queue::errorHandle(int errorcode)
+{
+    switch (errorcode){
+        case ERR_INSERT_RANGE:
+            fprintf(stderr, "%s\n", error_messages[ERR_INSERT_RANGE]);
+            errno = 0;
+            exit(3);
+            break;
+
+        default:
+            errno = 0;
+            break;
     }
 }
 
