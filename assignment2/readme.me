@@ -1,0 +1,29 @@
+
+Changes made to queue.cpp
+ - Added the functionality for void Queue::insert(Data d, unsigned position)
+    - Provides the functionality of 
+        - appending to the end of the queue
+        - inserting node to the front of the queue
+        - inserting node to a specific position of the queue
+        - inserting a node behind the tail, [one position before the end of the queue]
+
+ - Added errorHandle(), this function is being reused from assignment1
+    - Provides the functionality of
+        - Dealing with the error code that is passed in.
+        - Will display an error message
+        - Leave with an exit code, in this assignment exit code 3 was used.
+
+
+Changes made to queue.h
+- Added the prototype for 
+    void insert(Data d, unsigned position);
+    void errorHandle(int errorcode);
+
+Changes made to testq.cpp
+    - Added void testInsert(bool j), which tests the functionality of new insert function defined in the queue.cpp file.
+        - If a true is passed into testInsert() then it will return the expected output which can be verified to check whether
+          the function is working correctly
+    - Includes 2 unit tests on 2 Queue objects + insert functionality testing
+        - unit test  on q1 shows how to use the vector table to verify the expected output
+        - unit test on q is the one that I use to verify the correct operation
+        - There is also a functionality test inside of testInsert()
