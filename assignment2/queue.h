@@ -1,7 +1,7 @@
 /** -*- c++ -*-
    Project: Implementation of a Queue in C++.
-   Course: enel452
-   Programmer: Karim Naqvi
+   Course: Enel452
+   Programmer: Mubashir Hussain
 
    Description: Implements a queue based on a singly-linked list.
    Element data is assumed to be a value type, and must support the equals method.

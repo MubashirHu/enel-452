@@ -1,7 +1,7 @@
 /**
    Project: Implementation of a Queue in C++.
-   Programmer: Karim Naqvi
-   Course: enel452
+   Programmer: Mubashir Hussain
+   Course: Enel452
 */
 
 #include "queue.h"

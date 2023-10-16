@@ -1,7 +1,7 @@
 /**
    Project: Implementation of a Queue in C++.
-   Programmer: Karim Naqvi
-   Course: enel452
+   Programmer: Mubashir Hussain
+   Course: Enel452
    Description: test code
 */
 
@@ -94,7 +94,7 @@ int main()
     q.insert(Data(-4,-5), 3);
     q.print();
     // should produce 0:(1,2) 1:(-2,-3) 2:(3,4) 3:(-4,-5) 4:(5,6)
-    
+
     vector<Data> dataVec1;
     dataVec1.push_back(Data(1,2));
     dataVec1.push_back(Data(-2,-3));
