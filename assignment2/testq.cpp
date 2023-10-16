@@ -39,20 +39,12 @@ int main()
     cout << "Testing queue.\n";
     Queue q1;
     Queue q;
-
-    q.insert(Data(1,2));//0
-    q.print();
-    q.insert(Data(3,4));//1
-    q.print();
-    q.insert(Data(5,6));//2
-    q.print();
-    q.insert(Data(-2,-3), q.size());
-    q.print();
-    q.insert(Data(-4,-5), q.size()-1);
-    q.print();
-    q.insert(Data(-4,-5), 0);
-    q.print();
-    q.insert(Data(1000,1000), 1);    
+    
+    q.insert(Data(1,2));
+    q.insert(Data(3,4));
+    q.insert(Data(5,6));
+    q.insert(Data(-2,-3), 1);
+    q.insert(Data(-4,-5), 3);
     q.print();
     // should produce 0:(1,2) 1:(-2,-3) 2:(3,4) 3:(-4,-5) 4:(5,6)
 
