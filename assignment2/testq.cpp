@@ -32,7 +32,11 @@ bool testQueueEquality( Queue & q, std::vector<Data> const & array)
     return true;
 }
 
-void testInsert(void)
+/**
+   Create's a test queue on which all the functions of the insert(data,position) function
+   are operated on.
+ */
+void testInsert(bool j)
 {
     Queue testq;
     testq.insert(Data(0,0), testq.size()); //normal append
@@ -41,7 +45,10 @@ void testInsert(void)
     testq.insert(Data(3,3), testq.size()-1); // before tail
     testq.insert(Data(4,4), 0); // front end
     testq.insert(Data(5,5), 2); // specific position
-    testq.print();
+
+    if(j == true){
+        testq.print();
+    } else { }
     // should produce 0:(4,4) 1:(0,0) 2:(5,5) 3:(1,1) 4:(3,3) 5:(2,2)
     
     assert(testq.size() == 6);
@@ -61,16 +68,10 @@ int main()
     Queue q1;
     Queue q;
 
-    testInsert();
+    // initial test of new insert
+    testInsert(false);
 
-    q.insert(Data(1,2));
-    q.insert(Data(3,4));
-    q.insert(Data(5,6));
-    q.insert(Data(-2,-3), 1);
-    q.insert(Data(-4,-5), 3);
-    q.print();
-    // should produce 0:(1,2) 1:(-2,-3) 2:(3,4) 3:(-4,-5) 4:(5,6)
-
+    //unit test 1
     q1.insert(Data(1,1));
     q1.insert(Data(3,3));
     q1.insert(Data(5,5));
@@ -84,6 +85,23 @@ int main()
     dataVec.push_back(Data(5,5));
     
     assert(testQueueEquality(q1, dataVec));
+
+    //unit test 2
+    q.insert(Data(1,2));
+    q.insert(Data(3,4));
+    q.insert(Data(5,6));
+    q.insert(Data(-2,-3), 1);
+    q.insert(Data(-4,-5), 3);
+    q.print();
+    // should produce 0:(1,2) 1:(-2,-3) 2:(3,4) 3:(-4,-5) 4:(5,6)
+    vector<Data> dataVec1;
+    dataVec1.push_back(Data(1,2));
+    dataVec1.push_back(Data(-2,-3));
+    dataVec1.push_back(Data(3,4));
+    dataVec1.push_back(Data(-4,-5));
+    dataVec1.push_back(Data(5,6));
+
+    assert(testQueueEquality(q, dataVec1));
 
     Data d44(4, 4);
     bool found = q1.search(d44);
