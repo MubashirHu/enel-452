@@ -75,7 +75,16 @@ public:
     */
     void insert(Data d, unsigned position);
 
+    /**
+    errorHandle(): This function prints the error message to stdout based on the errorcode that is passed in. 
+    The errorcode that is passed in will always be the global variable 'errno' unless otherwise stated. After 
+    The error message has been sent, the errno global variable is hard reset to 0.
+
+    Parameters : <1> int errorcode - the code from errno
+    Return: None
+    */
     void errorHandle(int errorcode);
+    
     /**
        Remove the head element of the queue.
 
