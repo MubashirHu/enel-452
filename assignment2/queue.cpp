@@ -61,13 +61,6 @@ void Queue::insert(Data d)
     nelements++;
 }
 
-/** 
-     Insert a new element at a specific position of the queue 
-     \post Data element will be inserted IN FRONT of the given position
-     If the position is 0,               data element will be inserted at the front of the queue(the head)
-     If the position is set to size(),   data element will be appended to the tail
-     If the position is set to size()-1, data element will insert just in front of the tail
-    */
 void Queue::insert(Data d, unsigned position)
 {
     if(position == 0)
@@ -115,12 +108,11 @@ void Queue::insert(Data d, unsigned position)
     else
     {
         QElement* el = new QElement(d);
-        QElement* current = head; // Initialize 'current' to the head of the list
+        QElement* current = head; 
         unsigned int i = 0;
 
         if (size() > 0)
         {
-            
             while (current->next != NULL)
             {
                 i++;
@@ -128,7 +120,7 @@ void Queue::insert(Data d, unsigned position)
                 {
                     el->next = current->next;
                     current->next = el;
-                    break; // No need to continue iterating
+                    break; 
                 }
                 current = current->next;
             }
