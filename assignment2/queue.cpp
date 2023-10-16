@@ -94,7 +94,6 @@ void Queue::insert(Data d, unsigned position)
                 current = current->next;
             }
 
-            //current has reached right before the tail
             el->next = current->next;
             current->next = el;
         }
