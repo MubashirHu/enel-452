@@ -88,3 +88,14 @@ char getbyte(void)
 	
 		return USART2->DR;
 }
+
+void USART2_IRQHandler(void) {
+    if ((USART2->SR & USART_SR_RXNE) != 0) {
+        uint8_t receivedData = USART2->DR; // Read the received data
+			
+        // Process the receivedData
+				sendbyte(receivedData);
+			
+        dataReceivedFlag = 1; // Set the flag to indicate character reception
+    }
+}
