@@ -56,9 +56,10 @@ void serial_close(void)
 	//Configure PA3 for Input with pull-up / pull-down b1000
 	GPIOA->CRL &= ~(GPIO_CRL_CNF3_1);
 	
-	//Enable the USART Tx and Rx in the USART Control register.
-	USART2->CR1 &= ~(USART_CR1_TE | USART_CR1_RE); //Enable Tx and Rx
-	USART2->CR1 &= ~(USART_CR1_UE); // Enable USART
+	//Disable the USART Tx and Rx in the USART Control register.
+	USART2->CR1 &= ~(USART_CR1_TE | USART_CR1_RE); //Disable Tx and Rx
+	USART2->CR1 &= ~(USART_CR1_UE); // Disable USART
+	USART2->CR1 &= ~(USART_CR1_RXNEIE); // Disable RXNE interrupt-enable
 	
 	//Configure USART 2 for 115200 bps, 8-bits-no parity, 1 stop bit. (Peripheral clock is 36MHz)
 	USART2->BRR = 0x0000;
