@@ -33,7 +33,12 @@ void serial_open(void)
 	
 	//Enable the USART Tx and Rx in the USART Control register.
 	USART2->CR1 |= USART_CR1_TE | USART_CR1_RE; //Enable Tx and Rx
-	USART2->CR1 |= USART_CR1_UE; // Enable USART
+	
+	//Enable USART2 RXNE interrupt
+	USART2->CR1 |= USART_CR1_RXNEIE;
+	
+	// Enable USART
+	USART2->CR1 |= USART_CR1_UE;
 	
 	//Configure USART 2 for 115200 bps, 8-bits-no parity, 1 stop bit. (Peripheral clock is 36MHz)
 	USART2->BRR = 0x0139;
