@@ -39,5 +39,7 @@ Gets an 8-bit character from the serial port, and returns it.
 */
 char getbyte(void);
 
+void USART2_IRQHandler(void);
+
 #endif //USART_H
 
