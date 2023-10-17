@@ -25,7 +25,6 @@ void serial_open(void);
 /**
 Undo whatever serial_open() did, setting the peripheral back to
 its reset configuration.
-2
 */
 void serial_close(void);
 
@@ -44,7 +43,15 @@ Gets an 8-bit character from the serial port, and returns it.
 char getbyte(void);
 
 
+/**
+Reads the USART_SR_RXNE register to determine whether dataReceivedFlag should be set
+*/
 void USART2_IRQHandler(void);
+
+/**
+Initialize the general purpose timer(TIM2 to TIM5)
+*/
+void init_general_purpose_timer(uint8_t timer);
 
 #endif //USART_H
 
