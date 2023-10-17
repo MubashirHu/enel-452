@@ -17,6 +17,8 @@
 #define USART_H
 #include <stdint.h>
 
+extern volatile uint8_t dataReceivedFlag = 0;
+
 /** Configure and enable the device. */
 void serial_open(void);
 /**
@@ -38,6 +40,7 @@ Gets an 8-bit character from the serial port, and returns it.
 @pre must have already called serial_open()
 */
 char getbyte(void);
+
 
 void USART2_IRQHandler(void);
 
