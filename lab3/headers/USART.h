@@ -51,7 +51,7 @@ void USART2_IRQHandler(void);
 /**
 Initialize the general purpose timer(TIM2 to TIM5)
 */
-void init_general_purpose_timer(uint8_t timer);
+void init_TIM2(uint16_t duration);
 
 #endif //USART_H
 
