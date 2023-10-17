@@ -28,5 +28,4 @@ int main(void)
 		CLI_Receive(receivedData, sizeof(receivedData));
 	}
 	
-	
 }
