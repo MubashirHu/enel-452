@@ -187,6 +187,14 @@ void led_flash(void)
 			}	
 }
 
+void led_blink(void)
+{			
+			GPIOA->BSRR = NUC_GREEN_ON;
+			delay(1800000);
+	    GPIOA->BSRR = NUC_GREEN_OFF;
+			delay(1800000);
+}
+
 void onboardLEDconfig(int c)
 {
 	if (c == 1) 
