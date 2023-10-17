@@ -32,8 +32,7 @@ int main(void)
 		
 		if(dataReceivedFlag == 1)
 		{
-			//CLI_Receive(receivedData, sizeof(receivedData));
-			sendbyte('b');
+			//process data
 			
 			dataReceivedFlag = 0;
 		}
