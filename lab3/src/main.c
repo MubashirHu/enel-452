@@ -11,8 +11,9 @@
  */
 
 #include "../headers/USART.h"
-#include "../headers/CLI.h"
+//#include "../headers/CLI.h"
 #include "../351/util.h"
+#include "stm32f10x.h"
 
 volatile uint8_t dataReceivedFlag = 0; // Global declaration and initialization
 
@@ -22,10 +23,12 @@ int main(void)
 	clockInit();
 	serial_open();
 	led_IO_init();
-	uint8_t receivedData[512];
+	init_TIM2(2);
+	//uint8_t receivedData[512];
 
 	//receivedData[0] = '\0';
 	
+	/*
 	while(1)
 	{
 		USART2_IRQHandler();
@@ -38,4 +41,16 @@ int main(void)
 		}
 		
 	}
+	*/
+	
+	while(1)
+	{
+		if(TIM2->CNT == 1000)
+		{
+			led_blink();
+		
+		}			
+	}
+	
+	
 }
