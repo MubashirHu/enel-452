@@ -17,7 +17,7 @@
 #define USART_H
 #include <stdint.h>
 
-extern volatile uint8_t dataReceivedFlag = 0;
+extern volatile uint8_t dataReceivedFlag; // Declaration, no initialization
 
 /** Configure and enable the device. */
 void serial_open(void);

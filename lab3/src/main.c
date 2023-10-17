@@ -14,6 +14,8 @@
 #include "../headers/CLI.h"
 #include "../351/util.h"
 
+volatile uint8_t dataReceivedFlag = 0; // Global declaration and initialization
+
 int main(void)
 {
 	//init
@@ -21,11 +23,20 @@ int main(void)
 	serial_open();
 	led_IO_init();
 	uint8_t receivedData[512];
+
 	//receivedData[0] = '\0';
 	
 	while(1)
 	{
-		CLI_Receive(receivedData, sizeof(receivedData));
+		USART2_IRQHandler();
+		
+		if(dataReceivedFlag == 1)
+		{
+			//CLI_Receive(receivedData, sizeof(receivedData));
+			sendbyte('b');
+			
+			dataReceivedFlag = 0;
+		}
+		
 	}
-	
 }
