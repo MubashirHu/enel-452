@@ -66,17 +66,15 @@ void serial_close(void)
 	
 }
 
-//Create a loop to send a character to the host and make sure that character is printed. This will test the Tx.
-void sendbyte(char c)
+int sendbyte(uint8_t b, uint32_t Timeout)
 {
 	// Wait until transmit buffer is empty
     while (!(USART2->SR & USART_SR_TXE));
     
     // Send character
-    USART2->DR = c;
+    USART2->DR = b;
 }
 
-//Create a function to receive a character and echo that back to the host to make sure Rx is working.
 char getbyte(void)
 {
 	// Wait until receive buffer is not empty
@@ -90,9 +88,9 @@ char getbyte(void)
 }
 
 void USART2_IRQHandler(void) {
-    if ((USART2->SR & USART_SR_RXNE) != 0) {
-        uint8_t receivedData = USART2->DR; // Read the received data
-			
-				dataReceivedFlag = 1; // Set the flag to indicate character reception
+    if ((USART2->SR & USART_SR_RXNE) != 0) 
+		{
+      uint8_t receivedData = USART2->DR; // Read the received data
+			dataReceivedFlag = 1; // Set the flag to indicate character reception
     }
 }
