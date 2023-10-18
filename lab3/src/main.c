@@ -11,7 +11,7 @@
  */
 
 #include "../headers/USART.h"
-//#include "../headers/CLI.h"
+#include "../headers/CLI.h"
 #include "../351/util.h"
 #include "stm32f10x.h"
 
@@ -23,34 +23,47 @@ int main(void)
 	clockInit();
 	serial_open();
 	led_IO_init();
-	init_TIM2(2);
-	//uint8_t receivedData[512];
-
-	//receivedData[0] = '\0';
+	init_TIM2();
+	uint8_t receivedData[512];
+	receivedData[0] = '\0';
+	int i = 0;
 	
-	/*
 	while(1)
 	{
 		USART2_IRQHandler();
 		
 		if(dataReceivedFlag == 1)
 		{
-			//process data
+			receivedData[i] = getbyte();
+			sendbyte(receivedData[i]);
 			
+			if(receivedData[i] == BACKSPACE)
+			{
+				if(i == 0)
+				{
+					//don't backspace when at the start of the buffer
+				}else
+				{
+					i = i - 2;
+					sendbyte(' ');
+					sendbyte(BACKSPACE);
+				}
+			}
+		
+			// if Enter key is pressed, manually send a carriage and new line byte
+			if(receivedData[i] == NEW_LINE_FEED || receivedData[i] == CARRIAGE_RETURN)
+			{
+				parseReceivedData(receivedData, i);
+				sendbyte(CARRIAGE_RETURN);
+				sendbyte(NEW_LINE_FEED);
+				i = -1;
+				
+				sendbyte('>');
+				sendbyte('>');
+			}
+			
+			i++;
 			dataReceivedFlag = 0;
 		}
-		
-	}
-	*/
-	
-	while(1)
-	{
-		if(TIM2->CNT == 1000)
-		{
-			led_blink();
-		
-		}			
-	}
-	
-	
+	}	
 }
