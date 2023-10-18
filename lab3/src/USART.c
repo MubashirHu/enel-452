@@ -77,6 +77,8 @@ int sendbyte(uint8_t b)
 		{
 			if((TIM2->SR & TIM_SR_UIF) != 0)
 			{
+				//reset update event
+				TIM2->SR &= ~(TIM_SR_UIF);
 				return 1;
 			}
 		}
@@ -88,6 +90,8 @@ int sendbyte(uint8_t b)
 		{
 			if((TIM2->SR & TIM_SR_UIF) != 0)
 			{
+				//reset update event
+				TIM2->SR &= ~(TIM_SR_UIF);
 				return 1;
 			}
 		}
@@ -108,6 +112,8 @@ char getbyte(void)
 			//sendbyte('a');
 			if((TIM2->SR & TIM_SR_UIF) != 0)
 			{
+				//reset update event
+				TIM2->SR &= ~(TIM_SR_UIF);
 				return 1;
 			}
 		}
