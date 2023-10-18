@@ -50,8 +50,11 @@ void USART2_IRQHandler(void);
 
 /**
 Initialize the general purpose timer(TIM2 to TIM5)
+Overall, this initialization function configures TIM2 to count at a rate of 10 kHz 
+(0.1 ms per count), with a period of 1 ms. The timer is set to start counting from 0 
+and will generate an update event every 1 ms.
 */
-void init_TIM2(uint16_t duration);
+void init_TIM2(void);
 
 #endif //USART_H
 

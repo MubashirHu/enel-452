@@ -95,7 +95,7 @@ void USART2_IRQHandler(void) {
     }
 }
 
-void init_TIM2(uint16_t duration)
+void init_TIM2(void)
 {
 	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
 	TIM2->PSC = 0xE0F; // Divide 36 MHz by 3600 (PSC+1), PSC_CLK= 10000 Hz, 1 count = 0.1 ms
