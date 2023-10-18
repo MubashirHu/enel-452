@@ -75,7 +75,7 @@ int sendbyte(uint8_t b)
 	// Wait until transmit buffer is empty
     while (!(USART2->SR & USART_SR_TXE))
 		{
-			if((TIM2->SR & TIM_SR_UIF) == 1)
+			if((TIM2->SR & TIM_SR_UIF) != 0)
 			{
 				return 1;
 			}
@@ -86,7 +86,7 @@ int sendbyte(uint8_t b)
 		
 		while((USART2->SR&(1<<6)) == 0) //wait until the TC flag is set
 		{
-			if((TIM2->SR & TIM_SR_UIF) == 1)
+			if((TIM2->SR & TIM_SR_UIF) != 0)
 			{
 				return 1;
 			}
@@ -106,7 +106,7 @@ char getbyte(void)
 		{
 			// Return received character
 			//sendbyte('a');
-			if((TIM2->SR & TIM_SR_UIF) == 1)
+			if((TIM2->SR & TIM_SR_UIF) != 0)
 			{
 				return 1;
 			}
