@@ -14,6 +14,9 @@
  
 #ifndef CLI_H
 #define CLI_H
+#define BACKSPACE 8
+#define NEW_LINE_FEED 10
+#define CARRIAGE_RETURN 13
 
 #include <stdint.h>
 
