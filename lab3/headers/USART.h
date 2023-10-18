@@ -16,6 +16,8 @@
 #ifndef USART_H
 #define USART_H
 #include <stdint.h>
+#define SENDDATA_TIMER 1000
+#define RECEIVEDATA_TIMER 1000
 
 extern volatile uint8_t dataReceivedFlag; // Declaration, no initialization
 
@@ -34,7 +36,7 @@ Returns 0 on success and non-zero on failure.
 @param b the 8-bit quantity to be sent.
 @pre must have already called serial_open()
 */
-int sendbyte(uint8_t b, uint32_t Timeout);
+int sendbyte(uint8_t b);
 
 /**
 Gets an 8-bit character from the serial port, and returns it.
@@ -42,14 +44,13 @@ Gets an 8-bit character from the serial port, and returns it.
 */
 char getbyte(void);
 
-
 /**
 Reads the USART_SR_RXNE register to determine whether dataReceivedFlag should be set
 */
 void USART2_IRQHandler(void);
 
 /**
-Initialize the general purpose timer(TIM2 to TIM5)
+Initialize the general purpose timer TIM2 to TIM5
 Overall, this initialization function configures TIM2 to count at a rate of 10 kHz 
 (0.1 ms per count), with a period of 1 ms. The timer is set to start counting from 0 
 and will generate an update event every 1 ms.
