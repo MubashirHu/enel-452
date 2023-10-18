@@ -66,25 +66,54 @@ void serial_close(void)
 	
 }
 
-int sendbyte(uint8_t b, uint32_t Timeout)
+int sendbyte(uint8_t b)
 {
+	uint16_t Timeout = SENDDATA_TIMER;
+	TIM2->ARR = 10*Timeout;
+	TIM2->CNT = 0;
+	
 	// Wait until transmit buffer is empty
-    while (!(USART2->SR & USART_SR_TXE));
+    while (!(USART2->SR & USART_SR_TXE))
+		{
+			if((TIM2->SR & TIM_SR_UIF) == 1)
+			{
+				return 1;
+			}
+		}
     
     // Send character
     USART2->DR = b;
+		
+		while((USART2->SR&(1<<6)) == 0) //wait until the TC flag is set
+		{
+			if((TIM2->SR & TIM_SR_UIF) == 1)
+			{
+				return 1;
+			}
+		}
+		
+		return 0;
 }
 
 char getbyte(void)
 {
+	uint16_t Timeout = RECEIVEDATA_TIMER;
+	TIM2->ARR = 10*Timeout;
+	TIM2->CNT = 0;
+	
 	// Wait until receive buffer is not empty
     while (!(USART2->SR & USART_SR_RXNE))
 		{
 			// Return received character
 			//sendbyte('a');
+			if((TIM2->SR & TIM_SR_UIF) == 1)
+			{
+				return 1;
+			}
 		}
 	
 		return USART2->DR;
+		
 }
 
 void USART2_IRQHandler(void) {
