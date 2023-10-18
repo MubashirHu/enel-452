@@ -35,6 +35,8 @@ int main(void)
 		if(dataReceivedFlag == 1)
 		{
 			receivedData[i] = getbyte();
+			dataReceivedFlag = 0;
+			
 			sendbyte(receivedData[i]);
 			
 			if(receivedData[i] == BACKSPACE)
@@ -63,7 +65,7 @@ int main(void)
 			}
 			
 			i++;
-			dataReceivedFlag = 0;
 		}
+		led_blink();
 	}	
 }
