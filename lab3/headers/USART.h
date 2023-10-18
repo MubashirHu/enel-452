@@ -16,8 +16,8 @@
 #ifndef USART_H
 #define USART_H
 #include <stdint.h>
-#define SENDDATA_TIMER 1000
-#define RECEIVEDATA_TIMER 4000
+#define SENDDATA_TIMER 500
+#define RECEIVEDATA_TIMER 1000
 
 extern volatile uint8_t dataReceivedFlag; // Declaration, no initialization
 
