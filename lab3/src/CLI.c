@@ -32,28 +32,37 @@ void CLI_Receive(uint8_t *pData, int* id)
 {
 		pData[*id] = getbyte();
 		sendbyte(pData[*id]);
-		
-		if(pData[*id] == BACKSPACE)
+	
+		switch(pData[*id])
 		{
-			if(*id == 0) 
-			{
-				//don't backspace at start of buffer
-			}
-			else 
-			{
-				*id = *id - 2;
-				sendbyte(' ');
-				sendbyte(BACKSPACE);
-			}
+			case BACKSPACE:
+				if(*id == 0) 
+				{
+					break;
+				}
+				else 
+				{
+					*id = *id - 2;
+					sendbyte(' ');
+					sendbyte(BACKSPACE);
+				}
+			break;
+
+			case NEW_LINE_FEED:
+				parseReceivedData(pData, *id);
+				newPromptLine();
+				*id = -1;	
+			break;
+	
+			case CARRIAGE_RETURN:
+				parseReceivedData(pData, *id);
+				newPromptLine();
+				*id = -1;	
+			break;
+				
+			default:
+			break;
 		}
-		
-		if(pData[*id] == NEW_LINE_FEED || pData[*id] == CARRIAGE_RETURN)
-		{
-			parseReceivedData(pData, *id);
-			newPromptLine();
-			*id = -1;
-		}
-			
 	*id = *id + 1;
 }
 
