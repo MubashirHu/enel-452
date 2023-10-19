@@ -56,5 +56,6 @@ void CLI_Receive(uint8_t *pData, int* id);
 void parseReceivedData(uint8_t *pData, int Size);
 
 void sendPromptArrows(void);
+void newPromptLine(void);
 
 #endif // CLI_H

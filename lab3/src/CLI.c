@@ -50,9 +50,7 @@ void CLI_Receive(uint8_t *pData, int* id)
 		if(pData[*id] == NEW_LINE_FEED || pData[*id] == CARRIAGE_RETURN)
 		{
 			parseReceivedData(pData, *id);
-			sendbyte(NEW_LINE_FEED);
-			sendbyte(CARRIAGE_RETURN);
-			sendPromptArrows();
+			newPromptLine();
 			*id = -1;
 		}
 			
@@ -106,4 +104,11 @@ void sendPromptArrows(void)
 {
 	sendbyte('>');
 	sendbyte('>');
+}
+
+void newPromptLine(void)
+{
+	sendbyte(NEW_LINE_FEED);
+	sendbyte(CARRIAGE_RETURN);
+	sendPromptArrows();
 }
