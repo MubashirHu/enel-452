@@ -399,6 +399,11 @@
               <FileType>5</FileType>
               <FilePath>.\headers\MY_STM32_FUNCTIONS.h</FilePath>
             </File>
+            <File>
+              <FileName>util.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\headers\util.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -424,95 +429,10 @@
               <FileType>1</FileType>
               <FilePath>.\src\MY_STM32_FUNCTIONS.c</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>351 libraries</GroupName>
-          <Files>
-            <File>
-              <FileName>functions.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\351\functions.h</FilePath>
-            </File>
-            <File>
-              <FileName>functions.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\351\functions.c</FilePath>
-            </File>
-            <File>
-              <FileName>GPIO.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\351\GPIO.c</FilePath>
-            </File>
-            <File>
-              <FileName>GPIO.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\351\GPIO.h</FilePath>
-            </File>
             <File>
               <FileName>util.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\351\util.c</FilePath>
-            </File>
-            <File>
-              <FileName>util.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\351\util.h</FilePath>
-            </File>
-            <File>
-              <FileName>UART.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\351\UART.c</FilePath>
-            </File>
-            <File>
-              <FileName>UART.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\351\UART.h</FilePath>
-            </File>
-            <File>
-              <FileName>PWM.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\351\PWM.c</FilePath>
-            </File>
-            <File>
-              <FileName>PWM.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\351\PWM.h</FilePath>
-            </File>
-            <File>
-              <FileName>i2c_lcd_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\351\i2c_lcd_driver.c</FilePath>
-            </File>
-            <File>
-              <FileName>i2c_lcd_driver.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\351\i2c_lcd_driver.h</FilePath>
-            </File>
-            <File>
-              <FileName>i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\351\i2c.c</FilePath>
-            </File>
-            <File>
-              <FileName>i2c.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\351\i2c.h</FilePath>
-            </File>
-            <File>
-              <FileName>ADC.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\351\ADC.c</FilePath>
-            </File>
-            <File>
-              <FileName>ADC.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\351\ADC.h</FilePath>
-            </File>
-            <File>
-              <FileName>IOdef.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\351\IOdef.h</FilePath>
+              <FilePath>.\src\util.c</FilePath>
             </File>
           </Files>
         </Group>
