@@ -16,8 +16,8 @@
 #ifndef USART_H
 #define USART_H
 #include <stdint.h>
-#define SENDDATA_TIMER 500
-#define RECEIVEDATA_TIMER 1000
+#define SENDDATA_TIMER 10
+#define RECEIVEDATA_TIMER 10
 
 extern volatile uint8_t dataReceivedFlag; // Declaration, no initialization
 
@@ -56,6 +56,8 @@ Overall, this initialization function configures TIM2 to count at a rate of 10 k
 and will generate an update event every 1 ms.
 */
 void init_TIM2(void);
+
+void init_usart2_interrupt(void);
 
 #endif //USART_H
 

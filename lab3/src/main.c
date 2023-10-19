@@ -22,6 +22,7 @@ int main(void)
 	//init
 	clockInit();
 	serial_open();
+	init_usart2_interrupt();
 	led_IO_init();
 	init_TIM2();
 	uint8_t receivedData[512];
@@ -30,10 +31,10 @@ int main(void)
 	
 	while(1)
 	{
-		USART2_IRQHandler();
 		
 		if(dataReceivedFlag == 1)
 		{
+			led_blink();
 			receivedData[i] = getbyte();
 			dataReceivedFlag = 0;
 			
@@ -66,6 +67,10 @@ int main(void)
 			
 			i++;
 		}
-		led_blink();
 	}	
+}
+
+void USART2_IRQHandler(void) {
+	dataReceivedFlag = 1; // Set the flag to indicate character reception
+	USART2->SR &= ~(USART_SR_RXNE);
 }
