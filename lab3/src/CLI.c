@@ -20,18 +20,15 @@
 #include "stm32f10x.h"
 #include <stdio.h>
  
-//Allows to Transmit data from the microcontroller to the host one byte at a time
 void CLI_Transmit(uint8_t *pData, uint16_t Size)
 {
 	for(int i = 0	; i < Size; i++)
 	{
 		sendbyte(pData[i]);
 	}
-		
 }
 
-// Receives data into the buffer passed to parameter 1 which is set to a certain size
-void CLI_Receive(uint8_t *pData, uint16_t Size, int* id)
+void CLI_Receive(uint8_t *pData, int* id)
 {
 		pData[*id] = getbyte();
 		sendbyte(pData[*id]);
@@ -44,7 +41,7 @@ void CLI_Receive(uint8_t *pData, uint16_t Size, int* id)
 			}
 			else 
 			{
-				*id = *id - 3;
+				*id = *id - 2;
 				sendbyte(' ');
 				sendbyte(BACKSPACE);
 			}
@@ -55,15 +52,13 @@ void CLI_Receive(uint8_t *pData, uint16_t Size, int* id)
 			parseReceivedData(pData, *id);
 			sendbyte(NEW_LINE_FEED);
 			sendbyte(CARRIAGE_RETURN);
-			sendbyte('>');
-			sendbyte('>');
+			sendPromptArrows();
 			*id = -1;
 		}
 			
 	*id = *id + 1;
 }
 
-//parses the data stored in the buffer pointed to by the pData pointer.
 void parseReceivedData(uint8_t *pData, int Size)
 {
 	sendbyte(NEW_LINE_FEED);
@@ -101,10 +96,14 @@ void parseReceivedData(uint8_t *pData, int Size)
 	}
 	else
 	{
-		uint8_t buffer[] = "Unknown command";
+		uint8_t buffer[] = "Unknown command:";
 		CLI_Transmit(buffer, sizeof(buffer));
-		sendbyte(NEW_LINE_FEED);
-		sendbyte(CARRIAGE_RETURN);
 		CLI_Transmit(pData, Size);
 	}
+}
+
+void sendPromptArrows(void)
+{
+	sendbyte('>');
+	sendbyte('>');
 }

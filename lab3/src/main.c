@@ -27,12 +27,13 @@ int main(void)
 	uint8_t buffer[512];
 	buffer[0] = '\0';
 	int bufferElementID = 0;
+	sendPromptArrows();
 	
 	while(1)
 	{
 		if(dataReceivedFlag == 1)
 		{
-			CLI_Receive(buffer, sizeof(buffer), &bufferElementID);
+			CLI_Receive(buffer, &bufferElementID);
 
 			dataReceivedFlag = 0;
 		}
