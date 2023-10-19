@@ -38,14 +38,15 @@ void CLI_Receive(uint8_t *pData, uint16_t Size, int* id)
 		
 		if(pData[*id] == BACKSPACE)
 		{
-			if(*id == 0)
+			if(*id == 0) 
 			{
 				//don't backspace at start of buffer
-			}else
+			}
+			else 
 			{
-			*id = *id - 2;
-			sendbyte(' ');
-			sendbyte(BACKSPACE);
+				*id = *id - 3;
+				sendbyte(' ');
+				sendbyte(BACKSPACE);
 			}
 		}
 		
@@ -68,19 +69,19 @@ void parseReceivedData(uint8_t *pData, int Size)
 	sendbyte(NEW_LINE_FEED);
 	sendbyte(CARRIAGE_RETURN);
 	
-	if(strncmp((char*)pData, "ledon\r", Size) == 0)
+	if(strncmp((char*)pData, "ledon\r", 6) == 0)
 	{
 		uint8_t buffer[] = "On-board led is ON";
 		CLI_Transmit(buffer, sizeof(buffer));
 		onboardLEDconfig(1);		
 	} 
-	else if(strncmp((char*)pData, "ledoff\r", Size) == 0)
+	else if(strncmp((char*)pData, "ledoff\r", 7) == 0)
 	{
 		uint8_t buffer[] = "On-board led is OFF";
 		CLI_Transmit(buffer, sizeof(buffer));
 		onboardLEDconfig(0);
 	}
-	else if(strncmp((char*)pData, "ledstate\r", Size) == 0)
+	else if(strncmp((char*)pData, "ledstate\r", 8) == 0)
 	{
 		if(GPIOA->IDR & NUC_GREEN_ON)
 		{
@@ -93,7 +94,7 @@ void parseReceivedData(uint8_t *pData, int Size)
 			CLI_Transmit(buffer, sizeof(buffer));
 		}
 	}
-	else if(strncmp((char*)pData, "help\r", Size) == 0)
+	else if(strncmp((char*)pData, "help\r", 5) == 0)
 	{
 		uint8_t buffer[] = "Help command Currently the commands available are 'ledon', 'ledoff', 'ledstate'. If a command is typed incorrectly an error prompt of 'invalid command' will show up. If the wrong command is typed, backspacing is available";
 		CLI_Transmit(buffer, sizeof(buffer));
@@ -102,5 +103,8 @@ void parseReceivedData(uint8_t *pData, int Size)
 	{
 		uint8_t buffer[] = "Unknown command";
 		CLI_Transmit(buffer, sizeof(buffer));
+		sendbyte(NEW_LINE_FEED);
+		sendbyte(CARRIAGE_RETURN);
+		CLI_Transmit(pData, Size);
 	}
 }
