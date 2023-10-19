@@ -24,14 +24,14 @@ void CLI_Transmit(uint8_t *pData, uint16_t Size)
 {
 	for(int i = 0	; i < Size; i++)
 	{
-		sendbyte(pData[i]);
+		sendByte(pData[i]);
 	}
 }
 
 void CLI_Receive(uint8_t *pData, int* id)
 {
-		pData[*id] = getbyte();
-		sendbyte(pData[*id]);
+		pData[*id] = getByte();
+		sendByte(pData[*id]);
 	
 		switch(pData[*id])
 		{
@@ -43,8 +43,8 @@ void CLI_Receive(uint8_t *pData, int* id)
 				else 
 				{
 					*id = *id - 2;
-					sendbyte(' ');
-					sendbyte(BACKSPACE);
+					sendByte(' ');
+					sendByte(BACKSPACE);
 				}
 			break;
 
@@ -68,8 +68,8 @@ void CLI_Receive(uint8_t *pData, int* id)
 
 void parseReceivedData(uint8_t *pData, int Size)
 {
-	sendbyte(NEW_LINE_FEED);
-	sendbyte(CARRIAGE_RETURN);
+	sendByte(NEW_LINE_FEED);
+	sendByte(CARRIAGE_RETURN);
 	
 	if(strncmp((char*)pData, "ledon\r", 6) == 0)
 	{
@@ -111,13 +111,13 @@ void parseReceivedData(uint8_t *pData, int Size)
 
 void sendPromptArrows(void)
 {
-	sendbyte('>');
-	sendbyte('>');
+	sendByte('>');
+	sendByte('>');
 }
 
 void newPromptLine(void)
 {
-	sendbyte(NEW_LINE_FEED);
-	sendbyte(CARRIAGE_RETURN);
+	sendByte(NEW_LINE_FEED);
+	sendByte(CARRIAGE_RETURN);
 	sendPromptArrows();
 }

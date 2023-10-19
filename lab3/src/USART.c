@@ -17,12 +17,10 @@
 #include "../headers/USART.h"
 #include "../headers/MY_STM32_FUNCTIONS.h"
 
-void serial_open(void)
+void serialOpen(void)
 {
-	//Enable port A
 	enablePort('A');
 	
-	//Enable USART2 CLOCK
 	enableUSART(2);
 	
 	//Configure PA2 for alternate function output push pull mode, max 50MHz b1011
@@ -41,7 +39,7 @@ void serial_open(void)
 	USART2->BRR = 0x0139;
 }
 
-void serial_close(void)
+void serialClose(void)
 {
 	disablePort('A');
 	disableUSART(2);
@@ -62,7 +60,7 @@ void serial_close(void)
 	
 }
 
-int sendbyte(uint8_t b)
+int sendByte(uint8_t b)
 {
 	uint16_t Timeout = SENDDATA_TIMER;
 	TIM2->ARR = 10*Timeout;
@@ -95,7 +93,7 @@ int sendbyte(uint8_t b)
 		return 0;
 }
 
-char getbyte(void)
+char getByte(void)
 {
 	uint16_t Timeout = RECEIVEDATA_TIMER;
 	TIM2->ARR = 10*Timeout;
@@ -111,19 +109,15 @@ char getbyte(void)
 				return USART2->DR;
 			}
 		}
-	
-		//return USART2->DR;
 }
 
-void init_usart2_interrupt(void)
+void initUSART2Interrupt(void)
 {
-	// enable RX interrupt in the control register
-	USART2->CR1 |= USART_CR1_RXNEIE;
-	// enable usart2 interrupts in the NVIC table
-	NVIC_EnableIRQ(USART2_IRQn);
+	USART2->CR1 |= USART_CR1_RXNEIE; // enable RX interrupt in the control register
+	NVIC_EnableIRQ(USART2_IRQn); // enable usart2 interrupts in the NVIC table
 }
 
-void init_TIM2(void)
+void initTIM2(void)
 {
 	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
 	TIM2->PSC = 0xE0F; // Divide 36 MHz by 3600 (PSC+1), PSC_CLK= 10000 Hz, 1 count = 0.1 ms

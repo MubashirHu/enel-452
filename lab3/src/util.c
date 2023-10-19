@@ -145,7 +145,7 @@ void clockInit(void)
 
 //**************************** I/O ************************************************************
 
-void led_IO_init (void)
+void ledIOInit (void)
 {
     //Enable Port A and Port C clocks
     
