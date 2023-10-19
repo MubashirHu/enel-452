@@ -31,49 +31,42 @@ void CLI_Transmit(uint8_t *pData, uint16_t Size)
 }
 
 // Receives data into the buffer passed to parameter 1 which is set to a certain size
-void CLI_Receive(uint8_t *pData, uint16_t Size)
+void CLI_Receive(uint8_t *pData, uint16_t Size, int* id)
 {
-	sendbyte('>');
-	sendbyte('>');
-	for ( int i = 0; i < Size; i++)
-	{
-		pData[i] = getbyte();
-		sendbyte(pData[i]);
+		pData[*id] = getbyte();
+		sendbyte(pData[*id]);
 		
-		if(pData[i] == 8)
+		if(pData[*id] == BACKSPACE)
 		{
-			if(i == 0)
+			if(*id == 0)
 			{
-				//don't backspace when at the start of the buffer
+				//don't backspace at start of buffer
 			}else
 			{
-			i = i - 2;
+			*id = *id - 2;
 			sendbyte(' ');
-			sendbyte(8);
+			sendbyte(BACKSPACE);
 			}
 		}
 		
-		// if Enter key is pressed, manually send a carriage and new line byte
-		if(pData[i] == 10 || pData[i] == 13)
+		if(pData[*id] == NEW_LINE_FEED || pData[*id] == CARRIAGE_RETURN)
 		{
-			parseReceivedData(pData, i);
-			sendbyte(13);
-			sendbyte(10);
-			i = -1;
+			parseReceivedData(pData, *id);
+			sendbyte(NEW_LINE_FEED);
+			sendbyte(CARRIAGE_RETURN);
+			sendbyte('>');
+			sendbyte('>');
+			*id = -1;
+		}
 			
-			sendbyte('>');
-			sendbyte('>');
-			}		
-	}
+	*id = *id + 1;
 }
 
 //parses the data stored in the buffer pointed to by the pData pointer.
 void parseReceivedData(uint8_t *pData, int Size)
 {
-	sendbyte('>');
-	sendbyte('>');
-	sendbyte(10);
-	sendbyte(13);
+	sendbyte(NEW_LINE_FEED);
+	sendbyte(CARRIAGE_RETURN);
 	
 	if(strncmp((char*)pData, "ledon\r", Size) == 0)
 	{

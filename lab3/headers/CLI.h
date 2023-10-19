@@ -42,7 +42,7 @@ void CLI_Transmit(uint8_t *pData, uint16_t Size);
  * @param pData Pointer to the buffer where received data is stored.
  * @param Size The maximum size of the buffer.
  */
-void CLI_Receive(uint8_t *pData, uint16_t Size);
+void CLI_Receive(uint8_t *pData, uint16_t Size, int* id);
 
 /**
  * @brief Parses the data stored in the buffer pointed to by the pData pointer and performs corresponding actions.
