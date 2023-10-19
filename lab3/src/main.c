@@ -12,7 +12,7 @@
 
 #include "../headers/USART.h"
 #include "../headers/CLI.h"
-#include "../351/util.h"
+#include "../headers//util.h"
 #include "stm32f10x.h"
 
 volatile uint8_t dataReceivedFlag = 0; // Global declaration and initialization

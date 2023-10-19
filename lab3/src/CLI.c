@@ -15,7 +15,7 @@
 
 #include "../headers/CLI.h"
 #include "../headers/USART.h"
-#include "../351/util.h"
+#include "../headers/util.h"
 #include <string.h>
 #include "stm32f10x.h"
 #include <stdio.h>
