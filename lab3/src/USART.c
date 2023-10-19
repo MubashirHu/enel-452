@@ -104,17 +104,15 @@ char getbyte(void)
 	// Wait until receive buffer is not empty
     while (!(USART2->SR & USART_SR_RXNE))
 		{
-			// Return received character
-			//sendbyte('a');
 			if((TIM2->SR & TIM_SR_UIF) != 0)
 			{
 				//reset update event
 				TIM2->SR &= ~(TIM_SR_UIF);
-				return 1;
+				return USART2->DR;
 			}
 		}
 	
-		return USART2->DR;
+		//return USART2->DR;
 }
 
 void init_usart2_interrupt(void)

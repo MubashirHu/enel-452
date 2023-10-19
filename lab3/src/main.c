@@ -25,7 +25,7 @@ int main(void)
 	init_usart2_interrupt();
 	led_IO_init();
 	init_TIM2();
-	uint8_t receivedData[512];
+	char receivedData[512];
 	receivedData[0] = '\0';
 	int i = 0;
 	
@@ -34,10 +34,7 @@ int main(void)
 		
 		if(dataReceivedFlag == 1)
 		{
-			led_blink();
 			receivedData[i] = getbyte();
-			dataReceivedFlag = 0;
-			
 			sendbyte(receivedData[i]);
 			
 			if(receivedData[i] == BACKSPACE)
@@ -64,8 +61,10 @@ int main(void)
 				sendbyte('>');
 				sendbyte('>');
 			}
-			
+	
+			//led_blink();
 			i++;
+			dataReceivedFlag = 0;
 		}
 	}	
 }
