@@ -71,4 +71,8 @@ window 1: is constant
 window 2: scrollable where commands can be enterred
 */
 void prepareTerminal(void);
+/**
+clears the terminal
+*/
+void clearTerminal(void);
 #endif // CLI_H
