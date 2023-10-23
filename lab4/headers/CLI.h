@@ -65,4 +65,10 @@ A new line with arrows to prompt the user to type
 */
 void newPromptLine(void);
 
+/**
+Prepares the terminal to have 2 windows.
+window 1: is constant
+window 2: scrollable where commands can be enterred
+*/
+void prepareTerminal(void);
 #endif // CLI_H
