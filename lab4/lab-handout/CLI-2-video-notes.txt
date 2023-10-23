@@ -1,0 +1,11 @@
+learning 3 things
+
+1. Using USART3 instead of USART2 (this was for the previous years)
+- because USART2 is connected to the ST-link debugger
+2. Using serial cables, the ones that we use from 351
+3. fancify the CLI by creating
+
+...
+
+- when using USART3, enable te USART3 global interrupt -> prevents blocking
+- Have a background task that uses a timer to update the status window
