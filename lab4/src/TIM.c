@@ -26,3 +26,5 @@ void initTIM2(void)
 	TIM2->CNT = 0;
 	TIM2->CR1 = TIM_CR1_ARPE | TIM_CR1_CEN; // Auto-reload preload enable and Counter enable
 }
+
+
