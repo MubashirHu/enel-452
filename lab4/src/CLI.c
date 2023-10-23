@@ -31,28 +31,22 @@ void CLI_Transmit(uint8_t *pData, uint16_t Size)
 void CLI_Receive(uint8_t *pData, int* id)
 {
 		pData[*id] = getByte();
-		sendByte(pData[*id]);
 	
 		switch(pData[*id])
 		{
 			case BACKSPACE:
-				onboardLEDconfig(1);
 				if(*id == 0) 
 				{
-					break;
+					*id = *id - 1;
+					//sendByte('>');
 				}
 				else 
 				{
 					*id = *id - 2;
+					sendByte(BACKSPACE);
 					sendByte(' ');
 					sendByte(BACKSPACE);
 				}
-			break;
-
-			case NEW_LINE_FEED:
-				parseReceivedData(pData, *id);
-				newPromptLine();
-				*id = -1;	
 			break;
 	
 			case CARRIAGE_RETURN:
@@ -62,6 +56,7 @@ void CLI_Receive(uint8_t *pData, int* id)
 			break;
 				
 			default:
+				sendByte(pData[*id]);
 			break;
 		}
 	*id = *id + 1;
@@ -103,9 +98,7 @@ void parseReceivedData(uint8_t *pData, int Size)
 		CLI_Transmit(buffer, sizeof(buffer));
 	}else if(strncmp((char*)pData, "clear\r", 6) == 0)
 	{
-		uint8_t buffer[] = "\x1b[2J";
-		onboardLEDconfig(1);
-		CLI_Transmit(buffer, sizeof(buffer));		
+		clearTerminal();		
 	}
 	else
 	{
@@ -128,8 +121,16 @@ void newPromptLine(void)
 	sendPromptArrows();
 }
 
+void clearTerminal(void)
+{
+	uint8_t buffer[] = "\x1b[2J";
+	CLI_Transmit(buffer, sizeof(buffer));
+}
+
 void prepareTerminal(void)
 {
+	
+	
 	uint8_t set_cursor_to_row[] = "\x1b[10;r";
 	CLI_Transmit(set_cursor_to_row, sizeof(set_cursor_to_row));
 	
