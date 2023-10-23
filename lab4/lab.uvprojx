@@ -404,6 +404,11 @@
               <FileType>5</FileType>
               <FilePath>.\headers\util.h</FilePath>
             </File>
+            <File>
+              <FileName>TIM.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\headers\TIM.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -433,6 +438,11 @@
               <FileName>util.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\util.c</FilePath>
+            </File>
+            <File>
+              <FileName>TIM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\TIM.c</FilePath>
             </File>
           </Files>
         </Group>
