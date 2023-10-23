@@ -50,14 +50,6 @@ Reads the USART_SR_RXNE register to determine whether dataReceivedFlag should be
 void USART2_IRQHandler(void);
 
 /**
-Initialize the general purpose timer TIM2
-Overall, this initialization function configures TIM2 to count at a rate of 10 kHz 
-(0.1 ms per count), with a period of 1 ms. The timer is set to start counting from 0 
-and will generate an update event every 1 ms.
-*/
-void initTIM2(void);
-
-/**
 Initialize the USART2 receive Interrupt and enable the handler in the NVIC table
 */
 void initUSART2Interrupt(void);

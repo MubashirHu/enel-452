@@ -116,12 +116,3 @@ void initUSART2Interrupt(void)
 	USART2->CR1 |= USART_CR1_RXNEIE; // enable RX interrupt in the control register
 	NVIC_EnableIRQ(USART2_IRQn); // enable usart2 interrupts in the NVIC table
 }
-
-void initTIM2(void)
-{
-	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
-	TIM2->PSC = 0xE0F; // Divide 36 MHz by 3600 (PSC+1), PSC_CLK= 10000 Hz, 1 count = 0.1 ms
-	TIM2->ARR = 10; // 10 unts = 1 ms or 1000 Hz, period 
-	TIM2->CNT = 0;
-	TIM2->CR1 = TIM_CR1_ARPE | TIM_CR1_CEN; // Auto-reload preload enable and Counter enable
-}

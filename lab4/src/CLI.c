@@ -36,6 +36,7 @@ void CLI_Receive(uint8_t *pData, int* id)
 		switch(pData[*id])
 		{
 			case BACKSPACE:
+				onboardLEDconfig(1);
 				if(*id == 0) 
 				{
 					break;
@@ -100,6 +101,11 @@ void parseReceivedData(uint8_t *pData, int Size)
 	{
 		uint8_t buffer[] = "Help command Currently the commands available are 'ledon', 'ledoff', 'ledstate'. If a command is typed incorrectly an error prompt of 'invalid command' will show up. If the wrong command is typed, backspacing is available";
 		CLI_Transmit(buffer, sizeof(buffer));
+	}else if(strncmp((char*)pData, "clear\r", 6) == 0)
+	{
+		uint8_t buffer[] = "\x1b[2J";
+		onboardLEDconfig(1);
+		CLI_Transmit(buffer, sizeof(buffer));		
 	}
 	else
 	{
@@ -120,4 +126,13 @@ void newPromptLine(void)
 	sendByte(NEW_LINE_FEED);
 	sendByte(CARRIAGE_RETURN);
 	sendPromptArrows();
+}
+
+void prepareTerminal(void)
+{
+	uint8_t set_cursor_to_row[] = "\x1b[10;r";
+	CLI_Transmit(set_cursor_to_row, sizeof(set_cursor_to_row));
+	
+	uint8_t set_row_to_roll_off[] = "\x1b[10;0H";
+	CLI_Transmit(set_row_to_roll_off, sizeof(set_row_to_roll_off));
 }
