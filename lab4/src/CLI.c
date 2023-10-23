@@ -125,15 +125,18 @@ void clearTerminal(void)
 {
 	uint8_t buffer[] = "\x1b[2J";
 	CLI_Transmit(buffer, sizeof(buffer));
+	
+	uint8_t set_row_to_roll_off[] = "\x1b[8;0H";
+	CLI_Transmit(set_row_to_roll_off, sizeof(set_row_to_roll_off));
 }
 
 void prepareTerminal(void)
 {
+	clearTerminal();
 	
-	
-	uint8_t set_cursor_to_row[] = "\x1b[10;r";
+	uint8_t set_cursor_to_row[] = "\x1b[7;r";
 	CLI_Transmit(set_cursor_to_row, sizeof(set_cursor_to_row));
 	
-	uint8_t set_row_to_roll_off[] = "\x1b[10;0H";
+	uint8_t set_row_to_roll_off[] = "\x1b[8;0H";
 	CLI_Transmit(set_row_to_roll_off, sizeof(set_row_to_roll_off));
 }
