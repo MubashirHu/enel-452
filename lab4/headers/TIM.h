@@ -25,7 +25,8 @@ Overall, this initialization function configures TIM2 to count at a rate of 10 k
 (0.1 ms per count), with a period of 1 ms. The timer is set to start counting from 0 
 and will generate an update event every 1 ms.
 */
-void initTIM2(void);
+void initTIM(int timer);
+void initTIMInterrupt(int timer);
 
 #endif //TIM_H
 
