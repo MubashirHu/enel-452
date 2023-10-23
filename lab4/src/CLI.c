@@ -67,8 +67,15 @@ void CLI_Receive(uint8_t *pData, int* id)
 					cursor_row = cursor_row + 2;
 					cursor_col = COL_OF_SCROLL_WINDOW;
 				}
+			
 			break;
 				
+			case SPACE:
+				sendByte(SPACE);
+				cursor_col++;
+				*id = -1;
+				
+				break;
 			default:
 				sendByte(pData[*id]);
 				cursor_col++;

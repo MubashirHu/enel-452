@@ -1,11 +1,11 @@
 /**
- * @file USART.c
+ * @file TIM.c
  *
  * @brief Function Definitions for USART (Universal Synchronous Asynchronous Receiver-Transmitter) Module.
  *
  * This file includes the implementation of functions corresponding to the prototypes defined
- * in the `../headers/USART.h` header file. The USART module is responsible for configuring and
- * managing communication with external devices using the USART protocol.
+ * in the `../headers/TIM.h` header file. This module is responsible for the timings in the sendByte
+ * and getByte functions as well as the interrupt timers to update the terminal.
  *
  * @note Functions in this file align with the USART module in `../headers/TIM.h`.
  *

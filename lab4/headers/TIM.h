@@ -1,13 +1,11 @@
 /**
- * @file USART.h
+ * @file TIM.h
  *
  * @brief USART2 Configuration for STM32 Communication with Host Terminal.
  *
  * This header file enables the USART2 port, which is used for communication between
  * an STM32 board and a host terminal. It utilizes the same communication interface
  * as the ST-Link debugger. The file also includes functions previously used in ENEL 351.
- *
- * @note This file may contain functions from ../351/UART.h.
  *
  * @author Mubashir Hussain
  * @studentID 200396797
