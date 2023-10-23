@@ -16,6 +16,7 @@
 #include "stm32f10x.h"
 #include "../headers/USART.h"
 #include "../headers/MY_STM32_FUNCTIONS.h"
+#include "../headers/TIM.h"
 
 void serialOpen(void)
 {
@@ -62,9 +63,7 @@ void serialClose(void)
 
 int sendByte(uint8_t b)
 {
-	uint16_t Timeout = SENDDATA_TIMER;
-	TIM2->ARR = 10*Timeout;
-	TIM2->CNT = 0;
+	configTIM(2, SENDDATA_TIMER);
 	
 	// Wait until transmit buffer is empty
     while (!(USART2->SR & USART_SR_TXE))
@@ -77,8 +76,7 @@ int sendByte(uint8_t b)
 			}
 		}
     
-    // Send character
-    USART2->DR = b;
+    USART2->DR = b; // Send character
 		
 		while((USART2->SR&(1<<6)) == 0) //wait until the TC flag is set
 		{

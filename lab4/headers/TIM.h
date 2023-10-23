@@ -18,6 +18,7 @@
 #include <stdint.h>
 #define SENDDATA_TIMER 10
 #define RECEIVEDATA_TIMER 10
+extern volatile uint8_t TIM3_UPDATE_EVENT; // Declaration, no initialization
 
 /**
 Initialize the general purpose timer TIM2
@@ -27,6 +28,8 @@ and will generate an update event every 1 ms.
 */
 void initTIM(int timer);
 void initTIMInterrupt(int timer);
+void configTIM(int timer, uint16_t time_period);
+void TIM3_IRQHandler(void);
 
 #endif //TIM_H
 

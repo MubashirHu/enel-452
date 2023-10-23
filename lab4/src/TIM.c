@@ -51,17 +51,47 @@ void initTIM(int timer)
 	}
 }
 
+void configTIM(int timer, uint16_t time_period)
+{
+	switch(timer)
+	{
+		case 2:
+			TIM2->ARR = 10*time_period;
+			TIM2->CNT = 0;
+			break;
+		
+		case 3:
+			TIM3->ARR = 10*time_period;
+			TIM3->CNT = 0;
+			break;
+		
+		case 4:
+			TIM4->ARR = 10*time_period;
+			TIM4->CNT = 0;
+			break;
+		
+		default:
+			break;
+	}
+}
+
 void initTIMInterrupt(int timer)
 {
 	switch(timer)
 	{
-		case 1:
-			break;
-		
 		case 2:
+			TIM2->CR1 |= TIM_DIER_UIE;
+			NVIC_EnableIRQ(TIM2_IRQn);
 			break;
 		
 		case 3:
+			TIM3->DIER |= TIM_DIER_UIE;
+			NVIC_EnableIRQ(TIM3_IRQn);
+			break;
+		
+		case 4:
+			TIM4->CR1 |= TIM_DIER_UIE;
+			NVIC_EnableIRQ(TIM4_IRQn);
 			break;
 		
 		default:

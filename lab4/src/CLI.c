@@ -134,9 +134,9 @@ void prepareTerminal(void)
 {
 	clearTerminal();
 	
-	uint8_t set_cursor_to_row[] = "\x1b[7;r";
-	CLI_Transmit(set_cursor_to_row, sizeof(set_cursor_to_row));
+	uint8_t set_scroll_row[] = "\x1b[7;r";
+	CLI_Transmit(set_scroll_row, sizeof(set_scroll_row));
 	
-	uint8_t set_row_to_roll_off[] = "\x1b[8;0H";
-	CLI_Transmit(set_row_to_roll_off, sizeof(set_row_to_roll_off));
+	uint8_t set_cursor_to_row[] = "\x1b[8;0H";
+	CLI_Transmit(set_cursor_to_row, sizeof(set_cursor_to_row));
 }

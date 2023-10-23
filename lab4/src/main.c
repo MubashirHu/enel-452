@@ -17,7 +17,7 @@
 #include "stm32f10x.h"
 
 volatile uint8_t DATA_RECEIVED_FLAG = 0; // Global declaration and initialization
-volatile uint8_t TIM2_UPDATE_EVENT = 0; 
+volatile uint8_t TIM3_UPDATE_EVENT = 0; 
 
 int main(void)
 {
@@ -26,9 +26,12 @@ int main(void)
 	prepareTerminal();
 	initUSART2Interrupt();
 	ledIOInit();
-	initTIM(2);
 	
-	uint8_t counter = 0;
+	initTIM(2);
+	initTIM(3);
+	configTIM(3, 2000);
+	initTIMInterrupt(3);
+
 	uint8_t buffer[512];
 	
 	int bufferElementID = 0;
@@ -42,13 +45,30 @@ int main(void)
 			DATA_RECEIVED_FLAG = 0;
 		}
 		
-		if(TIM2_UPDATE_EVENT == 1)
+		if(TIM3_UPDATE_EVENT == 1)
 		{
-			onboardLEDconfig(1);
-			counter++;
-			TIM2_UPDATE_EVENT = 0;
-			break;
+			//move cursor to the top
+			uint8_t set_cursor_to_row[] = "\x1b[0;0H";
+			CLI_Transmit(set_cursor_to_row, sizeof(set_cursor_to_row));
+			
+			//print out a statement
+			if(GPIOA->IDR & NUC_GREEN_ON)
+			{
+				uint8_t buffer[] = "led is on";
+				CLI_Transmit(buffer, sizeof(buffer));
+			}
+			else 
+			{
+				uint8_t buffer[] = "led is off";
+				CLI_Transmit(buffer, sizeof(buffer));
+			}
+				//return back to the original position
+				
+			uint8_t set_cursor_back_to_row[] = "\x1b[8;0H";
+			CLI_Transmit(set_cursor_back_to_row, sizeof(set_cursor_back_to_row));
+				TIM3_UPDATE_EVENT = 0;
 		}
+		
 	}
 }
 
@@ -57,7 +77,7 @@ void USART2_IRQHandler(void) {
 	USART2->SR &= ~(USART_SR_RXNE);
 }
 
-void TIM2_IRQHandler(void) {
-	TIM2_UPDATE_EVENT = 1;
-	TIM2->SR &= ~(TIM_SR_UIF); // reset update event flag
+void TIM3_IRQHandler(void) {
+	TIM3_UPDATE_EVENT = 1;
+	TIM3->SR &= ~(TIM_SR_UIF); // reset update event flag
 }
