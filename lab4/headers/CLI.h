@@ -17,6 +17,10 @@
 #define BACKSPACE 8
 #define NEW_LINE_FEED 10
 #define CARRIAGE_RETURN 13
+#define SPACE 32
+
+#define ROW_OF_SCROLL_WINDOW 8
+#define COL_OF_SCROLL_WINDOW 3
 
 #include <stdint.h>
 
@@ -53,7 +57,7 @@ void CLI_Receive(uint8_t *pData, int* id);
  * @param pData Pointer to the data buffer containing the received data.
  * @param Size Size of the data in the buffer.
  */
-void parseReceivedData(uint8_t *pData, int Size);
+int parseReceivedData(uint8_t *pData, int Size);
 
 /**
 Send 2 bytes of data for the arrows to prompt the user to type
@@ -75,4 +79,20 @@ void prepareTerminal(void);
 clears the terminal
 */
 void clearTerminal(void);
+
+/**
+moves the cursor to a given coordinate of row and col
+*/
+void placeCursor(int row, int col);
+
+/**
+Update status window content
+returns the cursor back to the original position after updating status content
+*/
+void updateStatusWindow(void);
+
+/**
+returns the cursor back to where it was before status window was updated
+*/
+void updateCursorforCommandWindow(void);
 #endif // CLI_H

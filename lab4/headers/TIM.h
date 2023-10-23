@@ -27,8 +27,20 @@ Overall, this initialization function configures TIM2 to count at a rate of 10 k
 and will generate an update event every 1 ms.
 */
 void initTIM(int timer);
+
+/**
+Initialize the NVIChandler as well as the register for Timer interupt
+*/
 void initTIMInterrupt(int timer);
+
+/**
+Set the Time period for TIM2 to TIM4
+*/
 void configTIM(int timer, uint16_t time_period);
+
+/**
+prototype for the NVIC TIM3 handler
+*/
 void TIM3_IRQHandler(void);
 
 #endif //TIM_H

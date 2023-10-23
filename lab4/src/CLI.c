@@ -19,7 +19,10 @@
 #include <string.h>
 #include "stm32f10x.h"
 #include <stdio.h>
- 
+
+int cursor_row = ROW_OF_SCROLL_WINDOW;
+int cursor_col = COL_OF_SCROLL_WINDOW;
+
 void CLI_Transmit(uint8_t *pData, uint16_t Size)
 {
 	for(int i = 0	; i < Size; i++)
@@ -38,7 +41,7 @@ void CLI_Receive(uint8_t *pData, int* id)
 				if(*id == 0) 
 				{
 					*id = *id - 1;
-					//sendByte('>');
+					cursor_col = 0;
 				}
 				else 
 				{
@@ -46,23 +49,35 @@ void CLI_Receive(uint8_t *pData, int* id)
 					sendByte(BACKSPACE);
 					sendByte(' ');
 					sendByte(BACKSPACE);
+					cursor_col--;
 				}
 			break;
 	
 			case CARRIAGE_RETURN:
-				parseReceivedData(pData, *id);
-				newPromptLine();
-				*id = -1;	
+				if(parseReceivedData(pData, *id) != 1)
+				{
+					newPromptLine();
+					*id = -1;
+					cursor_row = cursor_row + 2;
+					cursor_col = COL_OF_SCROLL_WINDOW;
+				} else{
+					*id = -1;
+					placeCursor(ROW_OF_SCROLL_WINDOW, 0);
+					sendPromptArrows();
+					cursor_row = cursor_row + 2;
+					cursor_col = COL_OF_SCROLL_WINDOW;
+				}
 			break;
 				
 			default:
 				sendByte(pData[*id]);
+				cursor_col++;
 			break;
 		}
 	*id = *id + 1;
 }
 
-void parseReceivedData(uint8_t *pData, int Size)
+int parseReceivedData(uint8_t *pData, int Size)
 {
 	sendByte(NEW_LINE_FEED);
 	sendByte(CARRIAGE_RETURN);
@@ -96,9 +111,12 @@ void parseReceivedData(uint8_t *pData, int Size)
 	{
 		uint8_t buffer[] = "Help command Currently the commands available are 'ledon', 'ledoff', 'ledstate'. If a command is typed incorrectly an error prompt of 'invalid command' will show up. If the wrong command is typed, backspacing is available";
 		CLI_Transmit(buffer, sizeof(buffer));
+		cursor_row++;
 	}else if(strncmp((char*)pData, "clear\r", 6) == 0)
 	{
-		clearTerminal();		
+		clearTerminal();
+		cursor_row = ROW_OF_SCROLL_WINDOW-2;
+		return 1;
 	}
 	else
 	{
@@ -120,23 +138,50 @@ void newPromptLine(void)
 	sendByte(CARRIAGE_RETURN);
 	sendPromptArrows();
 }
+void placeCursor(int row, int col)
+{
+	uint8_t bigbuff[20];
+	
+	sprintf((char*)bigbuff, "\x1b[%d;%dH", row, col);
+	CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
+}
 
 void clearTerminal(void)
 {
 	uint8_t buffer[] = "\x1b[2J";
 	CLI_Transmit(buffer, sizeof(buffer));
-	
-	uint8_t set_row_to_roll_off[] = "\x1b[8;0H";
-	CLI_Transmit(set_row_to_roll_off, sizeof(set_row_to_roll_off));
 }
 
 void prepareTerminal(void)
 {
 	clearTerminal();
 	
-	uint8_t set_scroll_row[] = "\x1b[7;r";
+	uint8_t set_scroll_row[] = "\x1b[8;r";
 	CLI_Transmit(set_scroll_row, sizeof(set_scroll_row));
+		
+	placeCursor(ROW_OF_SCROLL_WINDOW,COL_OF_SCROLL_WINDOW-2);
+	sendPromptArrows();
+	updateCursorforCommandWindow();
+}
+
+void updateStatusWindow(void)
+{
+			//first data
+			placeCursor(1,0);
+			uint8_t bigbuff[20];
+			sprintf((char*)bigbuff, "cursor_row:%d", cursor_row);
+			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
 	
-	uint8_t set_cursor_to_row[] = "\x1b[8;0H";
-	CLI_Transmit(set_cursor_to_row, sizeof(set_cursor_to_row));
+			//second data
+			placeCursor(2,0);
+			uint8_t bigbuff1[20];
+			sprintf((char*)bigbuff1, "cursor_col:%d", cursor_col);
+			CLI_Transmit(bigbuff1, strlen((char*)(bigbuff1)));
+	
+			updateCursorforCommandWindow();
+}
+
+void updateCursorforCommandWindow(void)
+{
+		placeCursor(cursor_row, cursor_col);
 }

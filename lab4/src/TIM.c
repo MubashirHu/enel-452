@@ -17,7 +17,6 @@
 #include "../headers/TIM.h"
 #include "../headers/MY_STM32_FUNCTIONS.h"
 
-
 void initTIM(int timer)
 {
 	switch(timer)
@@ -98,5 +97,3 @@ void initTIMInterrupt(int timer)
 			break;
 	}
 }
-
-

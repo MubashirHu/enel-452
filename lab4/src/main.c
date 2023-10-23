@@ -17,7 +17,7 @@
 #include "stm32f10x.h"
 
 volatile uint8_t DATA_RECEIVED_FLAG = 0; // Global declaration and initialization
-volatile uint8_t TIM3_UPDATE_EVENT = 0; 
+volatile uint8_t TIM3_UPDATE_EVENT = 0;
 
 int main(void)
 {
@@ -29,13 +29,12 @@ int main(void)
 	
 	initTIM(2);
 	initTIM(3);
-	configTIM(3, 2000);
+	configTIM(3, 100);
 	initTIMInterrupt(3);
 
 	uint8_t buffer[512];
 	
 	int bufferElementID = 0;
-	sendPromptArrows();
 	
 	while(1)
 	{
@@ -44,31 +43,13 @@ int main(void)
 			CLI_Receive(buffer, &bufferElementID);
 			DATA_RECEIVED_FLAG = 0;
 		}
-		
+				
 		if(TIM3_UPDATE_EVENT == 1)
 		{
-			//move cursor to the top
-			uint8_t set_cursor_to_row[] = "\x1b[0;0H";
-			CLI_Transmit(set_cursor_to_row, sizeof(set_cursor_to_row));
-			
-			//print out a statement
-			if(GPIOA->IDR & NUC_GREEN_ON)
-			{
-				uint8_t buffer[] = "led is on";
-				CLI_Transmit(buffer, sizeof(buffer));
-			}
-			else 
-			{
-				uint8_t buffer[] = "led is off";
-				CLI_Transmit(buffer, sizeof(buffer));
-			}
-				//return back to the original position
-				
-			uint8_t set_cursor_back_to_row[] = "\x1b[8;0H";
-			CLI_Transmit(set_cursor_back_to_row, sizeof(set_cursor_back_to_row));
-				TIM3_UPDATE_EVENT = 0;
+			updateStatusWindow();
+			updateCursorforCommandWindow();
+			TIM3_UPDATE_EVENT = 0;
 		}
-		
 	}
 }
 
