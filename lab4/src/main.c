@@ -39,8 +39,7 @@ int main(void)
 			CLI_Receive(buffer, &bufferElementID);
 			DATA_RECEIVED_FLAG = 0;
 		}
-		
-	}	
+	}
 }
 
 void USART2_IRQHandler(void) {
