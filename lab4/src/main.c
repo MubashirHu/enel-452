@@ -11,6 +11,7 @@
  */
 
 #include "../headers/USART.h"
+#include "../headers/TIM.h"
 #include "../headers/CLI.h"
 #include "../headers//util.h"
 #include "stm32f10x.h"
@@ -21,11 +22,13 @@ int main(void)
 {
 	clockInit();
 	serialOpen();
+	prepareTerminal();
 	initUSART2Interrupt();
 	ledIOInit();
 	initTIM2();
 	
 	uint8_t buffer[512];
+	
 	int bufferElementID = 0;
 	sendPromptArrows();
 	
@@ -36,6 +39,7 @@ int main(void)
 			CLI_Receive(buffer, &bufferElementID);
 			DATA_RECEIVED_FLAG = 0;
 		}
+		
 	}	
 }
 
