@@ -166,13 +166,20 @@ void prepareTerminal(void)
 
 void updateStatusWindow(void)
 {
+	
+		uint8_t clearbuffer[20]= "                    ";
+			
 			//first data
+			placeCursor(1,0);
+			CLI_Transmit(clearbuffer, 20);
 			placeCursor(1,0);
 			uint8_t bigbuff[20];
 			sprintf((char*)bigbuff, "cursor_row:%d", cursor_row);
 			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
 	
 			//second data
+			placeCursor(2,0);
+			CLI_Transmit(clearbuffer, 20);
 			placeCursor(2,0);
 			uint8_t bigbuff1[20];
 			sprintf((char*)bigbuff1, "cursor_col:%d", cursor_col);

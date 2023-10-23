@@ -47,7 +47,6 @@ int main(void)
 		if(TIM3_UPDATE_EVENT == 1)
 		{
 			updateStatusWindow();
-			updateCursorforCommandWindow();
 			TIM3_UPDATE_EVENT = 0;
 		}
 	}
