@@ -41,7 +41,7 @@ void CLI_Receive(uint8_t *pData, int* id)
 				if(*id == 0) 
 				{
 					*id = *id - 1;
-					cursor_col = 0;
+					cursor_col = COL_OF_SCROLL_WINDOW;
 				}
 				else 
 				{
