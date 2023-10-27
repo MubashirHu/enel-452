@@ -18,6 +18,9 @@
 #define NEW_LINE_FEED 10
 #define CARRIAGE_RETURN 13
 #define SPACE 32
+#define CLEAR_TERMINAL 0
+#define SAVE_CURSOR_POSITION 1
+#define RESTORE_CURSOR_POSITION 2
 
 
 #include <stdint.h>
@@ -88,5 +91,7 @@ Update status window content
 returns the cursor back to the original position after updating status content
 */
 void updateStatusWindow(void);
+
+void sendEscapeAnsi(uint16_t ANSI);
 
 #endif // CLI_H

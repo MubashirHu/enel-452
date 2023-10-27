@@ -149,7 +149,7 @@ void clearTerminal(void)
 
 void prepareTerminal(void)
 {
-	clearTerminal();
+	sendEscapeAnsi(CLEAR_TERMINAL);
 	
 	uint8_t set_scroll_row[] = "\x1b[8;r";
 	CLI_Transmit(set_scroll_row, sizeof(set_scroll_row));
@@ -164,9 +164,7 @@ void updateStatusWindow(void)
 		counter1++;
 	
 	// save the current position of the cursor
-		uint8_t cur_pos[20];
-		sprintf((char*)cur_pos, "\x1b[s");
-		CLI_Transmit(cur_pos, strlen((char*)(cur_pos)));
+		sendEscapeAnsi(SAVE_CURSOR_POSITION);
 	
 		uint8_t clearbuffer[20]= "                    ";
 			
@@ -187,7 +185,34 @@ void updateStatusWindow(void)
 			CLI_Transmit(bigbuff1, strlen((char*)(bigbuff1)));
 			
 	// return to the original address
-		uint8_t cur_pos2[20];
-		sprintf((char*)cur_pos2, "\x1b[u");
-		CLI_Transmit(cur_pos2, strlen((char*)(cur_pos2)));
+		sendEscapeAnsi(RESTORE_CURSOR_POSITION);
+}
+
+void sendEscapeAnsi(uint16_t ANSI)
+{
+	
+		uint8_t ansiBuffer[20];
+	
+	switch(ANSI)
+	{
+		case CLEAR_TERMINAL:
+			sprintf((char*)ansiBuffer, "\x1b[2J");
+			CLI_Transmit(ansiBuffer, strlen((char*)(ansiBuffer)));
+			break;
+		
+		case SAVE_CURSOR_POSITION:
+			sprintf((char*)ansiBuffer, "\x1b[s");
+			CLI_Transmit(ansiBuffer, strlen((char*)(ansiBuffer)));
+			break;
+		
+		case RESTORE_CURSOR_POSITION:
+			sprintf((char*)ansiBuffer, "\x1b[u");
+			CLI_Transmit(ansiBuffer, strlen((char*)(ansiBuffer)));
+			break;
+				
+		default:
+			break;
+		
+		
+	}
 }
