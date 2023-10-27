@@ -21,8 +21,6 @@
 #include <stdio.h>
 
 uint16_t counter = 0;
-uint16_t counter1 = 0;
-
 
 void CLI_Transmit(uint8_t *pData, uint16_t Size)
 {
@@ -58,14 +56,13 @@ void CLI_Receive(uint8_t *pData, int* id)
 					newPromptLine();
 					*id = -1;
 				}
-			
 			break;
 				
 			case SPACE:
 				sendByte(SPACE);
 				*id = -1;
-				
 				break;
+			
 			default:
 				sendByte(pData[*id]);
 			break;
@@ -109,8 +106,7 @@ int parseReceivedData(uint8_t *pData, int Size)
 		CLI_Transmit(buffer, sizeof(buffer));
 	}else if(strncmp((char*)pData, "clear\r", 6) == 0)
 	{
-		clearTerminal();
-		
+		sendEscapeAnsi(CLEAR_TERMINAL);
 		return 1;
 	}
 	else
@@ -133,27 +129,11 @@ void newPromptLine(void)
 	sendByte(CARRIAGE_RETURN);
 	sendPromptArrows();
 }
-void placeCursor(int row, int col)
-{
-	uint8_t bigbuff[20];
-	
-	sprintf((char*)bigbuff, "\x1b[%d;%dH", row, col);
-	CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
-}
-
-void clearTerminal(void)
-{
-	uint8_t buffer[] = "\x1b[2J";
-	CLI_Transmit(buffer, sizeof(buffer));
-}
 
 void prepareTerminal(void)
 {
 	sendEscapeAnsi(CLEAR_TERMINAL);
-	
-	uint8_t set_scroll_row[] = "\x1b[8;r";
-	CLI_Transmit(set_scroll_row, sizeof(set_scroll_row));
-		
+	sendEscapeAnsi(SET_SCROLLABLE_ROW);
 	placeCursor(8,0);
 	sendPromptArrows();
 }
@@ -161,37 +141,25 @@ void prepareTerminal(void)
 void updateStatusWindow(void)
 {
 		counter++;
-		counter1++;
 	
-	// save the current position of the cursor
 		sendEscapeAnsi(SAVE_CURSOR_POSITION);
 	
-		uint8_t clearbuffer[20]= "                    ";
+		uint8_t clearBuffer[20]= "                    ";
 			
-			//first data
-			placeCursor(1,0);
-			CLI_Transmit(clearbuffer, 20);
-			placeCursor(1,0);
-			uint8_t bigbuff[20];
-			sprintf((char*)bigbuff, "counter:%d", counter);
-			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
+		placeCursor(1,0);
+		CLI_Transmit(clearBuffer, 20);
+		placeCursor(1,0);
 	
-			//second data
-			placeCursor(2,0);
-			CLI_Transmit(clearbuffer, 20);
-			placeCursor(2,0);
-			uint8_t bigbuff1[20];
-			sprintf((char*)bigbuff1, "counter2:%d", counter1);
-			CLI_Transmit(bigbuff1, strlen((char*)(bigbuff1)));
-			
-	// return to the original address
+		uint8_t bigbuff[20];
+		sprintf((char*)bigbuff, "counter:%d", counter);
+		CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
+				
 		sendEscapeAnsi(RESTORE_CURSOR_POSITION);
 }
 
 void sendEscapeAnsi(uint16_t ANSI)
 {
-	
-		uint8_t ansiBuffer[20];
+	uint8_t ansiBuffer[20];
 	
 	switch(ANSI)
 	{
@@ -209,10 +177,21 @@ void sendEscapeAnsi(uint16_t ANSI)
 			sprintf((char*)ansiBuffer, "\x1b[u");
 			CLI_Transmit(ansiBuffer, strlen((char*)(ansiBuffer)));
 			break;
+		
+		case SET_SCROLLABLE_ROW:
+			sprintf((char*)ansiBuffer, "\x1b[8;r");
+			CLI_Transmit(ansiBuffer, strlen((char*)(ansiBuffer)));
+			break;
 				
 		default:
 			break;
-		
-		
 	}
+}
+
+void placeCursor(int row, int col)
+{
+	uint8_t bigbuff[20];
+	
+	sprintf((char*)bigbuff, "\x1b[%d;%dH", row, col);
+	CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
 }
