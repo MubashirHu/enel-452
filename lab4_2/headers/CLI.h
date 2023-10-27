@@ -21,7 +21,7 @@
 #define CLEAR_TERMINAL 0
 #define SAVE_CURSOR_POSITION 1
 #define RESTORE_CURSOR_POSITION 2
-
+#define SET_SCROLLABLE_ROW 3
 
 #include <stdint.h>
 
@@ -61,37 +61,44 @@ void CLI_Receive(uint8_t *pData, int* id);
 int parseReceivedData(uint8_t *pData, int Size);
 
 /**
-Send 2 bytes of data for the arrows to prompt the user to type
-*/
+ * @brief Send two bytes of data to display arrow prompts for user input.
+ */
 void sendPromptArrows(void);
 
 /**
-A new line with arrows to prompt the user to type
-*/
+ * @brief Display a new line with arrow prompts to guide the user for input.
+ */
 void newPromptLine(void);
 
 /**
-Prepares the terminal to have 2 windows.
-window 1: is constant
-window 2: scrollable where commands can be enterred
-*/
+ * @brief Prepare the terminal for a two-window layout.
+ *
+ * This function sets up the terminal with two windows:
+ * - Window 1: A constant window.
+ * - Window 2: A scrollable window where commands can be entered.
+ */
 void prepareTerminal(void);
-/**
-clears the terminal
-*/
-void clearTerminal(void);
 
 /**
-moves the cursor to a given coordinate of row and col
-*/
+ * @brief Move the cursor to the specified row and column coordinates.
+ *
+ * @param row The target row to move the cursor to.
+ * @param col The target column to move the cursor to.
+ */
 void placeCursor(int row, int col);
 
 /**
-Update status window content
-returns the cursor back to the original position after updating status content
-*/
+ * @brief Update the content of the status window and restore the cursor position.
+ */
 void updateStatusWindow(void);
 
+/**
+ * @brief Send an ANSI escape code represented by a directive over USART2.
+ *
+ * This function sends a string of characters over USART2, which corresponds to an ANSI escape code.
+ *
+ * @param ANSI The ANSI code directive representing the ANSI command.
+ */
 void sendEscapeAnsi(uint16_t ANSI);
 
 #endif // CLI_H
