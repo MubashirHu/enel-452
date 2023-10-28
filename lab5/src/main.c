@@ -20,13 +20,17 @@
 #include "stm32f10x.h"
 #define BLINKY_TASK_PRIORITY 5
 #define CLI_TASK_PRIORITY 1
-#define USART2_QUEUE_LENGTH 512
-#define USART2_QUEUE_ITEM_SIZE sizeof(uint8_t)
+#define CLI_QUEUE_LENGTH 512
+#define CLI_QUEUE_ITEM_SIZE sizeof(uint8_t)
+#define BLINKY_QUEUE_LENGTH 512
+#define BLINKY_QUEUE_ITEM_SIZE sizeof(uint8_t)
 
 // Global declaration and initialization
 volatile uint8_t DATA_RECEIVED_FLAG = 0; 
 volatile uint8_t TIM3_UPDATE_EVENT = 0;
-QueueHandle_t xUSART_Queue;
+QueueHandle_t xCLI_Queue;
+QueueHandle_t xBlinky_Queue;
+
 uint8_t buffer[512];
 uint8_t bufferElementID = 0;
 
@@ -46,14 +50,19 @@ int main(void)
 	configTIM(3, 1000);
 	initTIMInterrupt(3);
 	
-	xUSART_Queue = xQueueCreate(USART2_QUEUE_LENGTH, USART2_QUEUE_ITEM_SIZE);
-	if( xUSART_Queue == NULL )
+	xCLI_Queue = xQueueCreate(CLI_QUEUE_LENGTH, CLI_QUEUE_ITEM_SIZE);
+	if( xCLI_Queue == NULL )
 	{
 		/* The queue could not be created. */
 		led_flash();
 	}
 	
-	
+	xBlinky_Queue = xQueueCreate(BLINKY_QUEUE_LENGTH, BLINKY_QUEUE_ITEM_SIZE);
+	if( xCLI_Queue == NULL )
+	{
+		/* The queue could not be created. */
+		led_flash();
+	}
 	
 	//xTaskCreate(vBlinkTask, "Blinky", configMINIMAL_STACK_SIZE+10, NULL, BLINKY_TASK_PRIORITY, NULL);  
 	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+10,(void *) buffer, CLI_TASK_PRIORITY, NULL);  
@@ -65,7 +74,7 @@ void USART2_IRQHandler(void) {
 	DATA_RECEIVED_FLAG = 1;
 	USART2->SR &= ~(USART_SR_RXNE);	
 	uint8_t characterReceived = USART2->DR;
-	xQueueSendToFrontFromISR( xUSART_Queue, &characterReceived, NULL);
+	xQueueSendToFrontFromISR( xCLI_Queue, &characterReceived, NULL);
 }
 
 void TIM3_IRQHandler(void) {
@@ -98,7 +107,7 @@ static void vCLITask(void * parameters)
 		if(DATA_RECEIVED_FLAG == 1)
 		{
 			// READ FROM QUEUE
-			if( xQueueReceive( xUSART_Queue, &buffer[bufferElementID], portMAX_DELAY ) != pdPASS )
+			if( xQueueReceive( xCLI_Queue, &buffer[bufferElementID], portMAX_DELAY ) != pdPASS )
 				{
 					/* Nothing was received from the queue – even after blocking to wait for data to arrive. */
 				}
