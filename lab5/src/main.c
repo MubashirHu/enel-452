@@ -31,7 +31,7 @@ int main(void)
 {
 	clockInit();
 	serialOpen();
-	//prepareTerminal();
+	prepareTerminal();
 	initUSART2Interrupt();
 	ledIOInit();
 	
@@ -70,7 +70,6 @@ int main(void)
 void USART2_IRQHandler(void) {
 	DATA_RECEIVED_FLAG = 1;
 	USART2->SR &= ~(USART_SR_RXNE);
-	// send Data via queues
 }
 
 void TIM3_IRQHandler(void) {
@@ -94,8 +93,15 @@ static void vCLITask(void * parameters)
 	while(1)
 	{
 		//updates terminal
+		updateStatusWindow();
+		vTaskDelay(500);
 		
-		// receives characters for USART2 ISR from a Queue 
+		// receives characters for USART2 ISR from a Queue
+		if(DATA_RECEIVED_FLAG == 1)
+		{
+			// enqueue the data
+			
+		}		
 		
 		// sends characters to mainTask via Queue to change the frequency of the Blinky
 	}
