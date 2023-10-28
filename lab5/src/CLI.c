@@ -112,6 +112,7 @@ int parseReceivedData(uint8_t *pData, int Size)
 	}else if(strncmp((char*)pData, "clear\r", 6) == 0)
 	{
 		sendEscapeAnsi(CLEAR_TERMINAL);
+		prepareTerminal();
 		return 0;
 	}
 	else
