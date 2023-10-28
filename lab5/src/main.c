@@ -18,11 +18,13 @@
 #include "task.h"
 #include "stm32f10x.h"
 #define BLINKY_TASK_PRIORITY 5
+#define CLI_TASK_PRIORITY 5
 
 volatile uint8_t DATA_RECEIVED_FLAG = 0; // Global declaration and initialization
 volatile uint8_t TIM3_UPDATE_EVENT = 0;
 
 static void vBlinkTask(void * parameters);
+static void vCLITask(void * parameters);
 
 int main(void)
 {
@@ -59,13 +61,15 @@ int main(void)
 	*/
 	
 	xTaskCreate(vBlinkTask, "Blinky", configMINIMAL_STACK_SIZE+10, NULL, BLINKY_TASK_PRIORITY, NULL);  
-	 
+	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+10, NULL, CLI_TASK_PRIORITY, NULL);  
+	
 	vTaskStartScheduler();
 }
 
 void USART2_IRQHandler(void) {
 	DATA_RECEIVED_FLAG = 1;
 	USART2->SR &= ~(USART_SR_RXNE);
+	// send Data via queues
 }
 
 void TIM3_IRQHandler(void) {
@@ -81,5 +85,17 @@ static void vBlinkTask(void * parameters) {
 	vTaskDelay(1000);
 	onboardLEDconfig(0);
 	vTaskDelay(1000);
+	}
+}
+
+static void vCLITask(void * parameters)
+{
+	while(1)
+	{
+		//updates terminal
+		
+		// receives characters for USART2 ISR from a Queue 
+		
+		// sends characters to mainTask via Queue to change the frequency of the Blinky
 	}
 }
