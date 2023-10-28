@@ -20,6 +20,8 @@
 #include "stm32f10x.h"
 #define BLINKY_TASK_PRIORITY 5
 #define CLI_TASK_PRIORITY 5
+#define USART2_QUEUE_LENGTH 1
+#define USART2_QUEUE_ITEM_SIZE sizeof(uint8_t)
 
 volatile uint8_t DATA_RECEIVED_FLAG = 0; // Global declaration and initialization
 volatile uint8_t TIM3_UPDATE_EVENT = 0;
@@ -60,6 +62,14 @@ int main(void)
 		}
 	}
 	*/
+	
+	QueueHandle_t xQueue;
+	xQueue = xQueueCreate(USART2_QUEUE_LENGTH, USART2_QUEUE_ITEM_SIZE);
+	if( xQueue == NULL )
+	{
+		/* The queue could not be created. */
+		led_flash();
+	}
 	
 	xTaskCreate(vBlinkTask, "Blinky", configMINIMAL_STACK_SIZE+10, NULL, BLINKY_TASK_PRIORITY, NULL);  
 	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+10, NULL, CLI_TASK_PRIORITY, NULL);  
