@@ -19,11 +19,11 @@
 #include "queue.h"
 #include "stm32f10x.h"
 #define BLINKY_TASK_PRIORITY 5
-#define CLI_TASK_PRIORITY 1
+#define CLI_TASK_PRIORITY 5
 #define CLI_QUEUE_LENGTH 512
 #define CLI_QUEUE_ITEM_SIZE sizeof(uint8_t)
 #define BLINKY_QUEUE_LENGTH 512
-#define BLINKY_QUEUE_ITEM_SIZE sizeof(uint8_t)
+#define BLINKY_QUEUE_ITEM_SIZE sizeof(uint16_t)
 
 // Global declaration and initialization
 volatile uint8_t DATA_RECEIVED_FLAG = 0; 
@@ -33,6 +33,7 @@ QueueHandle_t xBlinky_Queue;
 
 uint8_t buffer[512];
 uint8_t bufferElementID = 0;
+uint16_t blinky_speed = 1000;
 
 static void vBlinkTask(void * parameters);
 static void vCLITask(void * parameters);
@@ -86,10 +87,19 @@ static void vBlinkTask(void * parameters) {
 	
 	while(1)
 		{
-		onboardLEDconfig(1);
-		vTaskDelay(1000);
-		onboardLEDconfig(0);
-		vTaskDelay(1000);
+						
+			 // code is getting stuck here
+			if( xQueueReceive( xBlinky_Queue, &blinky_speed, portMAX_DELAY ) != pdPASS )
+				{
+					
+				}
+				else 
+				{
+					onboardLEDconfig(1);
+					vTaskDelay(blinky_speed);
+					onboardLEDconfig(0);
+					vTaskDelay(blinky_speed);
+				}
 	}
 }
 
@@ -115,9 +125,9 @@ static void vCLITask(void * parameters)
 				{
 					/* xMessage now contains the received data. */
 					CLI_Receive(buffer, &bufferElementID);
-					uint8_t speed = (uint8_t)1000;
+					uint16_t speed = (uint16_t)200;
 					// TODO: sends characters to mainTask via Queue to change the frequency of the Blinky
-					xQueueSendToFront( xBlinky_Queue, &speed, 10);			
+					xQueueSendToBack( xBlinky_Queue, &speed, 10);			
 					DATA_RECEIVED_FLAG = 0;
 				}
 		}
