@@ -14,6 +14,8 @@
 #include "../headers/TIM.h"
 #include "../headers/CLI.h"
 #include "../headers//util.h"
+#include "FreeRTOS.h"
+#include "task.h"
 #include "stm32f10x.h"
 
 volatile uint8_t DATA_RECEIVED_FLAG = 0; // Global declaration and initialization
