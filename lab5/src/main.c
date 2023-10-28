@@ -26,7 +26,7 @@
 // Global declaration and initialization
 volatile uint8_t DATA_RECEIVED_FLAG = 0; 
 volatile uint8_t TIM3_UPDATE_EVENT = 0;
-QueueHandle_t xQueue;
+QueueHandle_t xUSART_Queue;
 uint8_t buffer[512];
 uint8_t bufferElementID = 0;
 
@@ -46,12 +46,14 @@ int main(void)
 	configTIM(3, 1000);
 	initTIMInterrupt(3);
 	
-	xQueue = xQueueCreate(USART2_QUEUE_LENGTH, USART2_QUEUE_ITEM_SIZE);
-	if( xQueue == NULL )
+	xUSART_Queue = xQueueCreate(USART2_QUEUE_LENGTH, USART2_QUEUE_ITEM_SIZE);
+	if( xUSART_Queue == NULL )
 	{
 		/* The queue could not be created. */
 		led_flash();
 	}
+	
+	
 	
 	//xTaskCreate(vBlinkTask, "Blinky", configMINIMAL_STACK_SIZE+10, NULL, BLINKY_TASK_PRIORITY, NULL);  
 	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+10,(void *) buffer, CLI_TASK_PRIORITY, NULL);  
@@ -63,7 +65,7 @@ void USART2_IRQHandler(void) {
 	DATA_RECEIVED_FLAG = 1;
 	USART2->SR &= ~(USART_SR_RXNE);	
 	uint8_t characterReceived = USART2->DR;
-	xQueueSendToFrontFromISR( xQueue, &characterReceived, NULL);
+	xQueueSendToFrontFromISR( xUSART_Queue, &characterReceived, NULL);
 }
 
 void TIM3_IRQHandler(void) {
@@ -96,7 +98,7 @@ static void vCLITask(void * parameters)
 		if(DATA_RECEIVED_FLAG == 1)
 		{
 			// READ FROM QUEUE
-			if( xQueueReceive( xQueue, &buffer[bufferElementID], portMAX_DELAY ) != pdPASS )
+			if( xQueueReceive( xUSART_Queue, &buffer[bufferElementID], portMAX_DELAY ) != pdPASS )
 				{
 					/* Nothing was received from the queue – even after blocking to wait for data to arrive. */
 				}
@@ -104,10 +106,11 @@ static void vCLITask(void * parameters)
 				{
 					/* xMessage now contains the received data. */
 					CLI_Receive(buffer, &bufferElementID);
+					
+					// TODO: sends characters to mainTask via Queue to change the frequency of the Blinky
 										
 					DATA_RECEIVED_FLAG = 0;
 				}
-			// sends characters to mainTask via Queue to change the frequency of the Blinky
 		}
 	}
 }
