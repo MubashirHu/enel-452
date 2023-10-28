@@ -48,7 +48,7 @@ void CLI_Receive(uint8_t *pData, int* id)
 					sendByte(' ');
 					sendByte(BACKSPACE);
 				}
-			break;
+				break;
 	
 			case CARRIAGE_RETURN:
 				if(parseReceivedData(pData, *id) != 1)
@@ -56,7 +56,7 @@ void CLI_Receive(uint8_t *pData, int* id)
 					newPromptLine();
 					*id = -1;
 				}
-			break;
+				break;
 				
 			case SPACE:
 				sendByte(SPACE);
@@ -65,7 +65,7 @@ void CLI_Receive(uint8_t *pData, int* id)
 			
 			default:
 				sendByte(pData[*id]);
-			break;
+				break;
 		}
 	*id = *id + 1;
 }
@@ -115,19 +115,6 @@ int parseReceivedData(uint8_t *pData, int Size)
 		CLI_Transmit(buffer, sizeof(buffer));
 		CLI_Transmit(pData, Size);
 	}
-}
-
-void sendPromptArrows(void)
-{
-	sendByte('>');
-	sendByte('>');
-}
-
-void newPromptLine(void)
-{
-	sendByte(NEW_LINE_FEED);
-	sendByte(CARRIAGE_RETURN);
-	sendPromptArrows();
 }
 
 void prepareTerminal(void)
@@ -194,4 +181,17 @@ void placeCursor(int row, int col)
 	
 	sprintf((char*)bigbuff, "\x1b[%d;%dH", row, col);
 	CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
+}
+
+void sendPromptArrows(void)
+{
+	sendByte('>');
+	sendByte('>');
+}
+
+void newPromptLine(void)
+{
+	sendByte(NEW_LINE_FEED);
+	sendByte(CARRIAGE_RETURN);
+	sendPromptArrows();
 }
