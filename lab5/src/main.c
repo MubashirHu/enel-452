@@ -58,13 +58,13 @@ int main(void)
 	}
 	
 	xBlinky_Queue = xQueueCreate(BLINKY_QUEUE_LENGTH, BLINKY_QUEUE_ITEM_SIZE);
-	if( xCLI_Queue == NULL )
+	if( xBlinky_Queue == NULL )
 	{
 		/* The queue could not be created. */
 		led_flash();
 	}
 	
-	//xTaskCreate(vBlinkTask, "Blinky", configMINIMAL_STACK_SIZE+10, NULL, BLINKY_TASK_PRIORITY, NULL);  
+	xTaskCreate(vBlinkTask, "Blinky", configMINIMAL_STACK_SIZE+10, NULL, BLINKY_TASK_PRIORITY, NULL);  
 	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+10,(void *) buffer, CLI_TASK_PRIORITY, NULL);  
 	
 	vTaskStartScheduler();
@@ -85,11 +85,11 @@ void TIM3_IRQHandler(void) {
 static void vBlinkTask(void * parameters) {
 	
 	while(1)
-	{
-	onboardLEDconfig(1);
-	vTaskDelay(1000);
-	onboardLEDconfig(0);
-	vTaskDelay(1000);
+		{
+		onboardLEDconfig(1);
+		vTaskDelay(1000);
+		onboardLEDconfig(0);
+		vTaskDelay(1000);
 	}
 }
 
@@ -115,9 +115,9 @@ static void vCLITask(void * parameters)
 				{
 					/* xMessage now contains the received data. */
 					CLI_Receive(buffer, &bufferElementID);
-					
+					uint8_t speed = (uint8_t)1000;
 					// TODO: sends characters to mainTask via Queue to change the frequency of the Blinky
-										
+					xQueueSendToFront( xBlinky_Queue, &speed, 10);			
 					DATA_RECEIVED_FLAG = 0;
 				}
 		}
