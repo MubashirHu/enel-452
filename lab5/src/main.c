@@ -19,11 +19,13 @@
 #include "queue.h"
 #include "stm32f10x.h"
 #define BLINKY_TASK_PRIORITY 5
-#define CLI_TASK_PRIORITY 5
+#define CLI_TASK_PRIORITY 1
 #define USART2_QUEUE_LENGTH 512
 #define USART2_QUEUE_ITEM_SIZE sizeof(uint8_t)
 
-volatile uint8_t DATA_RECEIVED_FLAG = 0; // Global declaration and initialization
+// Global declaration and initialization
+volatile uint8_t DATA_RECEIVED_FLAG = 0; 
+volatile uint8_t TIM3_UPDATE_EVENT = 0;
 QueueHandle_t xQueue;
 uint8_t buffer[512];
 uint8_t bufferElementID = 0;
@@ -39,6 +41,10 @@ int main(void)
 	initUSART2Interrupt();
 	ledIOInit();
 	initTIM(2);
+	
+	initTIM(3);
+	configTIM(3, 1000);
+	initTIMInterrupt(3);
 	
 	xQueue = xQueueCreate(USART2_QUEUE_LENGTH, USART2_QUEUE_ITEM_SIZE);
 	if( xQueue == NULL )
@@ -60,6 +66,11 @@ void USART2_IRQHandler(void) {
 	xQueueSendToFrontFromISR( xQueue, &characterReceived, NULL);
 }
 
+void TIM3_IRQHandler(void) {
+	TIM3_UPDATE_EVENT = 1;
+	TIM3->SR &= ~(TIM_SR_UIF); // reset update event flag
+}
+
 static void vBlinkTask(void * parameters) {
 	
 	while(1)
@@ -73,24 +84,27 @@ static void vBlinkTask(void * parameters) {
 
 static void vCLITask(void * parameters)
 {
-	
 	while(1)
 	{
-		// UPDATE TERMINAL
-		updateStatusWindow();
-		vTaskDelay(500);
+		if(TIM3_UPDATE_EVENT == 1)
+		{
+			// UPDATE TERMINAL
+			updateStatusWindow();
+			TIM3_UPDATE_EVENT = 0;
+		}
 		
 		if(DATA_RECEIVED_FLAG == 1)
 		{
 			// READ FROM QUEUE
-			if( xQueueReceive( xQueue, &buffer, portMAX_DELAY ) != pdPASS )
+			if( xQueueReceive( xQueue, &buffer[bufferElementID], portMAX_DELAY ) != pdPASS )
 				{
 					/* Nothing was received from the queue – even after blocking to wait for data to arrive. */
 				}
 				else 
 				{
 					/* xMessage now contains the received data. */
-					sendByte(buffer[bufferElementID]);
+					CLI_Receive(buffer, &bufferElementID);
+										
 					DATA_RECEIVED_FLAG = 0;
 				}
 			// sends characters to mainTask via Queue to change the frequency of the Blinky
