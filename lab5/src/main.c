@@ -24,6 +24,7 @@
 #define USART2_QUEUE_ITEM_SIZE sizeof(uint8_t)
 
 volatile uint8_t DATA_RECEIVED_FLAG = 0; // Global declaration and initialization
+QueueHandle_t xQueue;
 
 static void vBlinkTask(void * parameters);
 static void vCLITask(void * parameters);
@@ -38,7 +39,6 @@ int main(void)
 	
 	initTIM(2);
 	
-	QueueHandle_t xQueue;
 	xQueue = xQueueCreate(USART2_QUEUE_LENGTH, USART2_QUEUE_ITEM_SIZE);
 	if( xQueue == NULL )
 	{
