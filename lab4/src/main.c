@@ -29,7 +29,7 @@ int main(void)
 	
 	initTIM(2);
 	initTIM(3);
-	configTIM(3, 100);
+	configTIM(3, 1000);
 	initTIMInterrupt(3);
 
 	uint8_t buffer[512];

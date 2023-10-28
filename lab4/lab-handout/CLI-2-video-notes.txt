@@ -9,3 +9,8 @@ learning 3 things
 
 - when using USART3, enable te USART3 global interrupt -> prevents blocking
 - Have a background task that uses a timer to update the status window
+
+
+
+ANSI CODE
+https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
