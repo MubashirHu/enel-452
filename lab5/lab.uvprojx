@@ -452,6 +452,9 @@
         <Group>
           <GroupName>::Device</GroupName>
         </Group>
+        <Group>
+          <GroupName>::RTOS</GroupName>
+        </Group>
       </Groups>
     </Target>
   </Targets>
@@ -459,6 +462,54 @@
   <RTE>
     <apis/>
     <components>
+      <component Cbundle="FreeRTOS" Cclass="RTOS" Cgroup="Config" Cvariant="CMSIS RTOS2" Cvendor="ARM" Cversion="10.5.1" condition="FreeRTOS Config CMSIS RTOS2">
+        <package name="CMSIS-FreeRTOS" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="10.5.1"/>
+        <targetInfos>
+          <targetInfo name="Target 1"/>
+        </targetInfos>
+      </component>
+      <component Cbundle="FreeRTOS" Cclass="RTOS" Cgroup="Core" Cvariant="Cortex-M" Cvendor="ARM" Cversion="10.5.1" condition="FreeRTOS Core CM">
+        <package name="CMSIS-FreeRTOS" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="10.5.1"/>
+        <targetInfos>
+          <targetInfo name="Target 1"/>
+        </targetInfos>
+      </component>
+      <component Cbundle="FreeRTOS" Cclass="RTOS" Cgroup="Coroutines" Cvendor="ARM" Cversion="10.5.1" condition="FreeRTOS Coroutines">
+        <package name="CMSIS-FreeRTOS" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="10.5.1"/>
+        <targetInfos>
+          <targetInfo name="Target 1"/>
+        </targetInfos>
+      </component>
+      <component Cbundle="FreeRTOS" Cclass="RTOS" Cgroup="Event Groups" Cvendor="ARM" Cversion="10.5.1" condition="FreeRTOS Event Groups">
+        <package name="CMSIS-FreeRTOS" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="10.5.1"/>
+        <targetInfos>
+          <targetInfo name="Target 1"/>
+        </targetInfos>
+      </component>
+      <component Cbundle="FreeRTOS" Cclass="RTOS" Cgroup="Heap" Cvariant="Heap_4" Cvendor="ARM" Cversion="10.5.1" condition="FreeRTOS Heap">
+        <package name="CMSIS-FreeRTOS" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="10.5.1"/>
+        <targetInfos>
+          <targetInfo name="Target 1"/>
+        </targetInfos>
+      </component>
+      <component Cbundle="FreeRTOS" Cclass="RTOS" Cgroup="Message Buffer" Cvendor="ARM" Cversion="10.5.1" condition="FreeRTOS Message Buffer">
+        <package name="CMSIS-FreeRTOS" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="10.5.1"/>
+        <targetInfos>
+          <targetInfo name="Target 1"/>
+        </targetInfos>
+      </component>
+      <component Cbundle="FreeRTOS" Cclass="RTOS" Cgroup="Stream Buffer" Cvendor="ARM" Cversion="10.5.1" condition="FreeRTOS Stream Buffer">
+        <package name="CMSIS-FreeRTOS" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="10.5.1"/>
+        <targetInfos>
+          <targetInfo name="Target 1"/>
+        </targetInfos>
+      </component>
+      <component Cbundle="FreeRTOS" Cclass="RTOS" Cgroup="Timers" Cvendor="ARM" Cversion="10.5.1" condition="FreeRTOS Timers">
+        <package name="CMSIS-FreeRTOS" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="10.5.1"/>
+        <targetInfos>
+          <targetInfo name="Target 1"/>
+        </targetInfos>
+      </component>
       <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.6.0" condition="ARMv6_7_8-M Device">
         <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
@@ -505,6 +556,14 @@
         <instance index="0">RTE\Device\STM32F103RB\system_stm32f10x.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.0.0" condition="STM32F1xx CMSIS"/>
         <package name="STM32F1xx_DFP" schemaVersion="1.7.2" url="https://www.keil.com/pack/" vendor="Keil" version="2.4.1"/>
+        <targetInfos>
+          <targetInfo name="Target 1"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="header" condition="CoreM" name="CMSIS\RTOS2\FreeRTOS\Config\ARMCM\FreeRTOSConfig.h" version="10.4.0">
+        <instance index="0">RTE\RTOS\FreeRTOSConfig.h</instance>
+        <component Cbundle="FreeRTOS" Cclass="RTOS" Cgroup="Config" Cvariant="CMSIS RTOS2" Cvendor="ARM" Cversion="10.5.1" condition="FreeRTOS Config CMSIS RTOS2"/>
+        <package name="CMSIS-FreeRTOS" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="10.5.1"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
