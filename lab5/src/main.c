@@ -24,7 +24,6 @@
 #define USART2_QUEUE_ITEM_SIZE sizeof(uint8_t)
 
 volatile uint8_t DATA_RECEIVED_FLAG = 0; // Global declaration and initialization
-volatile uint8_t TIM3_UPDATE_EVENT = 0;
 
 static void vBlinkTask(void * parameters);
 static void vCLITask(void * parameters);
@@ -38,9 +37,6 @@ int main(void)
 	ledIOInit();
 	
 	initTIM(2);
-	//initTIM(3);
-	//configTIM(3, 1000);
-	//initTIMInterrupt(3);
 	
 	QueueHandle_t xQueue;
 	xQueue = xQueueCreate(USART2_QUEUE_LENGTH, USART2_QUEUE_ITEM_SIZE);
@@ -59,11 +55,6 @@ int main(void)
 void USART2_IRQHandler(void) {
 	DATA_RECEIVED_FLAG = 1;
 	USART2->SR &= ~(USART_SR_RXNE);	
-}
-
-void TIM3_IRQHandler(void) {
-	TIM3_UPDATE_EVENT = 1;
-	TIM3->SR &= ~(TIM_SR_UIF); // reset update event flag
 }
 
 static void vBlinkTask(void * parameters) {
