@@ -16,6 +16,7 @@
 #include "../headers//util.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "queue.h"
 #include "stm32f10x.h"
 #define BLINKY_TASK_PRIORITY 5
 #define CLI_TASK_PRIORITY 5
