@@ -32,7 +32,7 @@ void CLI_Transmit(uint8_t *pData, uint16_t Size)
 
 void CLI_Receive(uint8_t *pData, int* id)
 {
-		pData[*id] = getByte();
+		//pData[*id] = getByte(); // commented out for CLI task
 	
 		switch(pData[*id])
 		{
