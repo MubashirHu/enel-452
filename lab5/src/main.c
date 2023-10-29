@@ -118,7 +118,7 @@ static void vCLITask(void * parameters)
 				}
 				else 
 				{
-					/* xMessage now contains the received data. */
+					/* buffer now contains the received data. */
 					CLI_Receive(buffer, &bufferElementID);
 					uint16_t speed = (uint16_t)200;
 					// TODO: sends characters to mainTask via Queue to change the frequency of the Blinky
