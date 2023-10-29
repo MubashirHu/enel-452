@@ -84,23 +84,17 @@ void TIM3_IRQHandler(void) {
 }
 
 static void vBlinkTask(void * parameters) {
-	
+	uint16_t speed = (uint16_t)parameters;
 	while(1)
 		{	
-			blinky_speed = (uint16_t) blinky_speed;
-			
 			// code doesn't execute here
-			if( xQueueReceive( xBlinky_Queue, &blinky_speed, portMAX_DELAY ) != pdPASS )
-				{
-					/* Nothing was received from the queue  even after blocking to wait for data to arrive. */
-				}
-				else 
-				{
-					onboardLEDconfig(1);
-					vTaskDelay(blinky_speed);
-					onboardLEDconfig(0);
-					vTaskDelay(blinky_speed);
-				}
+			if( xQueueReceive( xBlinky_Queue, &speed, 0 ) != pdPASS )
+			{
+			}
+			onboardLEDconfig(1);
+			vTaskDelay(speed);
+			onboardLEDconfig(0);
+			vTaskDelay(speed);
 		}
 }
 
