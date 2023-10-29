@@ -20,9 +20,9 @@
 #include "stm32f10x.h"
 #define BLINKY_TASK_PRIORITY 5
 #define CLI_TASK_PRIORITY 5
-#define CLI_QUEUE_LENGTH 512
+#define CLI_QUEUE_LENGTH 1
 #define CLI_QUEUE_ITEM_SIZE sizeof(uint8_t)
-#define BLINKY_QUEUE_LENGTH 512
+#define BLINKY_QUEUE_LENGTH 1
 #define BLINKY_QUEUE_ITEM_SIZE sizeof(uint16_t)
 
 // Global declaration and initialization
@@ -65,7 +65,7 @@ int main(void)
 		led_flash();
 	}
 	
-	xTaskCreate(vBlinkTask, "Blinky", configMINIMAL_STACK_SIZE+10, NULL, BLINKY_TASK_PRIORITY, NULL);  
+	xTaskCreate(vBlinkTask, "Blinky", configMINIMAL_STACK_SIZE+10,(void*) blinky_speed, BLINKY_TASK_PRIORITY, NULL);  
 	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+10,(void *) buffer, CLI_TASK_PRIORITY, NULL);  
 	
 	vTaskStartScheduler();
@@ -86,12 +86,13 @@ void TIM3_IRQHandler(void) {
 static void vBlinkTask(void * parameters) {
 	
 	while(1)
-		{
-						
-			 // code is getting stuck here
+		{	
+			blinky_speed = (uint16_t) blinky_speed;
+			
+			// code doesn't execute here
 			if( xQueueReceive( xBlinky_Queue, &blinky_speed, portMAX_DELAY ) != pdPASS )
 				{
-					
+					/* Nothing was received from the queue  even after blocking to wait for data to arrive. */
 				}
 				else 
 				{
@@ -100,7 +101,7 @@ static void vBlinkTask(void * parameters) {
 					onboardLEDconfig(0);
 					vTaskDelay(blinky_speed);
 				}
-	}
+		}
 }
 
 static void vCLITask(void * parameters)
@@ -119,7 +120,7 @@ static void vCLITask(void * parameters)
 			// READ FROM QUEUE
 			if( xQueueReceive( xCLI_Queue, &buffer[bufferElementID], portMAX_DELAY ) != pdPASS )
 				{
-					/* Nothing was received from the queue – even after blocking to wait for data to arrive. */
+					/* Nothing was received from the queue  even after blocking to wait for data to arrive. */
 				}
 				else 
 				{
@@ -127,8 +128,7 @@ static void vCLITask(void * parameters)
 					CLI_Receive(buffer, &bufferElementID);
 					uint16_t speed = (uint16_t)200;
 					// TODO: sends characters to mainTask via Queue to change the frequency of the Blinky
-					xQueueSendToBack( xBlinky_Queue, &speed, 10);			
-					DATA_RECEIVED_FLAG = 0;
+					xQueueSendToFront( xBlinky_Queue, &speed, 10);			
 				}
 		}
 	}

@@ -147,7 +147,7 @@ void updateStatusWindow(void)
 		uint8_t bigbuff[20];
 		sprintf((char*)bigbuff, "counter:%d", counter);
 		CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
-				
+					
 		sendEscapeAnsi(RESTORE_CURSOR_POSITION);
 }
 
