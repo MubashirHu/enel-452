@@ -18,8 +18,8 @@
 #include "task.h"
 #include "queue.h"
 #include "stm32f10x.h"
-#define BLINKY_TASK_PRIORITY 5
-#define CLI_TASK_PRIORITY 5
+#define BLINKY_TASK_PRIORITY 15
+#define CLI_TASK_PRIORITY 1
 #define CLI_QUEUE_LENGTH 1
 #define CLI_QUEUE_ITEM_SIZE sizeof(uint8_t)
 #define BLINKY_QUEUE_LENGTH 1
@@ -50,7 +50,7 @@ int main(void)
 	initTIM(3);
 	configTIM(3, 1000);
 	initTIMInterrupt(3);
-	
+		
 	xCLI_Queue = xQueueCreate(CLI_QUEUE_LENGTH, CLI_QUEUE_ITEM_SIZE);
 	if( xCLI_Queue == NULL )
 	{
@@ -66,8 +66,7 @@ int main(void)
 	}
 	
 	xTaskCreate(vBlinkTask, "Blinky", configMINIMAL_STACK_SIZE+10,(void*) blinky_speed, BLINKY_TASK_PRIORITY, NULL);  
-	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+10,(void *) buffer, CLI_TASK_PRIORITY, NULL);  
-	
+	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+10,(void *) buffer, CLI_TASK_PRIORITY, NULL);
 	vTaskStartScheduler();
 }
 
@@ -76,6 +75,7 @@ void USART2_IRQHandler(void) {
 	USART2->SR &= ~(USART_SR_RXNE);	
 	uint8_t characterReceived = USART2->DR;
 	xQueueSendToFrontFromISR( xCLI_Queue, &characterReceived, NULL);
+	DATA_RECEIVED_FLAG = 0;
 }
 
 void TIM3_IRQHandler(void) {
@@ -101,20 +101,18 @@ static void vBlinkTask(void * parameters) {
 static void vCLITask(void * parameters)
 {
 	while(1)
-	{
-		if(TIM3_UPDATE_EVENT == 1)
-		{
-			// UPDATE TERMINAL
-			updateStatusWindow();
-			TIM3_UPDATE_EVENT = 0;
-		}
-		
-		if(DATA_RECEIVED_FLAG == 1)
-		{
+	{		
+		/* Nothing was received from the queue  even after blocking to wait for data to arrive. */
+			if(TIM3_UPDATE_EVENT == 1)
+			{
+				// UPDATE TERMINAL
+				updateStatusWindow();
+				TIM3_UPDATE_EVENT = 0;
+			} 
+					
 			// READ FROM QUEUE
-			if( xQueueReceive( xCLI_Queue, &buffer[bufferElementID], portMAX_DELAY ) != pdPASS )
+			if( xQueueReceive( xCLI_Queue, &buffer[bufferElementID], 10 ) != pdPASS )
 				{
-					/* Nothing was received from the queue  even after blocking to wait for data to arrive. */
 				}
 				else 
 				{
@@ -124,6 +122,5 @@ static void vCLITask(void * parameters)
 					// TODO: sends characters to mainTask via Queue to change the frequency of the Blinky
 					xQueueSendToFront( xBlinky_Queue, &speed, 10);			
 				}
-		}
 	}
 }
