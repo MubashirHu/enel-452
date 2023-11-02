@@ -1,13 +1,11 @@
 /**
- * @file TIM.c
+ * @file TASKS.c
  *
  * @brief Function Definitions for USART (Universal Synchronous Asynchronous Receiver-Transmitter) Module.
  *
  * This file includes the implementation of functions corresponding to the prototypes defined
- * in the `../headers/TIM.h` header file. This module is responsible for the timings in the sendByte
- * and getByte functions as well as the interrupt timers to update the terminal.
- *
- * @note Functions in this file align with the USART module in `../headers/TIM.h`.
+ * in the `../headers/Tasks.h` header file. This module is responsible for making all the queue connections
+ * between tasks. As well as creating the various tasks that are to be used. 
  *
  * @author Mubashir Hussain
  * @studentID 200396797
@@ -51,16 +49,16 @@ void createTasks(void)
 static void vBlinkTask(void * parameters) {
 	uint16_t speed = 1000;
 	while(1)
-		{	
-			// code doesn't execute here
-			if( xQueueReceive( xBlinky_Queue, &speed, 0 ) != pdPASS )
-			{
-			}
-			onboardLEDconfig(1);
-			vTaskDelay(speed);
-			onboardLEDconfig(0);
-			vTaskDelay(speed);
+	{	
+		if( xQueueReceive( xBlinky_Queue, &speed, 0 ) != pdPASS )
+		{
+			//no data in queue
 		}
+		onboardLEDconfig(1);
+		vTaskDelay(speed);
+		onboardLEDconfig(0);
+		vTaskDelay(speed);
+	}
 }
 
 static void vCLITask(void * parameters)
@@ -71,37 +69,25 @@ static void vCLITask(void * parameters)
 	
 	while(1)
 	{		
-		/* Nothing was received from the queue  even after blocking to wait for data to arrive. */
-			if(TIM3_UPDATE_EVENT == 1)
-			{
-				// UPDATE TERMINAL
-				updateStatusWindow();
-				TIM3_UPDATE_EVENT = 0;
-			} 
-					
-			// READ FROM QUEUE
-			if( xQueueReceive( xCLI_Queue, &buffer[bufferElementID], 10 ) != pdPASS )
-				{
-				}
-				else 
-				{
-					//led_flash();
-					/* buffer now contains the received data. */
-					CLI_Receive(buffer, &bufferElementID);
-					uint16_t speed = (uint16_t)200;
-					// TODO: sends characters to mainTask via Queue to change the frequency of the Blinky
-					xQueueSendToFront( xBlinky_Queue, &speed, 10);			
-				}
+		if(TIM3_UPDATE_EVENT == 1)
+		{
+			// UPDATE TERMINAL
+			updateStatusWindow();
+			TIM3_UPDATE_EVENT = 0;
+		} 	
+		if( xQueueReceive( xCLI_Queue, &buffer[bufferElementID], 10 ) != pdPASS )
+		{
+			// no data in queue
+		}
+		else 
+		{
+			// data in queue
+			//buffer now contains the received data
+			CLI_Receive(buffer, &bufferElementID);
+				
+			// send new speed to blinkytask queue
+			uint16_t speed = (uint16_t)200;
+			xQueueSendToFront( xBlinky_Queue, &speed, 10);			
+		}
 	}
-}
-
-void USART2_IRQHandler(void) {
-	//DATA_RECEIVED_FLAG = 1;
-	USART2->SR &= ~(USART_SR_RXNE);	
-	uint8_t characterReceived = USART2->DR;
-	if(xQueueSendToFrontFromISR( xCLI_Queue, &characterReceived, NULL) == pdTRUE)
-	{
-		
-	}
-	//DATA_RECEIVED_FLAG = 0;
 }
