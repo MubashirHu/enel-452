@@ -21,8 +21,6 @@
 #include "task.h"
 #include "queue.h"
 
-extern QueueHandle_t xCLI_Queue;
-
 void serialOpen(void)
 {
 	enablePort('A');
@@ -118,12 +116,4 @@ void initUSART2Interrupt(void)
 {
 	USART2->CR1 |= USART_CR1_RXNEIE; // enable RX interrupt in the control register
 	NVIC_EnableIRQ(USART2_IRQn); // enable usart2 interrupts in the NVIC table
-}
-
-void USART2_IRQHandler(void) {
-	DATA_RECEIVED_FLAG = 1;
-	USART2->SR &= ~(USART_SR_RXNE);	
-	uint8_t characterReceived = USART2->DR;
-	xQueueSendToFrontFromISR( xCLI_Queue, &characterReceived, NULL);
-	DATA_RECEIVED_FLAG = 0;
 }

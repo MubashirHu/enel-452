@@ -24,7 +24,6 @@
 
 QueueHandle_t xCLI_Queue;
 QueueHandle_t xBlinky_Queue;
-uint16_t blinky_speed = 1000;
 
 void createQueues(void)
 {
@@ -68,7 +67,7 @@ static void vCLITask(void * parameters)
 {
 	
 	uint8_t buffer[50];
-	uint8_t bufferElementID = 0;
+	int bufferElementID = 0;
 	
 	while(1)
 	{		
@@ -86,6 +85,7 @@ static void vCLITask(void * parameters)
 				}
 				else 
 				{
+					//led_flash();
 					/* buffer now contains the received data. */
 					CLI_Receive(buffer, &bufferElementID);
 					uint16_t speed = (uint16_t)200;
@@ -93,4 +93,15 @@ static void vCLITask(void * parameters)
 					xQueueSendToFront( xBlinky_Queue, &speed, 10);			
 				}
 	}
+}
+
+void USART2_IRQHandler(void) {
+	//DATA_RECEIVED_FLAG = 1;
+	USART2->SR &= ~(USART_SR_RXNE);	
+	uint8_t characterReceived = USART2->DR;
+	if(xQueueSendToFrontFromISR( xCLI_Queue, &characterReceived, NULL) == pdTRUE)
+	{
+		
+	}
+	//DATA_RECEIVED_FLAG = 0;
 }

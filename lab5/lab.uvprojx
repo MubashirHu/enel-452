@@ -409,6 +409,11 @@
               <FileType>5</FileType>
               <FilePath>.\headers\TIM.h</FilePath>
             </File>
+            <File>
+              <FileName>TASKS.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\headers\TASKS.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -443,6 +448,11 @@
               <FileName>TIM.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\TIM.c</FilePath>
+            </File>
+            <File>
+              <FileName>TASKS.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\TASKS.c</FilePath>
             </File>
           </Files>
         </Group>

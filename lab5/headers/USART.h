@@ -47,7 +47,7 @@ char getByte(void);
 /**
 Reads the USART_SR_RXNE register to determine whether dataReceivedFlag should be set
 */
-void USART2_IRQHandler(void);
+//void USART2_IRQHandler(void);
 
 /**
 Initialize the USART2 receive Interrupt and enable the handler in the NVIC table

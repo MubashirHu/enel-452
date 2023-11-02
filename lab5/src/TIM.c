@@ -97,8 +97,3 @@ void initTIMInterrupt(int timer)
 			break;
 	}
 }
-
-void TIM3_IRQHandler(void) {
-	TIM3_UPDATE_EVENT = 1;
-	TIM3->SR &= ~(TIM_SR_UIF); // reset update event flag
-}
