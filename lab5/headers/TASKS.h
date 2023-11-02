@@ -10,8 +10,8 @@
  * @studentID 200396797
  */
 
-#ifndef TIM_H
-#define TIM_H
+#ifndef TASKS_H
+#define TASKS_H
 
 #define BLINKY_TASK_PRIORITY 5
 #define CLI_TASK_PRIORITY 50

@@ -40,6 +40,7 @@ int main(void)
 	
 	createQueues();
 	createTasks();
+	
 	vTaskStartScheduler();
 }
 
