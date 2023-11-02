@@ -30,8 +30,10 @@ void CLI_Transmit(uint8_t *pData, uint16_t Size)
 	}
 }
 
-void CLI_Receive(uint8_t *pData, int* id)
+int CLI_Receive(uint8_t *pData, int* id, int* speed)
 {
+	int result;
+	
 	switch(pData[*id])
 	{
 		case BACKSPACE:
@@ -49,8 +51,15 @@ void CLI_Receive(uint8_t *pData, int* id)
 			break;
 	
 		case CARRIAGE_RETURN:
-			if(parseReceivedData(pData, *id) != 1)
+			result = parseReceivedData(pData, *id);
+			if(result != 0)
 			{
+				newPromptLine();
+				*id = 0;
+				*speed = result;
+				return *speed;
+			}
+			else{
 				newPromptLine();
 				*id = -1;
 			}
@@ -66,6 +75,7 @@ void CLI_Receive(uint8_t *pData, int* id)
 			break;
 		}
 	*id = *id + 1;
+		return 0;
 }
 
 int parseReceivedData(uint8_t *pData, int Size)
@@ -104,7 +114,7 @@ int parseReceivedData(uint8_t *pData, int Size)
 	}
 	else if(strncmp((char*)pData, "help\r", 5) == 0)
 	{
-		uint8_t buffer[] = "Help command Currently the commands available are 'ledon', 'ledoff', 'ledstate'. If a command is typed incorrectly an error prompt of 'invalid command' will show up. If the wrong command is typed, backspacing is available";
+		uint8_t buffer[] = "Commands available are \n\rhelp\n\rledon\n\rledoff\n\rledstate\n\rclear\n\rled200\n\rled500\n\rled1000\n\rnote: backspaces are available";
 		CLI_Transmit(buffer, sizeof(buffer));
 		return 0;
 	}else if(strncmp((char*)pData, "clear\r", 6) == 0)
@@ -112,6 +122,25 @@ int parseReceivedData(uint8_t *pData, int Size)
 		sendEscapeAnsi(CLEAR_TERMINAL);
 		prepareTerminal();
 		return 0;
+	}
+	else if(strncmp((char*)pData, "led200\r", 7) == 0)
+	{
+		uint8_t buffer[] = "ledspeed is set to 200ms tick";
+		CLI_Transmit(buffer, sizeof(buffer));
+		onboardLEDconfig(0);
+		return 200;
+	}else if(strncmp((char*)pData, "led500\r", 7) == 0)
+	{
+		uint8_t buffer[] = "ledspeed is set to 500ms tick";
+		CLI_Transmit(buffer, sizeof(buffer));
+		onboardLEDconfig(0);
+		return 500;
+	}else if(strncmp((char*)pData, "led1000\r", 8) == 0)
+	{
+		uint8_t buffer[] = "ledspeed is set to 1000ms tick";
+		CLI_Transmit(buffer, sizeof(buffer));
+		onboardLEDconfig(0);
+		return 1000;
 	}
 	else
 	{

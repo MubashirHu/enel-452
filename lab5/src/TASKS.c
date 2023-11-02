@@ -66,6 +66,7 @@ static void vCLITask(void * parameters)
 	
 	uint8_t buffer[50];
 	int bufferElementID = 0;
+	int speed = 200;
 	
 	while(1)
 	{		
@@ -83,11 +84,14 @@ static void vCLITask(void * parameters)
 		{
 			// data in queue
 			//buffer now contains the received data
-			CLI_Receive(buffer, &bufferElementID);
+			int user_speed = CLI_Receive(buffer, &bufferElementID, &speed);
 				
 			// send new speed to blinkytask queue
-			uint16_t speed = (uint16_t)200;
-			xQueueSendToFront( xBlinky_Queue, &speed, 10);			
+			if (user_speed != 0)
+			{
+				xQueueSendToFront( xBlinky_Queue, &speed, 10);	
+			}
+					
 		}
 	}
 }

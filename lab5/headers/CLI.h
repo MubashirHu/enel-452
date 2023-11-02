@@ -46,8 +46,9 @@ void CLI_Transmit(uint8_t *pData, uint16_t Size);
  *
  * @param pData Pointer to the buffer where received data is stored.
  * @param id pointer to the elementID of the buffer where the received data is stored.
+ * @return returns 0 if normal execution and non-zero when led-speed is parsed
  */
-void CLI_Receive(uint8_t *pData, int* id);
+int CLI_Receive(uint8_t *pData, int* id, int* speed);
 
 /**
  * @brief Parses the data stored in the buffer pointed to by the pData pointer and performs corresponding actions.
