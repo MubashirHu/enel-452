@@ -1,3 +1,17 @@
+/**
+ * @file TASKS.h
+ *
+ * @brief Task Configuration for STM32 Communication with Host Terminal.
+ *
+ * This head holds the prototypes for Tasks that are only local to this module. As well as wrapper function
+ * prototypes.
+ *
+ * @author Mubashir Hussain
+ * @studentID 200396797
+ */
+
+#ifndef TIM_H
+#define TIM_H
 
 #define BLINKY_TASK_PRIORITY 5
 #define CLI_TASK_PRIORITY 50
@@ -11,3 +25,5 @@ void createTasks(void);
 static void vCLITask(void * parameters);
 static void vBlinkTask(void * parameters);
 void USART2_IRQHandler(void);
+
+#endif //TIM_H
