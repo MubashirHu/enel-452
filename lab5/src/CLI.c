@@ -32,40 +32,38 @@ void CLI_Transmit(uint8_t *pData, uint16_t Size)
 
 void CLI_Receive(uint8_t *pData, int* id)
 {
-		//pData[*id] = getByte(); // commented out for CLI task
+	switch(pData[*id])
+	{
+		case BACKSPACE:
+			if(*id == 0) 
+			{
+				*id = *id - 1;
+			}
+			else 
+			{
+				*id = *id - 2;
+				sendByte(BACKSPACE);
+				sendByte(' ');
+				sendByte(BACKSPACE);
+			}
+			break;
 	
-		switch(pData[*id])
-		{
-			case BACKSPACE:
-				if(*id == 0) 
-				{
-					*id = *id - 1;
-				}
-				else 
-				{
-					*id = *id - 2;
-					sendByte(BACKSPACE);
-					sendByte(' ');
-					sendByte(BACKSPACE);
-				}
-				break;
-	
-			case CARRIAGE_RETURN:
-				if(parseReceivedData(pData, *id) != 1)
-				{
-					newPromptLine();
-					*id = -1;
-				}
-				break;
-				
-			case SPACE:
-				sendByte(SPACE);
+		case CARRIAGE_RETURN:
+			if(parseReceivedData(pData, *id) != 1)
+			{
+				newPromptLine();
 				*id = -1;
-				break;
+			}
+			break;
+				
+		case SPACE:
+			sendByte(SPACE);
+			*id = -1;
+			break;
 			
-			default:
-				sendByte(pData[*id]);
-				break;
+		default:
+			sendByte(pData[*id]);
+			break;
 		}
 	*id = *id + 1;
 }
