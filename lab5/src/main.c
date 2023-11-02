@@ -20,9 +20,10 @@
 #include "queue.h"
 #include "stm32f10x.h"
 
-// Global declaration and initialization
 volatile uint8_t DATA_RECEIVED_FLAG = 0; 
 volatile uint8_t TIM3_UPDATE_EVENT = 0;
+
+extern QueueHandle_t xCLI_Queue;
 
 int main(void)
 {
@@ -36,7 +37,7 @@ int main(void)
 	initTIM(3);
 	configTIM(3, 1000);
 	initTIMInterrupt(3);
-		
+	
 	createQueues();
 	createTasks();
 	vTaskStartScheduler();
@@ -45,4 +46,12 @@ int main(void)
 void TIM3_IRQHandler(void) {
 	TIM3_UPDATE_EVENT = 1;
 	TIM3->SR &= ~(TIM_SR_UIF); // reset update event flag
+}
+
+void USART2_IRQHandler(void) {
+	DATA_RECEIVED_FLAG = 1;
+	USART2->SR &= ~(USART_SR_RXNE);	
+	uint8_t characterReceived = USART2->DR;
+	xQueueSendToFrontFromISR( xCLI_Queue, &characterReceived, NULL);
+	DATA_RECEIVED_FLAG = 0;
 }
