@@ -31,8 +31,6 @@ volatile uint8_t TIM3_UPDATE_EVENT = 0;
 QueueHandle_t xCLI_Queue;
 QueueHandle_t xBlinky_Queue;
 
-uint8_t buffer[512];
-uint8_t bufferElementID = 0;
 uint16_t blinky_speed = 1000;
 
 static void vBlinkTask(void * parameters);
@@ -66,7 +64,7 @@ int main(void)
 	}
 	
 	xTaskCreate(vBlinkTask, "Blinky", configMINIMAL_STACK_SIZE+10,(void*) blinky_speed, BLINKY_TASK_PRIORITY, NULL);  
-	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+10,(void *) buffer, CLI_TASK_PRIORITY, NULL);
+	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+50, NULL, CLI_TASK_PRIORITY, NULL);
 	vTaskStartScheduler();
 }
 
@@ -100,6 +98,10 @@ static void vBlinkTask(void * parameters) {
 
 static void vCLITask(void * parameters)
 {
+	
+	uint8_t buffer[50];
+	uint8_t bufferElementID = 0;
+	
 	while(1)
 	{		
 		/* Nothing was received from the queue  even after blocking to wait for data to arrive. */
