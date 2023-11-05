@@ -26,11 +26,10 @@ volatile uint8_t DATA_RECEIVED_FLAG = 0;
 volatile uint8_t TIM3_UPDATE_EVENT = 0;
 
 extern QueueHandle_t xCLI_Queue;
+extern uint8_t my_lcd_addr;
 
 int main(void)
-{
-	uint8_t my_lcd_addr = 0x3f;
-	
+{	
 	clockInit();
 	serialOpen();
 	prepareTerminal();
@@ -42,12 +41,7 @@ int main(void)
 	initTIM(3);
 	configTIM(3, 1000);
 	initTIMInterrupt(3);
-	
-	lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
-	stringToLCD(my_lcd_addr, "Temp: ");
-	//intToLCD(my_lcd_addr, temperature); 
-	stringToLCD(my_lcd_addr, " Deg C   ");
-	
+		
 	createQueues();
 	createTasks();
 	
