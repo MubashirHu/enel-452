@@ -15,6 +15,8 @@
 #include "../headers/CLI.h"
 #include "../headers/util.h"
 #include "../headers/TASKS.h"
+#include "../headers/i2c.h"
+#include "../headers/i2c_lcd_driver.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
@@ -27,16 +29,24 @@ extern QueueHandle_t xCLI_Queue;
 
 int main(void)
 {
+	uint8_t my_lcd_addr = 0x3f;
+	
 	clockInit();
 	serialOpen();
 	prepareTerminal();
 	initUSART2Interrupt();
 	ledIOInit();
-	
+	i2c_init();
+	lcd_init(my_lcd_addr);
 	initTIM(2);
 	initTIM(3);
 	configTIM(3, 1000);
 	initTIMInterrupt(3);
+	
+	lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
+	stringToLCD(my_lcd_addr, "Temp: ");
+	//intToLCD(my_lcd_addr, temperature); 
+	stringToLCD(my_lcd_addr, " Deg C   ");
 	
 	createQueues();
 	createTasks();

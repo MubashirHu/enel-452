@@ -414,6 +414,21 @@
               <FileType>5</FileType>
               <FilePath>.\headers\TASKS.h</FilePath>
             </File>
+            <File>
+              <FileName>i2c.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\headers\i2c.h</FilePath>
+            </File>
+            <File>
+              <FileName>i2c_lcd_driver.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\headers\i2c_lcd_driver.h</FilePath>
+            </File>
+            <File>
+              <FileName>IOdef.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\headers\IOdef.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -453,6 +468,16 @@
               <FileName>TASKS.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\TASKS.c</FilePath>
+            </File>
+            <File>
+              <FileName>i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>i2c_lcd_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\i2c_lcd_driver.c</FilePath>
             </File>
           </Files>
         </Group>
