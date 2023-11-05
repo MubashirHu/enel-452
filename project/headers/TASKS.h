@@ -13,8 +13,9 @@
 #ifndef TASKS_H
 #define TASKS_H
 
-#define BLINKY_TASK_PRIORITY 5
-#define CLI_TASK_PRIORITY 5
+#define BLINKY_TASK_PRIORITY 1
+#define CLI_TASK_PRIORITY 10
+#define LCD_TASK_PRIORITY 2
 #define CLI_QUEUE_LENGTH 1
 #define CLI_QUEUE_ITEM_SIZE sizeof(uint8_t)
 #define BLINKY_QUEUE_LENGTH 1
@@ -53,5 +54,7 @@ static void vCLITask(void * parameters);
  * @param parameters A pointer to task-specific parameters (if needed).
  */
 static void vBlinkTask(void * parameters);
+
+static void vLCDTask(void * parameters);
 
 #endif //TIM_H
