@@ -414,6 +414,11 @@
               <FileType>5</FileType>
               <FilePath>.\headers\TASKS.h</FilePath>
             </File>
+            <File>
+              <FileName>ELEVATOR.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\headers\ELEVATOR.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -453,6 +458,11 @@
               <FileName>TASKS.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\TASKS.c</FilePath>
+            </File>
+            <File>
+              <FileName>ELEVATOR.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\ELEVATOR.c</FilePath>
             </File>
           </Files>
         </Group>
