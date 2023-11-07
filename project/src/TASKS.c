@@ -99,12 +99,15 @@ static void vCLITask(void * parameters)
 
 static void vLCDTask(void * parameters)
 {
+	uint8_t temp = 8;
 	while(1)
 	{
 		lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
-		stringToLCD(my_lcd_addr, "Temp: ");
-		//intToLCD(my_lcd_addr, temperature); 
-		stringToLCD(my_lcd_addr, " Deg C   ");
+		stringToLCD(my_lcd_addr, "current-floor: ");
+		intToLCD(my_lcd_addr, temp); 
+		lcd_write_cmd(my_lcd_addr, LCD_LN2);	// Position cursor at beginning of line 1
+		stringToLCD(my_lcd_addr, "Direction:");
+		
 	}
 	
 }
