@@ -17,6 +17,7 @@
 #include "../headers/TASKS.h"
 #include "../headers/i2c.h"
 #include "../headers/i2c_lcd_driver.h"
+#include "../headers/ELEVATOR.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
@@ -41,6 +42,7 @@ int main(void)
 	initTIM(3);
 	configTIM(3, 1000);
 	initTIMInterrupt(3);
+	initGPIOPinsForElevator();
 		
 	createQueues();
 	createTasks();

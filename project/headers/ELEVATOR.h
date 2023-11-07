@@ -13,5 +13,6 @@
 #ifndef ELEVATOR_H
 #define ELEVATOR_H
 
+void initGPIOPinsForElevator(void);
 void sendFloorLevelToMux(int floor);
 #endif //ELEVATOR_H

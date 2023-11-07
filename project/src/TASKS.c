@@ -18,6 +18,7 @@
 #include "../headers/TASKS.h"
 #include "../headers/i2c.h"
 #include "../headers/i2c_lcd_driver.h"
+#include "../headers/ELEVATOR.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
@@ -48,13 +49,15 @@ void createTasks(void)
 {
 	xTaskCreate(vBlinkTask, "Blinky", configMINIMAL_STACK_SIZE+10, NULL, BLINKY_TASK_PRIORITY, NULL);  
 	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+50, NULL, CLI_TASK_PRIORITY, NULL);
-	xTaskCreate(vLCDTask, "LCD task", configMINIMAL_STACK_SIZE+10, NULL, LCD_TASK_PRIORITY, NULL);
+	xTaskCreate(vLCDTask, "LCD task", configMINIMAL_STACK_SIZE+50, NULL, LCD_TASK_PRIORITY, NULL);
+	xTaskCreate(vMUXTask, "MUX task", configMINIMAL_STACK_SIZE+50, NULL, MUX_TASK_PRIORITY, NULL);
 }
 
 static void vBlinkTask(void * parameters) {
 	uint16_t speed = 1000;
+	
 	while(1)
-	{	
+	{			
 		if( xQueueReceive( xBlinky_Queue, &speed, 0 ) != pdPASS )
 		{
 			//no data in queue
@@ -62,7 +65,7 @@ static void vBlinkTask(void * parameters) {
 		onboardLEDconfig(1);
 		vTaskDelay(speed);
 		onboardLEDconfig(0);
-		vTaskDelay(speed);
+		vTaskDelay(speed);		
 	}
 }
 
@@ -105,9 +108,19 @@ static void vLCDTask(void * parameters)
 		lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
 		stringToLCD(my_lcd_addr, "current-floor: ");
 		intToLCD(my_lcd_addr, temp); 
-		lcd_write_cmd(my_lcd_addr, LCD_LN2);	// Position cursor at beginning of line 1
+		lcd_write_cmd(my_lcd_addr, LCD_LN2);	// Position cursor at beginning of line 2
 		stringToLCD(my_lcd_addr, "Direction:");
-		
 	}
-	
+}
+
+static void vMUXTask(void * parameters)
+{
+	while(1)
+	{
+		for( int i = 0; i < 8; i++)
+		{
+			sendFloorLevelToMux(i);
+			vTaskDelay(100);
+		}
+	}
 }

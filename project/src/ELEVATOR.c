@@ -12,7 +12,6 @@
  */
 
 #include "stm32f10x.h"
-#include "../headers/ELEVATOR.h"
 #include "../headers/util.h"
 #include "../headers/CLI.h"
 #include "../headers/TIM.h"
@@ -20,24 +19,32 @@
 #include "../headers/i2c.h"
 #include "../headers/i2c_lcd_driver.h"
 #include "../headers/MY_STM32_FUNCTIONS.h"
+#include "../headers/ELEVATOR.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 
 uint8_t current_floor = 0;
 
-void initGPIOPins(void)
+void initGPIOPinsForElevator(void)
 {
 	enablePort('A');
 	
-	//Configure PA8 for alternate function output push pull mode, max 50MHz b1011
-	GPIOA->CRL |= GPIO_CRL_CNF2_1 | GPIO_CRL_MODE2;
-
-	//Configure PA9 for Input with pull-up / pull-down b1000
-	GPIOA->CRL |= GPIO_CRL_CNF3_0;
+	//Configure PA8 for general purpose push-pull, max 50MHz b1011
+	GPIOA->CRH |= GPIO_CRH_MODE8;
+	GPIOA->CRH &= ~GPIO_CRH_CNF8;
 	
-	//Configure PA10 for Input with pull-up / pull-down b1000
-	GPIOA->CRL |= GPIO_CRL_CNF3_0;
+
+	//Configure PA9 for general purpose push-pull, max 50MHz b1011
+	GPIOA->CRH |= GPIO_CRH_MODE9;
+	GPIOA->CRH &= ~GPIO_CRH_CNF9;
+	
+	//Configure PA10 for general purpose push-pull, max 50MHz b1011
+	GPIOA->CRH |= GPIO_CRH_MODE10;
+	GPIOA->CRH &= ~GPIO_CRH_CNF10;
+	
+	//GPIOA->CRL |= GPIO_CRL_MODE5;
+	//GPIOA->CRL &= ~GPIO_CRL_CNF5;
 }
 
 void sendFloorLevelToMux(int floor)
@@ -47,16 +54,36 @@ void sendFloorLevelToMux(int floor)
 	switch(floor)
 	{
 		case 0:	
-			//
+			GPIOA->ODR &= ~(GPIO_ODR_ODR10 | GPIO_ODR_ODR9 | GPIO_ODR_ODR8);
 			break;
-		
-		
-		
-		
-		
-		
-		
-		
+		case 1:	
+			GPIOA->ODR &= ~(GPIO_ODR_ODR10 | GPIO_ODR_ODR9 | GPIO_ODR_ODR8);
+			GPIOA->ODR |= GPIO_ODR_ODR8;
+			break;
+		case 2:	
+			GPIOA->ODR &= ~(GPIO_ODR_ODR10 | GPIO_ODR_ODR9 | GPIO_ODR_ODR8);
+			GPIOA->ODR |= GPIO_ODR_ODR9;
+			break;
+		case 3:	
+			GPIOA->ODR &= ~(GPIO_ODR_ODR10 | GPIO_ODR_ODR9 | GPIO_ODR_ODR8);
+			GPIOA->ODR |= GPIO_ODR_ODR9 | GPIO_ODR_ODR8;
+			break;
+		case 4:	
+			GPIOA->ODR &= ~(GPIO_ODR_ODR10 | GPIO_ODR_ODR9 | GPIO_ODR_ODR8);
+			GPIOA->ODR |= GPIO_ODR_ODR10;
+			break;
+		case 5:	
+			GPIOA->ODR &= ~(GPIO_ODR_ODR10 | GPIO_ODR_ODR9 | GPIO_ODR_ODR8);
+			GPIOA->ODR |= GPIO_ODR_ODR10 | GPIO_ODR_ODR8;
+			break;
+		case 6:	
+			GPIOA->ODR &= ~(GPIO_ODR_ODR10 | GPIO_ODR_ODR9 | GPIO_ODR_ODR8);
+			GPIOA->ODR |= GPIO_ODR_ODR10 | GPIO_ODR_ODR9;
+			break;
+		case 7:	
+			GPIOA->ODR &= ~(GPIO_ODR_ODR10 | GPIO_ODR_ODR9 | GPIO_ODR_ODR8);
+			GPIOA->ODR |= GPIO_ODR_ODR10 | GPIO_ODR_ODR9 | GPIO_ODR_ODR8;
+			break;
 	}
 }
 

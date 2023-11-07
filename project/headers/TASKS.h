@@ -13,9 +13,10 @@
 #ifndef TASKS_H
 #define TASKS_H
 
-#define BLINKY_TASK_PRIORITY 1
+#define BLINKY_TASK_PRIORITY 5
 #define CLI_TASK_PRIORITY 10
-#define LCD_TASK_PRIORITY 2
+#define LCD_TASK_PRIORITY 5
+#define MUX_TASK_PRIORITY 15
 #define CLI_QUEUE_LENGTH 1
 #define CLI_QUEUE_ITEM_SIZE sizeof(uint8_t)
 #define BLINKY_QUEUE_LENGTH 1
@@ -56,5 +57,7 @@ static void vCLITask(void * parameters);
 static void vBlinkTask(void * parameters);
 
 static void vLCDTask(void * parameters);
+
+static void vMUXTask(void * parameters);
 
 #endif //TIM_H
