@@ -13,5 +13,5 @@
 #ifndef ELEVATOR_H
 #define ELEVATOR_H
 
-
+void sendFloorLevelToMux(int floor);
 #endif //ELEVATOR_H

@@ -12,14 +12,52 @@
  */
 
 #include "stm32f10x.h"
+#include "../headers/ELEVATOR.h"
 #include "../headers/util.h"
 #include "../headers/CLI.h"
 #include "../headers/TIM.h"
 #include "../headers/TASKS.h"
 #include "../headers/i2c.h"
 #include "../headers/i2c_lcd_driver.h"
+#include "../headers/MY_STM32_FUNCTIONS.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
+
+uint8_t current_floor = 0;
+
+void initGPIOPins(void)
+{
+	enablePort('A');
+	
+	//Configure PA8 for alternate function output push pull mode, max 50MHz b1011
+	GPIOA->CRL |= GPIO_CRL_CNF2_1 | GPIO_CRL_MODE2;
+
+	//Configure PA9 for Input with pull-up / pull-down b1000
+	GPIOA->CRL |= GPIO_CRL_CNF3_0;
+	
+	//Configure PA10 for Input with pull-up / pull-down b1000
+	GPIOA->CRL |= GPIO_CRL_CNF3_0;
+}
+
+void sendFloorLevelToMux(int floor)
+{
+	current_floor = floor;
+	
+	switch(floor)
+	{
+		case 0:	
+			//
+			break;
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+}
 
 
