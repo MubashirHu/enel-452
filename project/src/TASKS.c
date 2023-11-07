@@ -48,7 +48,7 @@ void createTasks(void)
 {
 	xTaskCreate(vBlinkTask, "Blinky", configMINIMAL_STACK_SIZE+10, NULL, BLINKY_TASK_PRIORITY, NULL);  
 	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+50, NULL, CLI_TASK_PRIORITY, NULL);
-	//xTaskCreate(vLCDTask, "LCD task", configMINIMAL_STACK_SIZE+10, NULL, LCD_TASK_PRIORITY, NULL);
+	xTaskCreate(vLCDTask, "LCD task", configMINIMAL_STACK_SIZE+10, NULL, LCD_TASK_PRIORITY, NULL);
 }
 
 static void vBlinkTask(void * parameters) {
@@ -99,9 +99,12 @@ static void vCLITask(void * parameters)
 
 static void vLCDTask(void * parameters)
 {
-	lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
-	stringToLCD(my_lcd_addr, "Temp: ");
-	//intToLCD(my_lcd_addr, temperature); 
-	stringToLCD(my_lcd_addr, " Deg C   ");
+	while(1)
+	{
+		lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
+		stringToLCD(my_lcd_addr, "Temp: ");
+		//intToLCD(my_lcd_addr, temperature); 
+		stringToLCD(my_lcd_addr, " Deg C   ");
+	}
 	
 }
