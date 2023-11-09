@@ -106,10 +106,15 @@ static void vLCDTask(void * parameters)
 	while(1)
 	{
 		lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
+		vTaskDelay(100);
 		stringToLCD(my_lcd_addr, "current-floor: ");
+		vTaskDelay(100);
 		intToLCD(my_lcd_addr, temp); 
+		vTaskDelay(100);
 		lcd_write_cmd(my_lcd_addr, LCD_LN2);	// Position cursor at beginning of line 2
+		vTaskDelay(100);
 		stringToLCD(my_lcd_addr, "Direction:");
+		vTaskDelay(100);
 	}
 }
 
