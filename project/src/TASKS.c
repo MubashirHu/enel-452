@@ -26,8 +26,6 @@
 
 QueueHandle_t xCLI_Queue;
 QueueHandle_t xBlinky_Queue;
-QueueHandle_t xElevator_Up_Queue;
-QueueHandle_t xElevator_Down_Queue;
 QueueHandle_t xMux_Queue;
 QueueHandle_t xUP_REQUEST_Queue;
 QueueHandle_t xDOWN_REQUEST_Queue;
@@ -93,7 +91,7 @@ void createTasks(void)
 	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+50, NULL, CLI_TASK_PRIORITY, NULL);
 	xTaskCreate(vLCDTask, "LCD task", configMINIMAL_STACK_SIZE+100, NULL, LCD_TASK_PRIORITY, NULL);
 	xTaskCreate(vMUXTask, "MUX task", configMINIMAL_STACK_SIZE+100, NULL, MUX_TASK_PRIORITY, NULL);
-	xTaskCreate(vElevatorControlTask, "Elevator task", configMINIMAL_STACK_SIZE+100, NULL, MUX_TASK_PRIORITY, NULL);
+	xTaskCreate(vELEVATORCONTROLTask, "Elevator task", configMINIMAL_STACK_SIZE+100, NULL, ELEVATOR_CONTROL_TASK_PRIORITY, NULL);
 }
 
 static void vBlinkTask(void * parameters) {
@@ -146,6 +144,7 @@ static void vCLITask(void * parameters)
 static void vLCDTask(void * parameters)
 {
 	ElevatorInformation elevator;
+	uint16_t LCD_DELAY = 50;
 	while(1)
 	{
 		
@@ -156,31 +155,31 @@ static void vLCDTask(void * parameters)
 		else
 		{
 			lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
-			vTaskDelay(50);
+			vTaskDelay(LCD_DELAY);
 			stringToLCD(my_lcd_addr, "current-floor: ");
-			vTaskDelay(50);
+			vTaskDelay(LCD_DELAY);
 			intToLCD(my_lcd_addr, elevator.currentFloor+1); 
-			vTaskDelay(50);
+			vTaskDelay(LCD_DELAY);
 			lcd_write_cmd(my_lcd_addr, LCD_LN2);	// Position cursor at beginning of line 2
-			vTaskDelay(50);
+			vTaskDelay(LCD_DELAY);
 			
 			if(elevator.elevatorDirection == IDLE)
 			{
 			stringToLCD(my_lcd_addr, "Dir:IDLE");
-			vTaskDelay(50);
+			vTaskDelay(LCD_DELAY);
 			}else 
 			if(elevator.elevatorDirection == UP)
 			{
 			stringToLCD(my_lcd_addr, "Dir:UP");
-			vTaskDelay(50);
+			vTaskDelay(LCD_DELAY);
 			}else if(elevator.elevatorDirection == DOWN)
 			{
 			stringToLCD(my_lcd_addr, "Dir:DOWN");
-			vTaskDelay(50);
+			vTaskDelay(LCD_DELAY);
 			}
-		
+			
 			//intToLCD(my_lcd_addr, elevator.elevatorDirection); 
-			vTaskDelay(50);
+			vTaskDelay(LCD_DELAY);
 		}
 	}
 }
@@ -190,128 +189,73 @@ static void vMUXTask(void * parameters)
 	ElevatorInformation elevator;
 	elevator.currentFloor = FIRST;
 	elevator.targetFloor = FIRST;
+	uint16_t MUX_TASK_DELAY = 800;
 	
 	while(1)
 	{
 		//recieves target floor over queue
-		if( xQueueReceive( xMux_Queue, &elevator.targetFloor, 0 ) != pdPASS )
+		if( xQueueReceive( xMux_Queue, &elevator.targetFloor, 0 ) == pdPASS )
 		{
-			//no data in queue
-		}
-		{
-			//if the target floor is greater than the current floor
+			// Move up
 			if(elevator.targetFloor > elevator.currentFloor)
 			{
-				//increment floor
 				elevator.currentFloor++;
-				vTaskDelay(1000);
-				//turn led on
+				vTaskDelay(MUX_TASK_DELAY);
 				setLED(elevator.currentFloor);
-				vTaskDelay(1000);
+				vTaskDelay(MUX_TASK_DELAY);
 			}
-			//if the target floor is less than the current floor
+			
+			// Move down
 			if(elevator.targetFloor < elevator.currentFloor)
 			{
-				//decrement floor 
 				elevator.currentFloor--;
-				vTaskDelay(1000);
-				//turn led on
+				vTaskDelay(MUX_TASK_DELAY);
 				setLED(elevator.currentFloor);
-				vTaskDelay(1000);
+				vTaskDelay(MUX_TASK_DELAY);
 			}
 			
-			//if the target floor has been reached
+			// Do not move
 			if(elevator.targetFloor == elevator.currentFloor)
 			{
-				// stay on that floor
-				// turn LED on
 				setLED(elevator.currentFloor);
-				vTaskDelay(1000);
+				vTaskDelay(MUX_TASK_DELAY);
 			}
-			
-			xQueueSendToBack(xCURRENT_FLOOR_Queue, &elevator.currentFloor, 10);
 		}
 	}
 }
 
-static void vElevatorControlTask(void * parameters) {
+static void vELEVATORCONTROLTask(void * parameters) {
 	
 	ElevatorInformation elevator;
 	elevator.currentFloor = FIRST;
 	elevator.targetFloor = FIRST;
 	elevator.elevatorDirection = IDLE;
-		
+	
 	while(1)
-	{
-		
-		if( xQueueReceive( xCURRENT_FLOOR_Queue, &elevator.currentFloor, 0 ) != pdPASS )
+	{		
+		//FLOOR REQUESTS
+		if( xQueueReceive( xUP_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
 		{
-			//no data in queue
-		}
-		else
-		{
-			//recieved data
-			xQueueSendToBack(xLCD_Queue, &elevator, 10);
-			
-		}
-				
-		// recieve target floor from CLI_receive...
-		// from the up queue
-		if( xQueueReceive( xUP_REQUEST_Queue, &elevator.targetFloor, 0 ) != pdPASS )
-		{
-			//no data in queue
-		}
-		else
-		{
-			//recieved data 
-			//until queue is empty 
 			elevator.elevatorDirection = UP;
 		}
-		
-		// from the down queue
-		if( xQueueReceive( xDOWN_REQUEST_Queue, &elevator.targetFloor, 0 ) != pdPASS )
+	
+		if( xQueueReceive( xDOWN_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
 		{
-			//no data in queue
-		}
-		else
-		{
-			//until queue is empty 
 			elevator.elevatorDirection = DOWN;
 		}
 		
-		switch(elevator.elevatorDirection)
-		{
-			case IDLE:
-				//return to homing sequence
-				elevator.targetFloor = IDLE;
-				xQueueSendToBack(xMux_Queue, &elevator.targetFloor, 10);
-				break;
-			
-			case UP:
-				//elevator process the up queues
-				xQueueSendToBack(xMux_Queue, &elevator.targetFloor, 10);
-			
-				// After a certain time, if the elevator is inactive 
-				//then it will home back to the ground floor
-				if(TIM4_UPDATE_EVENT == 1)
-				{
-					elevator.elevatorDirection = IDLE;
-					TIM4_UPDATE_EVENT = 0;
-				}
-				break;
-			
-			case DOWN:
-				//elevator process the down queue
-				xQueueSendToBack(xMux_Queue, &elevator.targetFloor, 10);
-			
-				// After a certain time, if the elevator is inactive 
-				//then it will home back to the ground floor
-				if(TIM4_UPDATE_EVENT == 1)
-					{
-						elevator.elevatorDirection = IDLE;
-						TIM4_UPDATE_EVENT = 0;
-					}
-				break;
-		}
+		//CONTROL LOGIC
+		if (elevator.elevatorDirection == UP) {
+        processUpRequests(&elevator);
+				vTaskDelay(200);
+    } else if (elevator.elevatorDirection == DOWN) {
+        processDownRequests(&elevator);
+				vTaskDelay(200);
+    } else {
+        checkForNewRequests(&elevator);
+    }
+		
+    // Handle movement and updating current floor
+    //updateElevatorPosition(&elevator);
 	}
 }
