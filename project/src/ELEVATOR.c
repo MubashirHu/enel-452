@@ -46,9 +46,7 @@ void initGPIOPinsForElevator(void)
 }
 
 void setLED(int floor)
-{
-	current_floor = floor;
-	
+{	
 	switch(floor)
 	{
 		case 0:	
