@@ -78,7 +78,9 @@ int parseReceivedData(uint8_t *pData, int Size)
 {
 	sendByte(NEW_LINE_FEED);
 	sendByte(CARRIAGE_RETURN);
-	enum floor targetFloor = FIRST;
+	ElevatorInformation elevator;
+	elevator.targetFloor = FIRST;
+	//enum floor targetFloor = FIRST;
 	
 	if(strncmp((char*)pData, "ledon\r", 6) == 0)
 	{
@@ -120,74 +122,74 @@ int parseReceivedData(uint8_t *pData, int Size)
 		return 0;
 	}else if(strncmp((char*)pData, "1u\r", 3) == 0)
 	{
-		targetFloor = FIRST;
-		xQueueSendToBack(xUP_REQUEST_Queue, &targetFloor, 10);
+		elevator.targetFloor = FIRST;
+		xQueueSendToBack(xUP_REQUEST_Queue, &elevator.targetFloor, 10);
 		return 0;
 	}
 	else if(strncmp((char*)pData, "2u\r", 3) == 0)
 	{
-		targetFloor = SECOND;
-		xQueueSendToBack(xUP_REQUEST_Queue, &targetFloor, 10);
+		elevator.targetFloor = SECOND;
+		xQueueSendToBack(xUP_REQUEST_Queue, &elevator.targetFloor, 10);
 		return 0;
 	}else if(strncmp((char*)pData, "2d\r", 3) == 0)
 	{
-		targetFloor = SECOND;
-		xQueueSendToBack(xDOWN_REQUEST_Queue, &targetFloor, 10);
+		elevator.targetFloor = SECOND;
+		xQueueSendToBack(xDOWN_REQUEST_Queue, &elevator.targetFloor, 10);
 		return 0;
 	}else if(strncmp((char*)pData, "3u\r", 3) == 0)
 	{
-		targetFloor = THIRD;
-		xQueueSendToBack(xUP_REQUEST_Queue, &targetFloor, 10);
+		elevator.targetFloor = THIRD;
+		xQueueSendToBack(xUP_REQUEST_Queue, &elevator.targetFloor, 10);
 		return 0;
 	}else if(strncmp((char*)pData, "3d\r", 3) == 0)
 	{
-		targetFloor = THIRD;
-		xQueueSendToBack(xDOWN_REQUEST_Queue, &targetFloor, 10);
+		elevator.targetFloor = THIRD;
+		xQueueSendToBack(xDOWN_REQUEST_Queue, &elevator.targetFloor, 10);
 		return 0;
 	}else if(strncmp((char*)pData, "4u\r", 3) == 0)
 	{
-		targetFloor = FOURTH;
-		xQueueSendToBack(xUP_REQUEST_Queue, &targetFloor, 10);
+		elevator.targetFloor = FOURTH;
+		xQueueSendToBack(xUP_REQUEST_Queue, &elevator.targetFloor, 10);
 		return 0;
 	}else if(strncmp((char*)pData, "4d\r", 3) == 0)
 	{
-		targetFloor = FOURTH;
-		xQueueSendToBack(xDOWN_REQUEST_Queue, &targetFloor, 10);
+		elevator.targetFloor = FOURTH;
+		xQueueSendToBack(xDOWN_REQUEST_Queue, &elevator.targetFloor, 10);
 		return 0;
 	}else if(strncmp((char*)pData, "5u\r", 3) == 0)
 	{
-		targetFloor = FIFTH;
-		xQueueSendToBack(xUP_REQUEST_Queue, &targetFloor, 10);
+		elevator.targetFloor = FIFTH;
+		xQueueSendToBack(xUP_REQUEST_Queue, &elevator.targetFloor, 10);
 		return 0;
 	}else if(strncmp((char*)pData, "5d\r", 3) == 0)
 	{
-		targetFloor = FIFTH;
-		xQueueSendToBack(xDOWN_REQUEST_Queue, &targetFloor, 10);
+		elevator.targetFloor = FIFTH;
+		xQueueSendToBack(xDOWN_REQUEST_Queue, &elevator.targetFloor, 10);
 		return 0;
 	}else if(strncmp((char*)pData, "6u\r", 3) == 0)
 	{
-		targetFloor = SIXTH;
-		xQueueSendToBack(xUP_REQUEST_Queue, &targetFloor, 10);
+		elevator.targetFloor = SIXTH;
+		xQueueSendToBack(xUP_REQUEST_Queue, &elevator.targetFloor, 10);
 		return 0;
 	}else if(strncmp((char*)pData, "6d\r", 3) == 0)
 	{
-		targetFloor = SIXTH;
-		xQueueSendToBack(xDOWN_REQUEST_Queue, &targetFloor, 10);
+		elevator.targetFloor = SIXTH;
+		xQueueSendToBack(xDOWN_REQUEST_Queue, &elevator.targetFloor, 10);
 		return 0;
 	}else if(strncmp((char*)pData, "7u\r", 3) == 0)
 	{
-		targetFloor = SEVENTH;
-		xQueueSendToBack(xUP_REQUEST_Queue, &targetFloor, 10);
+		elevator.targetFloor = SEVENTH;
+		xQueueSendToBack(xUP_REQUEST_Queue, &elevator.targetFloor, 10);
 		return 0;
 	}else if(strncmp((char*)pData, "7d\r", 3) == 0)
 	{
-		targetFloor = SEVENTH;
-		xQueueSendToBack(xDOWN_REQUEST_Queue, &targetFloor, 10);
+		elevator.targetFloor = SEVENTH;
+		xQueueSendToBack(xDOWN_REQUEST_Queue, &elevator.targetFloor, 10);
 		return 0;
 	}else if(strncmp((char*)pData, "8d\r", 3) == 0)
 	{
-		targetFloor = EIGHTH;
-		xQueueSendToBack(xDOWN_REQUEST_Queue, &targetFloor, 10);
+		elevator.targetFloor = EIGHTH;
+		xQueueSendToBack(xDOWN_REQUEST_Queue, &elevator.targetFloor, 10);
 		return 0;
 	}else if(strncmp((char*)pData, "elevatorsequence1\r", 3) == 0)
 	{
