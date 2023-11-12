@@ -24,6 +24,8 @@
 #include "task.h"
 #include "queue.h"
 
+extern QueueHandle_t xLCD_Queue;
+
 void initGPIOPinsForElevator(void)
 {
 	enablePort('A');
@@ -81,5 +83,55 @@ void setLED(int floor)
 			GPIOA->ODR |= GPIO_ODR_ODR10 | GPIO_ODR_ODR9 | GPIO_ODR_ODR8;
 			break;
 	}
+}
+
+void processUpRequests(ElevatorInformation *elevator)
+{
+	// if the target floor is above the current floor
+	if(elevator->targetFloor > elevator->currentFloor)
+	{
+			moveToUpperFloor(elevator);
+			updateLCDToNewFloor(elevator);
+	}
+	else
+	{
+		//ignore
+	}
+}
+
+void processDownRequests(ElevatorInformation *elevator)
+{
+	// if the target floor is below the current floor
+	if(elevator->targetFloor < elevator->currentFloor)
+	{
+			moveToLowerFloor(elevator);
+			updateLCDToNewFloor(elevator);
+	}
+	else
+	{
+		//ignore
+	}
+}
+
+void checkForNewRequests(ElevatorInformation *elevator)
+{
+	
+}
+
+void moveToUpperFloor(ElevatorInformation *elevator)
+{
+	elevator->currentFloor++;
+	setLED(elevator->currentFloor);
+}
+
+void moveToLowerFloor(ElevatorInformation *elevator)
+{
+	elevator->currentFloor--;
+	setLED(elevator->currentFloor);
+}
+
+void updateLCDToNewFloor(ElevatorInformation *elevator)
+{
+	xQueueSendToFront( xLCD_Queue, elevator, 10);
 }
 
