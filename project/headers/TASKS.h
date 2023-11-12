@@ -21,8 +21,11 @@
 #define CLI_QUEUE_ITEM_SIZE sizeof(uint8_t)
 #define BLINKY_QUEUE_LENGTH 1
 #define BLINKY_QUEUE_ITEM_SIZE sizeof(uint16_t)
-#define ELEVATOR_QUEUE_LENGTH 1
-#define ELEVATOR_QUEUE_ITEM_SIZE sizeof(uint16_t)
+
+#define ELEVATOR_UP_QUEUE_LENGTH 1
+#define ELEVATOR_UP_QUEUE_ITEM_SIZE sizeof(uint16_t)
+#define ELEVATOR_DOWN_QUEUE_LENGTH 1
+#define ELEVATOR_DOWN_QUEUE_ITEM_SIZE sizeof(uint16_t)
 
 /**
  * @brief Creating Task function
@@ -62,6 +65,6 @@ static void vLCDTask(void * parameters);
 
 static void vMUXTask(void * parameters);
 
-static void vElevatorTask(void * parameters);
+static void vElevatorControlTask(void * parameters);
 
 #endif //TIM_H
