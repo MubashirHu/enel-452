@@ -53,7 +53,7 @@ void createQueues(void)
 		led_flash();
 	}
 	
-	xElevator_Down_Queue = xQueueCreate(ELEVATOR_UP_QUEUE_LENGTH, ELEVATOR_UP_QUEUE_ITEM_SIZE);
+	xElevator_Down_Queue = xQueueCreate(ELEVATOR_DOWN_QUEUE_LENGTH, ELEVATOR_DOWN_QUEUE_ITEM_SIZE);
 	if( xCLI_Queue == NULL )
 	{
 		/* The queue could not be created. */
