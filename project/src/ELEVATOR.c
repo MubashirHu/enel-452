@@ -24,8 +24,6 @@
 #include "task.h"
 #include "queue.h"
 
-uint8_t current_floor = 0;
-
 void initGPIOPinsForElevator(void)
 {
 	enablePort('A');
@@ -47,7 +45,7 @@ void initGPIOPinsForElevator(void)
 	//GPIOA->CRL &= ~GPIO_CRL_CNF5;
 }
 
-void sendFloorLevelToMux(int floor)
+void setLED(int floor)
 {
 	current_floor = floor;
 	

@@ -13,6 +13,12 @@
 #ifndef ELEVATOR_H
 #define ELEVATOR_H
 
+enum ElevatorDirection {
+	IDLE,
+	DOWN,
+	UP
+};
+
 void initGPIOPinsForElevator(void);
-void sendFloorLevelToMux(int floor);
+void setLED(int floor);
 #endif //ELEVATOR_H
