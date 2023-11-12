@@ -226,10 +226,12 @@ static void vMUXTask(void * parameters)
 
 static void vELEVATORCONTROLTask(void * parameters) {
 	
+	// default values
 	ElevatorInformation elevator;
 	elevator.currentFloor = FIRST;
 	elevator.targetFloor = FIRST;
 	elevator.elevatorDirection = IDLE;
+	elevator.arrivalStatus = ARRIVED;
 	
 	while(1)
 	{		
@@ -261,8 +263,5 @@ static void vELEVATORCONTROLTask(void * parameters) {
 				updateLCDToNewFloor(&elevator);
 				vTaskDelay(500);
     }
-		
-    // Handle movement and updating current floor
-    //updateElevatorPosition(&elevator);
 	}
 }
