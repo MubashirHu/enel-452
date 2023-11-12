@@ -81,6 +81,7 @@ int parseReceivedData(uint8_t *pData, int Size)
 	ElevatorInformation elevator;
 	elevator.currentFloor = FIRST;
 	elevator.targetFloor = FIRST;
+	elevator.arrivalStatus = ARRIVED;
 	//enum floor targetFloor = FIRST;
 	
 	if(strncmp((char*)pData, "ledon\r", 6) == 0)
