@@ -13,20 +13,36 @@
 #ifndef TASKS_H
 #define TASKS_H
 
+//PRIORITIES
+
 #define BLINKY_TASK_PRIORITY 5
+
+//INPUTS
 #define CLI_TASK_PRIORITY 10
+
+//OUTPUTS
 #define LCD_TASK_PRIORITY 10
 #define MUX_TASK_PRIORITY 10
+
+//CONTROL LOGIC
+#define ELEVATOR_CONTROL_TASK_PRIORITY 10
+
+// QUEUE SIZES
 #define CLI_QUEUE_LENGTH 1
 #define CLI_QUEUE_ITEM_SIZE sizeof(uint8_t)
+	
 #define BLINKY_QUEUE_LENGTH 1
 #define BLINKY_QUEUE_ITEM_SIZE sizeof(uint16_t)
+	
+#define MUX_QUEUE_LENGTH 1
+#define MUX_QUEUE_ITEM_SIZE sizeof(uint16_t)
 
 #define ELEVATOR_UP_QUEUE_LENGTH 1
 #define ELEVATOR_UP_QUEUE_ITEM_SIZE sizeof(uint16_t)
+	
 #define ELEVATOR_DOWN_QUEUE_LENGTH 1
 #define ELEVATOR_DOWN_QUEUE_ITEM_SIZE sizeof(uint16_t)
-
+	
 /**
  * @brief Creating Task function
  *
