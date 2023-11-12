@@ -13,7 +13,7 @@
 #ifndef ELEVATOR_H
 #define ELEVATOR_H
 
-enum ElevatorDirection {
+enum direction {
 	IDLE,
 	DOWN,
 	UP
