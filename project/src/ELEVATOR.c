@@ -92,6 +92,16 @@ void processUpRequests(ElevatorInformation *elevator)
 	{
 			moveToUpperFloor(elevator);
 	}
+	
+	if(elevator->targetFloor == elevator->currentFloor)
+	{
+		elevator->arrivalStatus = ARRIVED;
+	}
+	else
+	{
+		elevator->arrivalStatus = OTW;
+	}
+	
 }
 
 void processDownRequests(ElevatorInformation *elevator)
@@ -100,6 +110,15 @@ void processDownRequests(ElevatorInformation *elevator)
 	if(elevator->targetFloor < elevator->currentFloor)
 	{
 			moveToLowerFloor(elevator);
+	}
+	
+	if(elevator->targetFloor == elevator->currentFloor)
+	{
+		elevator->arrivalStatus = ARRIVED;
+	}
+	else
+	{
+		elevator->arrivalStatus = OTW;
 	}
 }
 
