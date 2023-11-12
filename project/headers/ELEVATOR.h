@@ -19,6 +19,17 @@ enum direction {
 	UP
 };
 
+enum floor {
+	FIRST,
+	SECOND,
+	THIRD,
+	FOURTH,
+	FIFTH,
+	SIXTH,
+	SEVENTH,
+	EIGHTH
+};
+
 void initGPIOPinsForElevator(void);
 void setLED(int floor);
 #endif //ELEVATOR_H
