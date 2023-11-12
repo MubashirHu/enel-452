@@ -26,6 +26,7 @@
 
 QueueHandle_t xCLI_Queue;
 QueueHandle_t xBlinky_Queue;
+QueueHandle_t xElevator_Queue;
 uint8_t my_lcd_addr = 0x3f;
 
 void createQueues(void)
@@ -43,6 +44,13 @@ void createQueues(void)
 		/* The queue could not be created. */
 		led_flash();
 	}
+	
+	xElevator_Queue = xQueueCreate(ELEVATOR_QUEUE_LENGTH, ELEVATOR_QUEUE_ITEM_SIZE);
+	if( xCLI_Queue == NULL )
+	{
+		/* The queue could not be created. */
+		led_flash();
+	}
 }
 
 void createTasks(void)
@@ -51,6 +59,7 @@ void createTasks(void)
 	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+50, NULL, CLI_TASK_PRIORITY, NULL);
 	xTaskCreate(vLCDTask, "LCD task", configMINIMAL_STACK_SIZE+50, NULL, LCD_TASK_PRIORITY, NULL);
 	xTaskCreate(vMUXTask, "MUX task", configMINIMAL_STACK_SIZE+50, NULL, MUX_TASK_PRIORITY, NULL);
+	xTaskCreate(vElevatorTask, "Elevator task", configMINIMAL_STACK_SIZE+50, NULL, MUX_TASK_PRIORITY, NULL);
 }
 
 static void vBlinkTask(void * parameters) {
@@ -127,5 +136,21 @@ static void vMUXTask(void * parameters)
 			sendFloorLevelToMux(i);
 			vTaskDelay(100);
 		}
+	}
+}
+
+static void vElevatorTask(void * parameters) {
+	uint16_t speed = 1000;
+	
+	while(1)
+	{			
+		if( xQueueReceive( xElevator_Queue, &speed, 0 ) != pdPASS )
+		{
+			//no data in queue
+		}
+		onboardLEDconfig(1);
+		vTaskDelay(speed);
+		onboardLEDconfig(0);
+		vTaskDelay(speed);		
 	}
 }
