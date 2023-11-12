@@ -45,6 +45,7 @@ int main(void)
 	configTIM(3, 1000);
 	initTIMInterrupt(3);
 	initTIMInterrupt(4);
+	configTIM(4, 1000);
 	initGPIOPinsForElevator();
 		
 	createQueues();
