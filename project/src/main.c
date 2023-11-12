@@ -25,6 +25,7 @@
 
 volatile uint8_t DATA_RECEIVED_FLAG = 0; 
 volatile uint8_t TIM3_UPDATE_EVENT = 0;
+volatile uint8_t TIM4_UPDATE_EVENT = 0;
 
 extern QueueHandle_t xCLI_Queue;
 extern uint8_t my_lcd_addr;
@@ -40,8 +41,10 @@ int main(void)
 	lcd_init(my_lcd_addr);
 	initTIM(2);
 	initTIM(3);
+	initTIM(4);
 	configTIM(3, 1000);
 	initTIMInterrupt(3);
+	initTIMInterrupt(4);
 	initGPIOPinsForElevator();
 		
 	createQueues();
@@ -52,6 +55,11 @@ int main(void)
 
 void TIM3_IRQHandler(void) {
 	TIM3_UPDATE_EVENT = 1;
+	TIM3->SR &= ~(TIM_SR_UIF); // reset update event flag
+}
+
+void TIM4_IRQHandler(void) {
+	TIM4_UPDATE_EVENT = 1;
 	TIM3->SR &= ~(TIM_SR_UIF); // reset update event flag
 }
 
