@@ -18,14 +18,14 @@
 #define BLINKY_TASK_PRIORITY 5
 
 //INPUTS
-#define CLI_TASK_PRIORITY 10
+#define CLI_TASK_PRIORITY 15
 
 //OUTPUTS
-#define LCD_TASK_PRIORITY 10
-#define MUX_TASK_PRIORITY 10
+#define LCD_TASK_PRIORITY 15
+#define MUX_TASK_PRIORITY 15
 
 //CONTROL LOGIC
-#define ELEVATOR_CONTROL_TASK_PRIORITY 10
+#define ELEVATOR_CONTROL_TASK_PRIORITY 15
 
 // QUEUE SIZES
 #define CLI_QUEUE_LENGTH 1
@@ -34,21 +34,21 @@
 #define BLINKY_QUEUE_LENGTH 1
 #define BLINKY_QUEUE_ITEM_SIZE sizeof(uint16_t)
 	
-#define MUX_QUEUE_LENGTH 1
+#define MUX_QUEUE_LENGTH 5
 #define MUX_QUEUE_ITEM_SIZE sizeof(uint16_t)
 
-#define ELEVATOR_UP_QUEUE_LENGTH 1
+#define ELEVATOR_UP_QUEUE_LENGTH 5
 #define ELEVATOR_UP_QUEUE_ITEM_SIZE sizeof(uint16_t)
 	
-#define ELEVATOR_DOWN_QUEUE_LENGTH 1
+#define ELEVATOR_DOWN_QUEUE_LENGTH 5
 #define ELEVATOR_DOWN_QUEUE_ITEM_SIZE sizeof(uint16_t)
 	
-#define CURRENT_FLOOR_QUEUE_LENGTH 1
+#define CURRENT_FLOOR_QUEUE_LENGTH 5
 #define CURRENT_FLOOR_QUEUE_ITEM_SIZE sizeof(uint16_t)
 	
-#define LCD_QUEUE_LENGTH 1
+#define LCD_QUEUE_LENGTH 5
 #define LCD_QUEUE_ITEM_SIZE sizeof(ElevatorInformation)
-	
+
 /**
  * @brief Creating Task function
  *
@@ -87,6 +87,6 @@ static void vLCDTask(void * parameters);
 
 static void vMUXTask(void * parameters);
 
-static void vElevatorControlTask(void * parameters);
+static void vELEVATORCONTROLTask(void * parameters);
 
 #endif //TIM_H
