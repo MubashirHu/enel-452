@@ -43,6 +43,12 @@
 #define ELEVATOR_DOWN_QUEUE_LENGTH 1
 #define ELEVATOR_DOWN_QUEUE_ITEM_SIZE sizeof(uint16_t)
 	
+#define CURRENT_FLOOR_QUEUE_LENGTH 1
+#define CURRENT_FLOOR_QUEUE_ITEM_SIZE sizeof(uint16_t)
+	
+#define LCD_QUEUE_LENGTH 1
+#define LCD_QUEUE_ITEM_SIZE sizeof(ElevatorInformation)
+	
 /**
  * @brief Creating Task function
  *
