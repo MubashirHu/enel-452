@@ -28,6 +28,9 @@ QueueHandle_t xCLI_Queue;
 QueueHandle_t xBlinky_Queue;
 QueueHandle_t xElevator_Up_Queue;
 QueueHandle_t xElevator_Down_Queue;
+QueueHandle_t xMux_Queue;
+QueueHandle_t xUP_REQUEST_Queue;
+QueueHandle_t xDOWN_REQUEST_Queue;
 uint8_t my_lcd_addr = 0x3f;
 
 void createQueues(void)
@@ -46,15 +49,22 @@ void createQueues(void)
 		led_flash();
 	}
 	
-	xElevator_Up_Queue = xQueueCreate(ELEVATOR_UP_QUEUE_LENGTH, ELEVATOR_UP_QUEUE_ITEM_SIZE);
-	if( xCLI_Queue == NULL )
+	xMux_Queue = xQueueCreate(MUX_QUEUE_LENGTH, MUX_QUEUE_ITEM_SIZE);
+	if( xMux_Queue == NULL )
 	{
 		/* The queue could not be created. */
 		led_flash();
 	}
 	
-	xElevator_Down_Queue = xQueueCreate(ELEVATOR_DOWN_QUEUE_LENGTH, ELEVATOR_DOWN_QUEUE_ITEM_SIZE);
-	if( xCLI_Queue == NULL )
+	xUP_REQUEST_Queue = xQueueCreate(ELEVATOR_UP_QUEUE_LENGTH, ELEVATOR_UP_QUEUE_ITEM_SIZE);
+	if( xUP_REQUEST_Queue == NULL )
+	{
+		/* The queue could not be created. */
+		led_flash();
+	}
+	
+	xDOWN_REQUEST_Queue = xQueueCreate(ELEVATOR_DOWN_QUEUE_LENGTH, ELEVATOR_DOWN_QUEUE_ITEM_SIZE);
+	if( xDOWN_REQUEST_Queue == NULL )
 	{
 		/* The queue could not be created. */
 		led_flash();
@@ -137,29 +147,102 @@ static void vLCDTask(void * parameters)
 
 static void vMUXTask(void * parameters)
 {
+	enum floor targetFloor;
+	enum floor currentFloor = FIRST;
+	
 	while(1)
 	{
-		for( int i = 0; i < 8; i++)
+		//recieves target floor over queue
+		if( xQueueReceive( xMux_Queue, &targetFloor, 0 ) != pdPASS )
 		{
-			sendFloorLevelToMux(i);
-			vTaskDelay(100);
+			//no data in queue
+		}
+		{
+			//if the target floor is greater than the current floor
+			if(targetFloor > currentFloor)
+			{
+				//increment floor
+				currentFloor++;
+				vTaskDelay(500);
+				//turn led on
+				setLED(currentFloor);
+				vTaskDelay(500);
+			}
+			//if the target floor is less than the current floor
+			if(targetFloor < currentFloor)
+			{
+				//decrement floor 
+				currentFloor--;
+				vTaskDelay(500);
+				//turn led on
+				setLED(currentFloor);
+				vTaskDelay(500);
+			}
+			
+			//if the target floor has been reached
+			if(targetFloor == currentFloor)
+			{
+				// stay on that floor
+				// turn LED on
+				setLED(currentFloor);
+				vTaskDelay(500);
+			}
 		}
 	}
 }
 
 static void vElevatorControlTask(void * parameters) {
-	uint16_t speed = 1000;
+	
+	enum direction elevatorDirection = IDLE; 
+	enum floor targetFloor = FIRST;
 	
 	while(1)
-	{			
-		if( xQueueReceive( xElevator_Up_Queue, &speed, 0 ) != pdPASS )
+	{
+		// recieve target floor from CLI_receive...
+		
+		// from the up queue
+		if( xQueueReceive( xUP_REQUEST_Queue, &targetFloor, 0 ) != pdPASS )
 		{
 			//no data in queue
 		}
-
-		if( xQueueReceive( xElevator_Down_Queue, &speed, 0 ) != pdPASS )
+		else
+		{
+			//recieved data 
+			//until queue is empty 
+			elevatorDirection = UP;
+		}
+		
+	
+		// from the down queue
+		if( xQueueReceive( xDOWN_REQUEST_Queue, &targetFloor, 0 ) != pdPASS )
 		{
 			//no data in queue
 		}
+		else
+		{
+			//until queue is empty 
+			elevatorDirection = DOWN;
+		}
+		
+		switch(elevatorDirection)
+		{
+			case IDLE:
+				//return to homing sequence
+				targetFloor = FIRST;
+				xQueueSendToBack(xMux_Queue, &targetFloor, 10);
+				break;
+			
+			case UP:
+				//elevator process the up queues
+				
+				break;
+			
+			case DOWN:
+				break;
+				//elevator process the down queue
+		}
+		
+		// After a certain time, if the elevator is inactive 
+			//then it will home back to the ground floor
 	}
 }
