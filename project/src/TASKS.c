@@ -31,6 +31,8 @@ QueueHandle_t xElevator_Down_Queue;
 QueueHandle_t xMux_Queue;
 QueueHandle_t xUP_REQUEST_Queue;
 QueueHandle_t xDOWN_REQUEST_Queue;
+QueueHandle_t xCURRENT_FLOOR_Queue;
+QueueHandle_t xLCD_Queue;
 uint8_t my_lcd_addr = 0x3f;
 
 void createQueues(void)
@@ -65,6 +67,20 @@ void createQueues(void)
 	
 	xDOWN_REQUEST_Queue = xQueueCreate(ELEVATOR_DOWN_QUEUE_LENGTH, ELEVATOR_DOWN_QUEUE_ITEM_SIZE);
 	if( xDOWN_REQUEST_Queue == NULL )
+	{
+		/* The queue could not be created. */
+		led_flash();
+	}
+	
+	xCURRENT_FLOOR_Queue = xQueueCreate(CURRENT_FLOOR_QUEUE_LENGTH, CURRENT_FLOOR_QUEUE_ITEM_SIZE);
+	if( xCURRENT_FLOOR_Queue == NULL )
+	{
+		/* The queue could not be created. */
+		led_flash();
+	}
+	
+	xLCD_Queue = xQueueCreate(LCD_QUEUE_LENGTH, LCD_QUEUE_ITEM_SIZE);
+	if( xLCD_Queue == NULL )
 	{
 		/* The queue could not be created. */
 		led_flash();
@@ -129,25 +145,35 @@ static void vCLITask(void * parameters)
 
 static void vLCDTask(void * parameters)
 {
-	uint8_t temp = 8;
+	ElevatorInformation elevator;
 	while(1)
 	{
-		lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
-		vTaskDelay(100);
-		stringToLCD(my_lcd_addr, "current-floor: ");
-		vTaskDelay(100);
-		intToLCD(my_lcd_addr, temp); 
-		vTaskDelay(100);
-		lcd_write_cmd(my_lcd_addr, LCD_LN2);	// Position cursor at beginning of line 2
-		vTaskDelay(100);
-		stringToLCD(my_lcd_addr, "Direction:");
-		vTaskDelay(100);
+		
+		if( xQueueReceive( xMux_Queue, &elevator, 0 ) != pdPASS )
+		{
+			//no data in queue
+		}
+		else
+		{
+			lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
+			vTaskDelay(100);
+			stringToLCD(my_lcd_addr, "current-floor: ");
+			vTaskDelay(100);
+			intToLCD(my_lcd_addr, elevator.currentFloor); 
+			vTaskDelay(100);
+			lcd_write_cmd(my_lcd_addr, LCD_LN2);	// Position cursor at beginning of line 2
+			vTaskDelay(100);
+			stringToLCD(my_lcd_addr, "Direction:");
+			vTaskDelay(100);
+			intToLCD(my_lcd_addr, elevator.elevatorDirection); 
+			vTaskDelay(100);
+		}
 	}
 }
 
 static void vMUXTask(void * parameters)
 {
-	enum floor targetFloor;
+	enum floor targetFloor = FIRST;
 	enum floor currentFloor = FIRST;
 	
 	while(1)
@@ -163,20 +189,20 @@ static void vMUXTask(void * parameters)
 			{
 				//increment floor
 				currentFloor++;
-				vTaskDelay(500);
+				vTaskDelay(200);
 				//turn led on
 				setLED(currentFloor);
-				vTaskDelay(500);
+				vTaskDelay(200);
 			}
 			//if the target floor is less than the current floor
 			if(targetFloor < currentFloor)
 			{
 				//decrement floor 
 				currentFloor--;
-				vTaskDelay(500);
+				vTaskDelay(200);
 				//turn led on
 				setLED(currentFloor);
-				vTaskDelay(500);
+				vTaskDelay(200);
 			}
 			
 			//if the target floor has been reached
@@ -185,23 +211,37 @@ static void vMUXTask(void * parameters)
 				// stay on that floor
 				// turn LED on
 				setLED(currentFloor);
-				vTaskDelay(500);
+				vTaskDelay(200);
 			}
+			
+			xQueueSendToBack(xCURRENT_FLOOR_Queue, &currentFloor, 10);
 		}
 	}
 }
 
 static void vElevatorControlTask(void * parameters) {
 	
-	enum direction elevatorDirection = IDLE; 
-	enum floor targetFloor = FIRST;
-	
+	ElevatorInformation elevator;
+	elevator.currentFloor = FIRST;
+	elevator.elevatorDirection = IDLE;
+		
 	while(1)
 	{
-		// recieve target floor from CLI_receive...
 		
+		if( xQueueReceive( xCURRENT_FLOOR_Queue, &elevator.currentFloor, 0 ) != pdPASS )
+		{
+			//no data in queue
+		}
+		else
+		{
+			//recieved data
+			xQueueSendToBack(xLCD_Queue, &elevator, 10);
+			
+		}
+				
+		// recieve target floor from CLI_receive...
 		// from the up queue
-		if( xQueueReceive( xUP_REQUEST_Queue, &targetFloor, 0 ) != pdPASS )
+		if( xQueueReceive( xUP_REQUEST_Queue, &elevator.targetFloor, 0 ) != pdPASS )
 		{
 			//no data in queue
 		}
@@ -209,38 +249,37 @@ static void vElevatorControlTask(void * parameters) {
 		{
 			//recieved data 
 			//until queue is empty 
-			elevatorDirection = UP;
+			elevator.elevatorDirection = UP;
 		}
 		
-	
 		// from the down queue
-		if( xQueueReceive( xDOWN_REQUEST_Queue, &targetFloor, 0 ) != pdPASS )
+		if( xQueueReceive( xDOWN_REQUEST_Queue, &elevator.targetFloor, 0 ) != pdPASS )
 		{
 			//no data in queue
 		}
 		else
 		{
 			//until queue is empty 
-			elevatorDirection = DOWN;
+			elevator.elevatorDirection = DOWN;
 		}
 		
-		switch(elevatorDirection)
+		switch(elevator.elevatorDirection)
 		{
 			case IDLE:
 				//return to homing sequence
-				targetFloor = FIRST;
-				xQueueSendToBack(xMux_Queue, &targetFloor, 10);
+				elevator.targetFloor = EIGHTH;
+				xQueueSendToBack(xMux_Queue, &elevator.targetFloor, 10);
 				break;
 			
 			case UP:
 				//elevator process the up queues
-				xQueueSendToBack(xMux_Queue, &targetFloor, 10);
+				xQueueSendToBack(xMux_Queue, &elevator.targetFloor, 10);
 				break;
 			
 			case DOWN:
-				xQueueSendToBack(xMux_Queue, &targetFloor, 10);
-				break;
 				//elevator process the down queue
+				xQueueSendToBack(xMux_Queue, &elevator.targetFloor, 10);
+				break;
 		}
 		
 		// After a certain time, if the elevator is inactive 
