@@ -247,12 +247,19 @@ static void vELEVATORCONTROLTask(void * parameters) {
 		//CONTROL LOGIC
 		if (elevator.elevatorDirection == UP) {
         processUpRequests(&elevator);
-				vTaskDelay(200);
+				vTaskDelay(500);
+				updateLCDToNewFloor(&elevator);
+				vTaskDelay(500);
     } else if (elevator.elevatorDirection == DOWN) {
         processDownRequests(&elevator);
-				vTaskDelay(200);
+				vTaskDelay(500);
+				updateLCDToNewFloor(&elevator);
+				vTaskDelay(500);
     } else {
         checkForNewRequests(&elevator);
+				vTaskDelay(500);
+				updateLCDToNewFloor(&elevator);
+				vTaskDelay(500);
     }
 		
     // Handle movement and updating current floor

@@ -91,11 +91,6 @@ void processUpRequests(ElevatorInformation *elevator)
 	if(elevator->targetFloor > elevator->currentFloor)
 	{
 			moveToUpperFloor(elevator);
-			updateLCDToNewFloor(elevator);
-	}
-	else
-	{
-		//ignore
 	}
 }
 
@@ -105,11 +100,6 @@ void processDownRequests(ElevatorInformation *elevator)
 	if(elevator->targetFloor < elevator->currentFloor)
 	{
 			moveToLowerFloor(elevator);
-			updateLCDToNewFloor(elevator);
-	}
-	else
-	{
-		//ignore
 	}
 }
 
