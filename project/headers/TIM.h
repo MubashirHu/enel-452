@@ -17,6 +17,7 @@
 #define SENDDATA_TIMER 10
 #define RECEIVEDATA_TIMER 10
 extern volatile uint8_t TIM3_UPDATE_EVENT; // Declaration, no initialization
+extern volatile uint8_t TIM4_UPDATE_EVENT; // Declaration, no initialization
 
 /**
 Initialize the general purpose timer TIM2
@@ -40,6 +41,11 @@ void configTIM(int timer, uint16_t time_period);
 prototype for the NVIC TIM3 handler
 */
 void TIM3_IRQHandler(void);
+
+/**
+prototype for the NVIC TIM4 handler
+*/
+void TIM4_IRQHandler(void);
 
 #endif //TIM_H
 
