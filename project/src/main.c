@@ -60,7 +60,7 @@ void TIM3_IRQHandler(void) {
 
 void TIM4_IRQHandler(void) {
 	TIM4_UPDATE_EVENT = 1;
-	TIM3->SR &= ~(TIM_SR_UIF); // reset update event flag
+	TIM4->SR &= ~(TIM_SR_UIF); // reset update event flag
 }
 
 void USART2_IRQHandler(void) {
