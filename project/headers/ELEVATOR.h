@@ -30,11 +30,17 @@ enum floor {
 	EIGHTH
 };
 
+enum arrival {
+	ARRIVED,
+	OTW
+};
+
 typedef struct 
 {
 	enum direction elevatorDirection;
 	enum floor currentFloor;
 	enum floor targetFloor;
+	enum arrival arrivalStatus;
 }ElevatorInformation;
 
 void initGPIOPinsForElevator(void);
