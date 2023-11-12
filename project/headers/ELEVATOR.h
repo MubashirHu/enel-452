@@ -30,6 +30,13 @@ enum floor {
 	EIGHTH
 };
 
+typedef struct 
+{
+	enum direction elevatorDirection;
+	enum floor currentFloor;
+	enum floor targetFloor;
+}ElevatorInformation;
+
 void initGPIOPinsForElevator(void);
 void setLED(int floor);
 #endif //ELEVATOR_H
