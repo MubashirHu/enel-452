@@ -187,48 +187,49 @@ static void vLCDTask(void * parameters)
 
 static void vMUXTask(void * parameters)
 {
-	enum floor targetFloor = FIRST;
-	enum floor currentFloor = FIRST;
+	ElevatorInformation elevator;
+	elevator.currentFloor = FIRST;
+	elevator.targetFloor = FIRST;
 	
 	while(1)
 	{
 		//recieves target floor over queue
-		if( xQueueReceive( xMux_Queue, &targetFloor, 0 ) != pdPASS )
+		if( xQueueReceive( xMux_Queue, &elevator.targetFloor, 0 ) != pdPASS )
 		{
 			//no data in queue
 		}
 		{
 			//if the target floor is greater than the current floor
-			if(targetFloor > currentFloor)
+			if(elevator.targetFloor > elevator.currentFloor)
 			{
 				//increment floor
-				currentFloor++;
+				elevator.currentFloor++;
 				vTaskDelay(1000);
 				//turn led on
-				setLED(currentFloor);
+				setLED(elevator.currentFloor);
 				vTaskDelay(1000);
 			}
 			//if the target floor is less than the current floor
-			if(targetFloor < currentFloor)
+			if(elevator.targetFloor < elevator.currentFloor)
 			{
 				//decrement floor 
-				currentFloor--;
+				elevator.currentFloor--;
 				vTaskDelay(1000);
 				//turn led on
-				setLED(currentFloor);
+				setLED(elevator.currentFloor);
 				vTaskDelay(1000);
 			}
 			
 			//if the target floor has been reached
-			if(targetFloor == currentFloor)
+			if(elevator.targetFloor == elevator.currentFloor)
 			{
 				// stay on that floor
 				// turn LED on
-				setLED(currentFloor);
+				setLED(elevator.currentFloor);
 				vTaskDelay(1000);
 			}
 			
-			xQueueSendToBack(xCURRENT_FLOOR_Queue, &currentFloor, 10);
+			xQueueSendToBack(xCURRENT_FLOOR_Queue, &elevator.currentFloor, 10);
 		}
 	}
 }
@@ -237,6 +238,7 @@ static void vElevatorControlTask(void * parameters) {
 	
 	ElevatorInformation elevator;
 	elevator.currentFloor = FIRST;
+	elevator.targetFloor = FIRST;
 	elevator.elevatorDirection = IDLE;
 		
 	while(1)
@@ -281,22 +283,35 @@ static void vElevatorControlTask(void * parameters) {
 		{
 			case IDLE:
 				//return to homing sequence
-				elevator.targetFloor = FIRST;
+				elevator.targetFloor = IDLE;
 				xQueueSendToBack(xMux_Queue, &elevator.targetFloor, 10);
 				break;
 			
 			case UP:
 				//elevator process the up queues
 				xQueueSendToBack(xMux_Queue, &elevator.targetFloor, 10);
+			
+				// After a certain time, if the elevator is inactive 
+				//then it will home back to the ground floor
+				if(TIM4_UPDATE_EVENT == 1)
+				{
+					elevator.elevatorDirection = IDLE;
+					TIM4_UPDATE_EVENT = 0;
+				}
 				break;
 			
 			case DOWN:
 				//elevator process the down queue
 				xQueueSendToBack(xMux_Queue, &elevator.targetFloor, 10);
+			
+				// After a certain time, if the elevator is inactive 
+				//then it will home back to the ground floor
+				if(TIM4_UPDATE_EVENT == 1)
+					{
+						elevator.elevatorDirection = IDLE;
+						TIM4_UPDATE_EVENT = 0;
+					}
 				break;
 		}
-		
-		// After a certain time, if the elevator is inactive 
-			//then it will home back to the ground floor
 	}
 }
