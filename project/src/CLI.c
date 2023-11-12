@@ -79,6 +79,7 @@ int parseReceivedData(uint8_t *pData, int Size)
 	sendByte(NEW_LINE_FEED);
 	sendByte(CARRIAGE_RETURN);
 	ElevatorInformation elevator;
+	elevator.currentFloor = FIRST;
 	elevator.targetFloor = FIRST;
 	//enum floor targetFloor = FIRST;
 	
