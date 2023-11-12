@@ -91,9 +91,9 @@ void createTasks(void)
 {
 	xTaskCreate(vBlinkTask, "Blinky", configMINIMAL_STACK_SIZE+10, NULL, BLINKY_TASK_PRIORITY, NULL);  
 	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+50, NULL, CLI_TASK_PRIORITY, NULL);
-	xTaskCreate(vLCDTask, "LCD task", configMINIMAL_STACK_SIZE+50, NULL, LCD_TASK_PRIORITY, NULL);
-	xTaskCreate(vMUXTask, "MUX task", configMINIMAL_STACK_SIZE+50, NULL, MUX_TASK_PRIORITY, NULL);
-	xTaskCreate(vElevatorControlTask, "Elevator task", configMINIMAL_STACK_SIZE+50, NULL, MUX_TASK_PRIORITY, NULL);
+	xTaskCreate(vLCDTask, "LCD task", configMINIMAL_STACK_SIZE+100, NULL, LCD_TASK_PRIORITY, NULL);
+	xTaskCreate(vMUXTask, "MUX task", configMINIMAL_STACK_SIZE+100, NULL, MUX_TASK_PRIORITY, NULL);
+	xTaskCreate(vElevatorControlTask, "Elevator task", configMINIMAL_STACK_SIZE+100, NULL, MUX_TASK_PRIORITY, NULL);
 }
 
 static void vBlinkTask(void * parameters) {
@@ -149,24 +149,38 @@ static void vLCDTask(void * parameters)
 	while(1)
 	{
 		
-		if( xQueueReceive( xMux_Queue, &elevator, 0 ) != pdPASS )
+		if( xQueueReceive( xLCD_Queue, &elevator, 0 ) != pdPASS )
 		{
 			//no data in queue
 		}
 		else
 		{
 			lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
-			vTaskDelay(100);
+			vTaskDelay(50);
 			stringToLCD(my_lcd_addr, "current-floor: ");
-			vTaskDelay(100);
-			intToLCD(my_lcd_addr, elevator.currentFloor); 
-			vTaskDelay(100);
+			vTaskDelay(50);
+			intToLCD(my_lcd_addr, elevator.currentFloor+1); 
+			vTaskDelay(50);
 			lcd_write_cmd(my_lcd_addr, LCD_LN2);	// Position cursor at beginning of line 2
-			vTaskDelay(100);
-			stringToLCD(my_lcd_addr, "Direction:");
-			vTaskDelay(100);
-			intToLCD(my_lcd_addr, elevator.elevatorDirection); 
-			vTaskDelay(100);
+			vTaskDelay(50);
+			
+			if(elevator.elevatorDirection == IDLE)
+			{
+			stringToLCD(my_lcd_addr, "Dir:IDLE");
+			vTaskDelay(50);
+			}else 
+			if(elevator.elevatorDirection == UP)
+			{
+			stringToLCD(my_lcd_addr, "Dir:UP");
+			vTaskDelay(50);
+			}else if(elevator.elevatorDirection == DOWN)
+			{
+			stringToLCD(my_lcd_addr, "Dir:DOWN");
+			vTaskDelay(50);
+			}
+		
+			//intToLCD(my_lcd_addr, elevator.elevatorDirection); 
+			vTaskDelay(50);
 		}
 	}
 }
@@ -189,20 +203,20 @@ static void vMUXTask(void * parameters)
 			{
 				//increment floor
 				currentFloor++;
-				vTaskDelay(200);
+				vTaskDelay(1000);
 				//turn led on
 				setLED(currentFloor);
-				vTaskDelay(200);
+				vTaskDelay(1000);
 			}
 			//if the target floor is less than the current floor
 			if(targetFloor < currentFloor)
 			{
 				//decrement floor 
 				currentFloor--;
-				vTaskDelay(200);
+				vTaskDelay(1000);
 				//turn led on
 				setLED(currentFloor);
-				vTaskDelay(200);
+				vTaskDelay(1000);
 			}
 			
 			//if the target floor has been reached
@@ -211,7 +225,7 @@ static void vMUXTask(void * parameters)
 				// stay on that floor
 				// turn LED on
 				setLED(currentFloor);
-				vTaskDelay(200);
+				vTaskDelay(1000);
 			}
 			
 			xQueueSendToBack(xCURRENT_FLOOR_Queue, &currentFloor, 10);
@@ -267,7 +281,7 @@ static void vElevatorControlTask(void * parameters) {
 		{
 			case IDLE:
 				//return to homing sequence
-				elevator.targetFloor = EIGHTH;
+				elevator.targetFloor = FIRST;
 				xQueueSendToBack(xMux_Queue, &elevator.targetFloor, 10);
 				break;
 			
