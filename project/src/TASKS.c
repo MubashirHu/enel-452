@@ -234,10 +234,11 @@ static void vElevatorControlTask(void * parameters) {
 			
 			case UP:
 				//elevator process the up queues
-				
+				xQueueSendToBack(xMux_Queue, &targetFloor, 10);
 				break;
 			
 			case DOWN:
+				xQueueSendToBack(xMux_Queue, &targetFloor, 10);
 				break;
 				//elevator process the down queue
 		}
