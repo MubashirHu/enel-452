@@ -244,6 +244,30 @@ static void vELEVATORCONTROLTask(void * parameters) {
 			}
 		}
 		
+		else if(elevator.arrivalStatus == ARRIVED && elevator.elevatorDirection == UP)
+		{
+			
+			if(xQueueReceive( xUP_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
+			{
+				elevator.elevatorDirection = UP;
+			} else
+			{
+				elevator.elevatorDirection = DOWN;
+			}
+		}
+		
+		else if(elevator.arrivalStatus == ARRIVED && elevator.elevatorDirection == DOWN)
+		{
+			
+			if( xQueueReceive( xDOWN_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
+			{
+				elevator.elevatorDirection = DOWN;
+			} else
+			{
+				elevator.elevatorDirection = IDLE;
+			}
+		}
+		
 		//CONTROL LOGIC
 		if (elevator.elevatorDirection == UP) {
         processUpRequests(&elevator);
@@ -266,7 +290,6 @@ static void vELEVATORCONTROLTask(void * parameters) {
 		
 		if(TIM3_UPDATE_EVENT == 1)
 		{
-			// UPDATE TERMINAL
 			updateStatusWindow(&elevator);
 			TIM3_UPDATE_EVENT = 0;
 		}
