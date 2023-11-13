@@ -236,14 +236,17 @@ static void vELEVATORCONTROLTask(void * parameters) {
 	while(1)
 	{		
 		//FLOOR REQUESTS
-		if( xQueueReceive( xUP_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
+		if(elevator.arrivalStatus == ARRIVED)
 		{
-			elevator.elevatorDirection = UP;
-		}
+			if(xQueueReceive( xUP_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
+			{
+				elevator.elevatorDirection = UP;
+			}
 	
-		if( xQueueReceive( xDOWN_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
-		{
-			elevator.elevatorDirection = DOWN;
+			if( xQueueReceive( xDOWN_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
+			{
+				elevator.elevatorDirection = DOWN;
+			}
 		}
 		
 		//CONTROL LOGIC

@@ -124,7 +124,15 @@ void processDownRequests(ElevatorInformation *elevator)
 
 void checkForNewRequests(ElevatorInformation *elevator)
 {
-	
+	if(elevator->targetFloor != elevator->currentFloor)
+	{
+		elevator->arrivalStatus = OTW;
+	}
+	else
+	{
+		elevator->arrivalStatus = ARRIVED;
+		elevator->elevatorDirection = IDLE;
+	}
 }
 
 void moveToUpperFloor(ElevatorInformation *elevator)
