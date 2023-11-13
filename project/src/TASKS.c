@@ -118,12 +118,7 @@ static void vCLITask(void * parameters)
 	
 	while(1)
 	{		
-		if(TIM3_UPDATE_EVENT == 1)
-		{
-			// UPDATE TERMINAL
-			updateStatusWindow();
-			TIM3_UPDATE_EVENT = 0;
-		} 	
+	 	
 		if( xQueueReceive( xCLI_Queue, &buffer[bufferElementID], 10 ) != pdPASS )
 		{
 			// no data in queue
@@ -236,7 +231,7 @@ static void vELEVATORCONTROLTask(void * parameters) {
 	while(1)
 	{		
 		//FLOOR REQUESTS
-		if(elevator.arrivalStatus == ARRIVED)
+		if(elevator.arrivalStatus == ARRIVED && elevator.elevatorDirection == IDLE)
 		{
 			if(xQueueReceive( xUP_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
 			{
@@ -245,7 +240,7 @@ static void vELEVATORCONTROLTask(void * parameters) {
 	
 			if( xQueueReceive( xDOWN_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
 			{
-				elevator.elevatorDirection = DOWN;
+				elevator.elevatorDirection = UP;
 			}
 		}
 		
@@ -255,16 +250,25 @@ static void vELEVATORCONTROLTask(void * parameters) {
 				vTaskDelay(500);
 				updateLCDToNewFloor(&elevator);
 				vTaskDelay(500);
+			
     } else if (elevator.elevatorDirection == DOWN) {
         processDownRequests(&elevator);
 				vTaskDelay(500);
 				updateLCDToNewFloor(&elevator);
 				vTaskDelay(500);
+			
     } else {
         checkForNewRequests(&elevator);
 				vTaskDelay(500);
 				updateLCDToNewFloor(&elevator);
 				vTaskDelay(500);
     }
+		
+		if(TIM3_UPDATE_EVENT == 1)
+		{
+			// UPDATE TERMINAL
+			updateStatusWindow(&elevator);
+			TIM3_UPDATE_EVENT = 0;
+		}
 	}
 }
