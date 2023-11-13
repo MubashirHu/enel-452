@@ -31,6 +31,7 @@ QueueHandle_t xUP_REQUEST_Queue;
 QueueHandle_t xDOWN_REQUEST_Queue;
 QueueHandle_t xCURRENT_FLOOR_Queue;
 QueueHandle_t xLCD_Queue;
+QueueHandle_t xIN_ELEVATOR_BUTTONS_Queue;
 uint8_t my_lcd_addr = 0x3f;
 
 void createQueues(void)
@@ -79,6 +80,13 @@ void createQueues(void)
 	
 	xLCD_Queue = xQueueCreate(LCD_QUEUE_LENGTH, LCD_QUEUE_ITEM_SIZE);
 	if( xLCD_Queue == NULL )
+	{
+		/* The queue could not be created. */
+		led_flash();
+	}
+	
+	xIN_ELEVATOR_BUTTONS_Queue = xQueueCreate(IN_ELEVATOR_BUTTONS_QUEUE_LENGTH, IN_ELEVATOR_BUTTONS_QUEUE_ITEM_SIZE);
+	if( xIN_ELEVATOR_BUTTONS_Queue == NULL )
 	{
 		/* The queue could not be created. */
 		led_flash();
