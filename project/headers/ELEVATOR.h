@@ -32,6 +32,7 @@ enum floor {
 
 enum arrival {
 	ARRIVED,
+	ARRIVED_TO_REQUEST,
 	OTW
 };
 
