@@ -241,31 +241,33 @@ static void vELEVATORCONTROLTask(void * parameters) {
 	
 			if( xQueueReceive( xDOWN_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
 			{
-				elevator.elevatorDirection = UP;
+				elevator.elevatorDirection = DOWN;
 			}
 		}
 		
-		else if(elevator.arrivalStatus == ARRIVED && elevator.elevatorDirection == UP)
+		else if(elevator.arrivalStatus == ARRIVED && elevator.elevatorDirection != IDLE)
 		{
-			
+			// if there is a up-request
 			if(xQueueReceive( xUP_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
 			{
+				//then you set the direction to up
 				elevator.elevatorDirection = UP;
-			} else
+			} 
+			else
 			{
+				// there is no up-request 
+				// if there is a down-request
+				if( xQueueReceive( xDOWN_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
+				{
+					//then you set the direction to down
 				elevator.elevatorDirection = DOWN;
-			}
-		}
-		
-		else if(elevator.arrivalStatus == ARRIVED && elevator.elevatorDirection == DOWN)
-		{
-			
-			if( xQueueReceive( xDOWN_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
-			{
-				elevator.elevatorDirection = DOWN;
-			} else
-			{
-				elevator.elevatorDirection = IDLE;
+				} 
+				else
+				{
+					// there is no down-request
+					elevator.elevatorDirection = IDLE;
+				}
+				
 			}
 		}
 		
