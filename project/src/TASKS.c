@@ -227,6 +227,7 @@ static void vELEVATORCONTROLTask(void * parameters) {
 	elevator.targetFloor = FIRST;
 	elevator.elevatorDirection = IDLE;
 	elevator.arrivalStatus = ARRIVED;
+	uint16_t ELEVATOR_DELAY = 200;
 	
 	while(1)
 	{		
@@ -271,21 +272,21 @@ static void vELEVATORCONTROLTask(void * parameters) {
 		//CONTROL LOGIC
 		if (elevator.elevatorDirection == UP) {
         processUpRequests(&elevator);
-				vTaskDelay(500);
+				vTaskDelay(ELEVATOR_DELAY);
 				updateLCDToNewFloor(&elevator);
-				vTaskDelay(500);
+				vTaskDelay(ELEVATOR_DELAY);
 			
     } else if (elevator.elevatorDirection == DOWN) {
         processDownRequests(&elevator);
-				vTaskDelay(500);
+				vTaskDelay(ELEVATOR_DELAY);
 				updateLCDToNewFloor(&elevator);
-				vTaskDelay(500);
+				vTaskDelay(ELEVATOR_DELAY);
 			
     } else {
         checkForNewRequests(&elevator);
-				vTaskDelay(500);
+				vTaskDelay(ELEVATOR_DELAY);
 				updateLCDToNewFloor(&elevator);
-				vTaskDelay(500);
+				vTaskDelay(ELEVATOR_DELAY);
     }
 		
 		if(TIM3_UPDATE_EVENT == 1)
