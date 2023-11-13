@@ -27,6 +27,7 @@
 uint16_t counter = 0;
 extern QueueHandle_t xUP_REQUEST_Queue;
 extern QueueHandle_t xDOWN_REQUEST_Queue;
+extern QueueHandle_t xIN_ELEVATOR_BUTTONS_Queue;
 
 void CLI_Transmit(uint8_t *pData, uint16_t Size)
 {
@@ -192,6 +193,46 @@ int parseReceivedData(uint8_t *pData, int Size)
 	{
 		elevator.targetFloor = EIGHTH;
 		xQueueSendToBack(xDOWN_REQUEST_Queue, &elevator.targetFloor, 10);
+		return 0;
+	}else if(strncmp((char*)pData, "1\r", 2) == 0)
+	{
+		elevator.targetFloor = FIRST;
+		xQueueSendToBack(xIN_ELEVATOR_BUTTONS_Queue, &elevator.targetFloor, 10);
+		return 0;
+	}else if(strncmp((char*)pData, "2\r", 2) == 0)
+	{
+		elevator.targetFloor = SECOND;
+		xQueueSendToBack(xIN_ELEVATOR_BUTTONS_Queue, &elevator.targetFloor, 10);
+		return 0;
+	}else if(strncmp((char*)pData, "3\r", 2) == 0)
+	{
+		elevator.targetFloor = THIRD;
+		xQueueSendToBack(xIN_ELEVATOR_BUTTONS_Queue, &elevator.targetFloor, 10);
+		return 0;
+	}else if(strncmp((char*)pData, "4\r", 2) == 0)
+	{
+		elevator.targetFloor = FOURTH;
+		xQueueSendToBack(xIN_ELEVATOR_BUTTONS_Queue, &elevator.targetFloor, 10);
+		return 0;
+	}else if(strncmp((char*)pData, "5\r", 2) == 0)
+	{
+		elevator.targetFloor = FIFTH;
+		xQueueSendToBack(xIN_ELEVATOR_BUTTONS_Queue, &elevator.targetFloor, 10);
+		return 0;
+	}else if(strncmp((char*)pData, "6\r", 2) == 0)
+	{
+		elevator.targetFloor = SIXTH;
+		xQueueSendToBack(xIN_ELEVATOR_BUTTONS_Queue, &elevator.targetFloor, 10);
+		return 0;
+	}else if(strncmp((char*)pData, "7\r", 2) == 0)
+	{
+		elevator.targetFloor = SEVENTH;
+		xQueueSendToBack(xIN_ELEVATOR_BUTTONS_Queue, &elevator.targetFloor, 10);
+		return 0;
+	}else if(strncmp((char*)pData, "8\r", 2) == 0)
+	{
+		elevator.targetFloor = EIGHTH;
+		xQueueSendToBack(xIN_ELEVATOR_BUTTONS_Queue, &elevator.targetFloor, 10);
 		return 0;
 	}else if(strncmp((char*)pData, "elevatorsequence1\r", 3) == 0)
 	{
