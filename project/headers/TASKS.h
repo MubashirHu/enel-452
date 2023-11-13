@@ -48,6 +48,9 @@
 	
 #define LCD_QUEUE_LENGTH 5
 #define LCD_QUEUE_ITEM_SIZE sizeof(ElevatorInformation)
+	
+#define IN_ELEVATOR_BUTTONS_QUEUE_LENGTH 1
+#define IN_ELEVATOR_BUTTONS_QUEUE_ITEM_SIZE sizeof(uint16_t)
 
 /**
  * @brief Creating Task function
