@@ -96,6 +96,20 @@ void processUpRequests(ElevatorInformation *elevator)
 	if(elevator->targetFloor == elevator->currentFloor)
 	{
 		elevator->arrivalStatus = ARRIVED;
+		//elevator->arrivalStatus = ARRIVED_TO_REQUEST;
+		
+		//if(elevator->arrivalStatus == ARRIVED_TO_REQUEST)
+		//{
+			// TODO : Ask the user what floor to go to
+				
+				// THROUGH CLI
+			
+				// CREATE A QUEUE sending from CLI to this point. 
+			
+				// The value passed into that queue will be the new target floor 
+				// has to be greater than the current floor
+			
+		//}		
 	}
 	else
 	{
