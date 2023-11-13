@@ -22,6 +22,7 @@
 #define SAVE_CURSOR_POSITION 1
 #define RESTORE_CURSOR_POSITION 2
 #define SET_SCROLLABLE_ROW 3
+#include "../headers/ELEVATOR.h"
 
 #include <stdint.h>
 
@@ -90,7 +91,7 @@ void placeCursor(int row, int col);
 /**
  * @brief Update the content of the status window and restore the cursor position.
  */
-void updateStatusWindow(void);
+void updateStatusWindow(ElevatorInformation *elevator);
 
 /**
  * @brief Send an ANSI escape code represented by a directive over USART2.
