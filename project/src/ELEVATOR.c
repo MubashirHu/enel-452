@@ -102,7 +102,7 @@ void processUpRequests(ElevatorInformation *elevator)
 		//{
 			// TODO : Ask the user what floor to go to
 				
-				// THROUGH CLI
+				
 			
 				// CREATE A QUEUE sending from CLI to this point. 
 			

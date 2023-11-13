@@ -151,11 +151,7 @@ static void vLCDTask(void * parameters)
 	while(1)
 	{
 		
-		if( xQueueReceive( xLCD_Queue, &elevator, 0 ) != pdPASS )
-		{
-			//no data in queue
-		}
-		else
+		if( xQueueReceive( xLCD_Queue, &elevator, 0 ) == pdPASS )
 		{
 			lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
 			vTaskDelay(LCD_DELAY);
