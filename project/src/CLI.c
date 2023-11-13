@@ -261,7 +261,7 @@ void updateStatusWindow(ElevatorInformation *elevator)
 		{
 			sprintf((char*)bigbuff, "status:Arrived");
 			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
-		} else if(elevator->elevatorDirection == OTW)
+		} else
 		{
 			sprintf((char*)bigbuff, "status:OTW");
 			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
