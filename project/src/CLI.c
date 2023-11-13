@@ -219,14 +219,15 @@ void prepareTerminal(void)
 	sendPromptArrows();
 }
 
-void updateStatusWindow(void)
+void updateStatusWindow(ElevatorInformation *elevator)
 {
 		counter++;
-	
+
 		sendEscapeAnsi(SAVE_CURSOR_POSITION);
 	
 		uint8_t clearBuffer[20]= "                    ";
-			
+	
+		//display a counter
 		placeCursor(1,0);
 		CLI_Transmit(clearBuffer, 20);
 		placeCursor(1,0);
@@ -234,7 +235,61 @@ void updateStatusWindow(void)
 		uint8_t bigbuff[20];
 		sprintf((char*)bigbuff, "counter:%d", counter);
 		CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
-					
+	
+		//display the current floor
+		placeCursor(2,0);
+		CLI_Transmit(clearBuffer, 20);
+		placeCursor(2,0);
+	
+		sprintf((char*)bigbuff, "current-floor:%d", elevator->currentFloor+1);
+		CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
+	
+		//display the target floor
+		placeCursor(3,0);
+		CLI_Transmit(clearBuffer, 20);
+		placeCursor(3,0);
+	
+		sprintf((char*)bigbuff, "target-floor:%d", elevator->targetFloor+1);
+		CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
+		
+		//display the elevator-state arrival state
+		placeCursor(4,0);
+		CLI_Transmit(clearBuffer, 20);
+		placeCursor(4,0);
+		
+		if(elevator->arrivalStatus == ARRIVED)
+		{
+			sprintf((char*)bigbuff, "status:Arrived");
+			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
+		} else if(elevator->elevatorDirection == OTW)
+		{
+			sprintf((char*)bigbuff, "status:OTW");
+			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
+			
+		}
+		
+		//display the elevator-state floor
+		placeCursor(5,0);
+		CLI_Transmit(clearBuffer, 20);
+		placeCursor(5,0);
+		
+		if(elevator->elevatorDirection == IDLE)
+		{
+			sprintf((char*)bigbuff, "elevator-state:IDLE");
+			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
+		} 
+		else if(elevator->elevatorDirection == UP)
+		{
+			sprintf((char*)bigbuff, "elevator-state:UP");
+			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
+			
+		} 
+		else if(elevator->elevatorDirection == DOWN)
+		{
+			sprintf((char*)bigbuff, "elevator-state:DOWN");
+			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
+		}
+	
 		sendEscapeAnsi(RESTORE_CURSOR_POSITION);
 }
 
