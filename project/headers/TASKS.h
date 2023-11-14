@@ -31,9 +31,6 @@
 #define CLI_QUEUE_LENGTH 1
 #define CLI_QUEUE_ITEM_SIZE sizeof(uint8_t)
 	
-#define BLINKY_QUEUE_LENGTH 1
-#define BLINKY_QUEUE_ITEM_SIZE sizeof(uint16_t)
-	
 #define MUX_QUEUE_LENGTH 5
 #define MUX_QUEUE_ITEM_SIZE sizeof(uint16_t)
 
