@@ -110,17 +110,8 @@ void processUpRequests(ElevatorInformation *elevator)
 				{
 					elevator->elevatorDirection = UP;
 				}
-				
+
 			}
-			// no destination received
-			else
-			{
-				//elevator->elevatorDirection = IDLE;
-			}
-		}
-		else
-		{
-			//elevator->arrivalStatus = OTW;
 		}
 	}
 	

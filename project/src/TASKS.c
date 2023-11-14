@@ -233,7 +233,7 @@ static void vELEVATORCONTROLTask(void * parameters) {
 	elevator.elevatorDirection = IDLE;
 	elevator.arrivalStatus = HOME;
 	elevator.someoneInElevator = NO;
-	uint16_t ELEVATOR_DELAY = 200;
+	uint16_t ELEVATOR_DELAY = 500;
 	
 	while(1)
 	{		
