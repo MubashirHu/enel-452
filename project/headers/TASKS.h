@@ -31,18 +31,12 @@
 #define CLI_QUEUE_LENGTH 1
 #define CLI_QUEUE_ITEM_SIZE sizeof(uint8_t)
 	
-#define MUX_QUEUE_LENGTH 5
-#define MUX_QUEUE_ITEM_SIZE sizeof(uint16_t)
-
 #define ELEVATOR_UP_QUEUE_LENGTH 3
 #define ELEVATOR_UP_QUEUE_ITEM_SIZE sizeof(uint16_t)
 	
 #define ELEVATOR_DOWN_QUEUE_LENGTH 3
 #define ELEVATOR_DOWN_QUEUE_ITEM_SIZE sizeof(uint16_t)
-	
-#define CURRENT_FLOOR_QUEUE_LENGTH 3
-#define CURRENT_FLOOR_QUEUE_ITEM_SIZE sizeof(uint16_t)
-	
+		
 #define LCD_QUEUE_LENGTH 3
 #define LCD_QUEUE_ITEM_SIZE sizeof(ElevatorInformation)
 	
