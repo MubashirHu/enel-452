@@ -26,6 +26,9 @@
 
 extern QueueHandle_t xLCD_Queue;
 extern QueueHandle_t xIN_ELEVATOR_BUTTONS_Queue;
+extern QueueHandle_t xUP_REQUEST_Queue;
+extern QueueHandle_t xDOWN_REQUEST_Queue;
+
 
 void initGPIOPinsForElevator(void)
 {
@@ -96,6 +99,12 @@ void processUpRequests(ElevatorInformation *elevator)
 				// go up
 				moveToUpperFloor(elevator);
 		}
+		
+		if(elevator->targetFloor < elevator->currentFloor)
+		{
+				// go down
+				moveToLowerFloor(elevator);
+		}
 	
 		// if you reached your floor
 		if(elevator->targetFloor == elevator->currentFloor)
@@ -144,6 +153,11 @@ void processDownRequests(ElevatorInformation *elevator)
 		{
 				// go down
 				moveToLowerFloor(elevator);
+		}
+		
+		if(elevator->targetFloor > elevator->currentFloor)
+		{
+			moveToUpperFloor(elevator);
 		}
 	
 		// if you reached your floor
@@ -211,5 +225,18 @@ void moveToLowerFloor(ElevatorInformation *elevator)
 void updateLCDToNewFloor(ElevatorInformation *elevator)
 {
 	xQueueSendToFront( xLCD_Queue, elevator, 10);
+}
+
+void determineElevatorDirection(ElevatorInformation *elevator)
+{
+	if(xQueueReceive( xUP_REQUEST_Queue, &elevator->targetFloor, 0 ) == pdPASS )
+	{
+		elevator->elevatorDirection = UP;
+	}
+	
+	if( xQueueReceive( xDOWN_REQUEST_Queue, &elevator->targetFloor, 0 ) == pdPASS )
+	{
+		elevator->elevatorDirection = DOWN;
+	}
 }
 

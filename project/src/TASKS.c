@@ -119,29 +119,11 @@ static void vELEVATORCONTROLTask(void * parameters) {
 		// if at the lowest floor (home) and the elevator is idle. wait for a request
 		if(elevator.arrivalStatus == HOME && elevator.elevatorDirection == IDLE)
 		{
-			if(xQueueReceive( xUP_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
-			{
-				elevator.elevatorDirection = UP;
-			}
-	
-			if( xQueueReceive( xDOWN_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
-			{
-				elevator.elevatorDirection = DOWN;
-			}
+			determineElevatorDirection(&elevator);
 		}
 		else if(elevator.arrivalStatus == ARRIVED && elevator.elevatorDirection == IDLE)
 		{
-			if(xQueueReceive( xUP_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
-			{
-				elevator.elevatorDirection = UP;
-			}
-	
-			if( xQueueReceive( xDOWN_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
-			{
-				elevator.elevatorDirection = DOWN;
-			}
-			
-			
+			determineElevatorDirection(&elevator);
 		}
 		
 		else if(elevator.arrivalStatus == ARRIVED && elevator.elevatorDirection != IDLE)
@@ -170,25 +152,30 @@ static void vELEVATORCONTROLTask(void * parameters) {
 		}
 		
 		//CONTROL LOGIC
-		if (elevator.elevatorDirection == UP) {
+		if (elevator.elevatorDirection == UP) 
+		{
         processUpRequests(&elevator);
 				updateLCDToNewFloor(&elevator);
-			
-    } else if (elevator.elevatorDirection == DOWN) {
+    } 
+		else if (elevator.elevatorDirection == DOWN) 
+		{
         processDownRequests(&elevator);
 				updateLCDToNewFloor(&elevator);
 		
-    } else if(elevator.elevatorDirection == IDLE) {
+    } 
+		else if(elevator.elevatorDirection == IDLE) 
+		{
 				elevator.targetFloor = FIRST;
         goHome(&elevator);
 				updateLCDToNewFloor(&elevator);
     }
 		
-		vTaskDelay(ELEVATOR_DELAY);
 		if(TIM3_UPDATE_EVENT == 1)
 		{
 			updateStatusWindow(&elevator);
 			TIM3_UPDATE_EVENT = 0;
 		}
+		
+		vTaskDelay(ELEVATOR_DELAY);
 	}
 }

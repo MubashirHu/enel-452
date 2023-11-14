@@ -59,4 +59,5 @@ void goHome(ElevatorInformation *elevator);
 void moveToUpperFloor(ElevatorInformation *elevator);
 void moveToLowerFloor(ElevatorInformation *elevator);
 void updateLCDToNewFloor(ElevatorInformation *elevator);
+void determineElevatorDirection(ElevatorInformation *elevator);
 #endif //ELEVATOR_H
