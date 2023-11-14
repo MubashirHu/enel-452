@@ -51,7 +51,15 @@ void initGPIOPinsForElevator(void)
 	
 	//GPIOA->CRH &= ~GPIO_CRH_MODE11;
 	//GPIOA->CRH |= GPIO_CRH_CNF11_1;
-	GPIOA->CRH |= 0x00008000;
+	//GPIOA->CRH |= 0x00008000;
+	
+	//Configure PB4 for Input mode with Input with pull-up / pull-down 
+	//GPIOB->CRL |= GPIO_CRL_CNF4_0;
+	
+	//Configure PB8 for Input mode with Input with pull-up / pull-down 
+	GPIOB->CRH |= GPIO_CRH_CNF8_0;
+	
+	
 }
 
 void setLED(int floor)
@@ -266,5 +274,18 @@ void messagesLeavingElevator(ElevatorInformation *elevator)
 	elevator->doorMessage = NONE;
 	updateLCDToNewFloor(elevator);
 	vTaskDelay(2000);
+}
+
+void readElevator(void)
+{
+	if ((GPIOB->IDR & GPIO_IDR_IDR8) == 0) {
+						//PB8 IS LOW
+						//button pressed
+						//pinState = 0;
+				} else {
+						// PA11 is low
+						// button released
+						//pinState = 1;
+				}
 }
 

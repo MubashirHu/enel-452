@@ -70,4 +70,5 @@ void updateLCDToNewFloor(ElevatorInformation *elevator);
 void determineElevatorDirection(ElevatorInformation *elevator);
 void messagesEnteringElevator(ElevatorInformation *elevator);
 void messagesLeavingElevator(ElevatorInformation *elevator);
+void readElevator(void);
 #endif //ELEVATOR_H
