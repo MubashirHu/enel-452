@@ -256,7 +256,7 @@ void prepareTerminal(void)
 {
 	sendEscapeAnsi(CLEAR_TERMINAL);
 	sendEscapeAnsi(SET_SCROLLABLE_ROW);
-	placeCursor(8,0);
+	placeCursor(10,0);
 	sendPromptArrows();
 }
 
@@ -398,7 +398,7 @@ void sendEscapeAnsi(uint16_t ANSI)
 			break;
 		
 		case SET_SCROLLABLE_ROW:
-			sprintf((char*)ansiBuffer, "\x1b[8;r");
+			sprintf((char*)ansiBuffer, "\x1b[10;r");
 			CLI_Transmit(ansiBuffer, strlen((char*)(ansiBuffer)));
 			break;
 				
