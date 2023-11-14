@@ -46,6 +46,7 @@ int main(void)
 	initTIMInterrupt(3);
 	initTIMInterrupt(4);
 	configTIM(4, 1000);
+	initMaintenanceButtonInterrupt();
 	initGPIOPinsForElevator();
 		
 	createQueues();
@@ -70,4 +71,17 @@ void USART2_IRQHandler(void) {
 	uint8_t characterReceived = USART2->DR;
 	xQueueSendToFrontFromISR( xCLI_Queue, &characterReceived, NULL);
 	DATA_RECEIVED_FLAG = 0;
+}
+
+void EXTI9_5_IRQHandler(void) {
+    // Check if EXTI line 8 triggered the interrupt
+		
+    if (EXTI->PR & EXTI_PR_PR8) {
+        // Clear the interrupt pending bit for EXTI line 8
+        EXTI->PR = EXTI_PR_PR8;
+
+        //button pressed
+				//send the elevator into maintenance mode
+				led_flash();
+    }
 }
