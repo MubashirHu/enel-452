@@ -87,7 +87,7 @@ static void vLCDTask(void * parameters)
 			}
 			else if(elevator.elevatorDirection == UP)
 			{
-			stringToLCD(my_lcd_addr, "Dir:UP  ");
+			stringToLCD(my_lcd_addr, "Dir:UP          ");
 			vTaskDelay(LCD_DELAY);
 			}
 			else if(elevator.elevatorDirection == DOWN)
@@ -96,7 +96,47 @@ static void vLCDTask(void * parameters)
 			vTaskDelay(LCD_DELAY);
 			}
 			
-			//intToLCD(my_lcd_addr, elevator.elevatorDirection); 
+			
+			switch(elevator.doorMessage)
+			{
+				case OPENING:
+					lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
+					stringToLCD(my_lcd_addr, "OUTSIDE-ELEVATOR");
+					lcd_write_cmd(my_lcd_addr, LCD_LN2);	// Position cursor at beginning of line 1
+					stringToLCD(my_lcd_addr, "  DOORS-OPENING ");
+					vTaskDelay(1000);
+					break;
+				
+				case INSIDE_CLOSING:
+					lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
+					stringToLCD(my_lcd_addr, " INSIDE-ELEVATOR ");
+					lcd_write_cmd(my_lcd_addr, LCD_LN2);	// Position cursor at beginning of line 1
+					stringToLCD(my_lcd_addr, "  DOORS-CLOSING  ");
+					vTaskDelay(1000);
+					lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
+					stringToLCD(my_lcd_addr, "  DOORS-CLOSED  ");
+					lcd_write_cmd(my_lcd_addr, LCD_LN2);	// Position cursor at beginning of line 1
+					stringToLCD(my_lcd_addr, "  CHOOSE-FLOOR  ");
+					vTaskDelay(2000);
+					break;
+				
+				case OUTSIDE_CLOSING:
+					lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
+					stringToLCD(my_lcd_addr, " OUTSIDE-ELEVATOR ");
+					lcd_write_cmd(my_lcd_addr, LCD_LN2);	// Position cursor at beginning of line 1
+					stringToLCD(my_lcd_addr, " DOORS-CLOSING ");
+					vTaskDelay(1000);
+					lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
+					stringToLCD(my_lcd_addr, "  DOORS-CLOSED  ");
+					lcd_write_cmd(my_lcd_addr, LCD_LN2);	// Position cursor at beginning of line 1
+					stringToLCD(my_lcd_addr, "                ");
+					vTaskDelay(2000);
+					break;
+					
+				case NONE:
+					break;
+				
+			}
 			vTaskDelay(LCD_DELAY);
 		}
 	}

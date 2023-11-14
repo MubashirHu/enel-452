@@ -111,8 +111,7 @@ void processUpRequests(ElevatorInformation *elevator)
 		{
 			elevator->someoneInElevator = YES;
 			
-			//get a destination to go to next
-			vTaskDelay(500);
+			messagesEnteringElevator(elevator);
 			if(xQueueReceive( xIN_ELEVATOR_BUTTONS_Queue, &elevator->targetFloor, 0 ) == pdPASS )
 			{
 				if(elevator->targetFloor > elevator->currentFloor)
@@ -136,6 +135,7 @@ void processUpRequests(ElevatorInformation *elevator)
 		{
 			elevator->arrivalStatus = ARRIVED;
 			elevator->someoneInElevator = NO;
+			messagesLeavingElevator(elevator);
 		}
 		else
 		{
@@ -238,5 +238,28 @@ void determineElevatorDirection(ElevatorInformation *elevator)
 	{
 		elevator->elevatorDirection = DOWN;
 	}
+}
+
+void messagesEnteringElevator(ElevatorInformation *elevator)
+{
+	elevator->doorMessage = OPENING;
+			updateLCDToNewFloor(elevator);
+			vTaskDelay(1500);
+			elevator->doorMessage = INSIDE_CLOSING;
+			updateLCDToNewFloor(elevator);
+			vTaskDelay(1500);
+			elevator->doorMessage = NONE;
+			updateLCDToNewFloor(elevator);
+			vTaskDelay(2000);
+}
+
+void messagesLeavingElevator(ElevatorInformation *elevator)
+{
+	elevator->doorMessage = OUTSIDE_CLOSING;
+	updateLCDToNewFloor(elevator);
+	vTaskDelay(1500);
+	elevator->doorMessage = NONE;
+	updateLCDToNewFloor(elevator);
+	vTaskDelay(2000);
 }
 

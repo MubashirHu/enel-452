@@ -42,6 +42,13 @@ enum someoneInElevator {
 	YES
 };
 
+enum doorStatusMessage {
+	OPENING,
+	INSIDE_CLOSING,
+	OUTSIDE_CLOSING,
+	NONE
+};
+
 typedef struct 
 {
 	enum direction elevatorDirection;
@@ -49,6 +56,7 @@ typedef struct
 	enum floor targetFloor;
 	enum arrival arrivalStatus;
 	enum someoneInElevator someoneInElevator; 
+	enum doorStatusMessage doorMessage;
 }ElevatorInformation;
 
 void initGPIOPinsForElevator(void);
@@ -60,4 +68,6 @@ void moveToUpperFloor(ElevatorInformation *elevator);
 void moveToLowerFloor(ElevatorInformation *elevator);
 void updateLCDToNewFloor(ElevatorInformation *elevator);
 void determineElevatorDirection(ElevatorInformation *elevator);
+void messagesEnteringElevator(ElevatorInformation *elevator);
+void messagesLeavingElevator(ElevatorInformation *elevator);
 #endif //ELEVATOR_H
