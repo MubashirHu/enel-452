@@ -28,6 +28,7 @@ volatile uint8_t TIM3_UPDATE_EVENT = 0;
 volatile uint8_t TIM4_UPDATE_EVENT = 0;
 
 extern QueueHandle_t xCLI_Queue;
+extern QueueHandle_t xMAINTENANCE_MODE_Queue;
 extern uint8_t my_lcd_addr;
 
 int main(void)
@@ -75,13 +76,14 @@ void USART2_IRQHandler(void) {
 
 void EXTI9_5_IRQHandler(void) {
     // Check if EXTI line 8 triggered the interrupt
-		
+		enum maintenanceMode mode = TRUE;
+	
     if (EXTI->PR & EXTI_PR_PR8) {
         // Clear the interrupt pending bit for EXTI line 8
         EXTI->PR = EXTI_PR_PR8;
 
         //button pressed
 				//send the elevator into maintenance mode
-				led_flash();
+				xQueueSendToFrontFromISR( xMAINTENANCE_MODE_Queue, &mode, NULL);
     }
 }

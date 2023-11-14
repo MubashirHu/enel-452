@@ -42,6 +42,9 @@
 	
 #define IN_ELEVATOR_BUTTONS_QUEUE_LENGTH 1
 #define IN_ELEVATOR_BUTTONS_QUEUE_ITEM_SIZE sizeof(uint16_t)
+	
+#define MAINTENANCE_MODE_QUEUE_LENGTH 1
+#define MAINTENANCE_MODE_QUEUE_ITEM_SIZE sizeof(uint16_t)
 
 /**
  * @brief Creating Task function

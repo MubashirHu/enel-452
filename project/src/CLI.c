@@ -356,6 +356,22 @@ void updateStatusWindow(ElevatorInformation *elevator)
 			sprintf((char*)bigbuff, "Anyone-inside:NO");
 			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
 		}
+		
+		//display the elevator-maintenance status
+		placeCursor(7,0);
+		CLI_Transmit(clearBuffer, 20);
+		placeCursor(7,0);
+		
+		if(elevator->maintenanceStatus == TRUE)
+		{
+			sprintf((char*)bigbuff, "Maintenance-Mode!");
+			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
+		}
+		else
+		{
+			sprintf((char*)bigbuff, "elevator-functional!");
+			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
+		}
 	
 		sendEscapeAnsi(RESTORE_CURSOR_POSITION);
 }

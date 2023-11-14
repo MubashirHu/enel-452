@@ -29,6 +29,7 @@ QueueHandle_t xUP_REQUEST_Queue;
 QueueHandle_t xDOWN_REQUEST_Queue;
 QueueHandle_t xLCD_Queue;
 QueueHandle_t xIN_ELEVATOR_BUTTONS_Queue;
+QueueHandle_t xMAINTENANCE_MODE_Queue;
 uint8_t my_lcd_addr = 0x3f;
 
 void createQueues(void)
@@ -38,6 +39,7 @@ void createQueues(void)
 	xDOWN_REQUEST_Queue = xQueueCreate(ELEVATOR_DOWN_QUEUE_LENGTH, ELEVATOR_DOWN_QUEUE_ITEM_SIZE);
 	xLCD_Queue = xQueueCreate(LCD_QUEUE_LENGTH, LCD_QUEUE_ITEM_SIZE);
 	xIN_ELEVATOR_BUTTONS_Queue = xQueueCreate(IN_ELEVATOR_BUTTONS_QUEUE_LENGTH, IN_ELEVATOR_BUTTONS_QUEUE_ITEM_SIZE);
+	xMAINTENANCE_MODE_Queue = xQueueCreate(MAINTENANCE_MODE_QUEUE_LENGTH, MAINTENANCE_MODE_QUEUE_ITEM_SIZE);
 }
 
 void createTasks(void)
@@ -151,19 +153,38 @@ static void vELEVATORCONTROLTask(void * parameters) {
 	elevator.elevatorDirection = IDLE;
 	elevator.arrivalStatus = HOME;
 	elevator.someoneInElevator = NO;
+	elevator.maintenanceStatus = FALSE;
 	uint16_t ELEVATOR_DELAY = 500;
 	
 	while(1)
 	{		
+		
+		if( xQueueReceive( xMAINTENANCE_MODE_Queue, &elevator.maintenanceStatus, 10 ) == pdPASS )
+		{
+			//received an interrupt
+		}
+		
+		if(elevator.maintenanceStatus == TRUE)
+		{
+			elevator.elevatorDirection = IDLE;
+		}
+		
 		//FLOOR REQUESTS
-		// if at the lowest floor (home) and the elevator is idle. wait for a request
 		if(elevator.arrivalStatus == HOME && elevator.elevatorDirection == IDLE)
 		{
-			determineElevatorDirection(&elevator);
+			if(elevator.maintenanceStatus == FALSE)
+			{
+				determineElevatorDirection(&elevator);
+			}
+			
 		}
 		else if(elevator.arrivalStatus == ARRIVED && elevator.elevatorDirection == IDLE)
 		{
-			determineElevatorDirection(&elevator);
+			if(elevator.maintenanceStatus == FALSE)
+			{
+				determineElevatorDirection(&elevator);
+			}
+			
 		}
 		
 		else if(elevator.arrivalStatus == ARRIVED && elevator.elevatorDirection != IDLE)

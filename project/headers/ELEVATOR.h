@@ -49,6 +49,12 @@ enum doorStatusMessage {
 	NONE
 };
 
+enum maintenanceMode {
+	TRUE,
+	FALSE
+};
+
+
 typedef struct 
 {
 	enum direction elevatorDirection;
@@ -57,6 +63,7 @@ typedef struct
 	enum arrival arrivalStatus;
 	enum someoneInElevator someoneInElevator; 
 	enum doorStatusMessage doorMessage;
+	enum maintenanceMode maintenanceStatus;
 }ElevatorInformation;
 
 void initGPIOPinsForElevator(void);
