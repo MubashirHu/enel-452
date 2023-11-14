@@ -71,4 +71,7 @@ void determineElevatorDirection(ElevatorInformation *elevator);
 void messagesEnteringElevator(ElevatorInformation *elevator);
 void messagesLeavingElevator(ElevatorInformation *elevator);
 void readElevator(void);
+
+void initMaintenanceButtonInterrupt(void);
+void EXTI9_5_IRQHandler(void);
 #endif //ELEVATOR_H
