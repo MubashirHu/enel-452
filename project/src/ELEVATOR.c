@@ -167,6 +167,7 @@ void processDownRequests(ElevatorInformation *elevator)
 			
 			vTaskDelay(500);
 			//get a destination to go to next
+			messagesEnteringElevator(elevator);
 			if(xQueueReceive( xIN_ELEVATOR_BUTTONS_Queue, &elevator->targetFloor, 0 ) == pdPASS )
 			{
 				if(elevator->targetFloor < elevator->currentFloor)
@@ -189,6 +190,7 @@ void processDownRequests(ElevatorInformation *elevator)
 		{
 			elevator->arrivalStatus = ARRIVED;
 			elevator->someoneInElevator = NO;
+			messagesLeavingElevator(elevator);
 		}
 		else
 		{
