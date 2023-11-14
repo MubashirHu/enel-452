@@ -87,7 +87,7 @@ static void vLCDTask(void * parameters)
 			}
 			else if(elevator.elevatorDirection == UP)
 			{
-			stringToLCD(my_lcd_addr, "Dir:UP");
+			stringToLCD(my_lcd_addr, "Dir:UP  ");
 			vTaskDelay(LCD_DELAY);
 			}
 			else if(elevator.elevatorDirection == DOWN)
