@@ -103,7 +103,7 @@ void processUpRequests(ElevatorInformation *elevator)
 			elevator->someoneInElevator = YES;
 			
 			//get a destination to go to next
-			vTaskDelay(4000);
+			vTaskDelay(500);
 			if(xQueueReceive( xIN_ELEVATOR_BUTTONS_Queue, &elevator->targetFloor, 0 ) == pdPASS )
 			{
 				if(elevator->targetFloor > elevator->currentFloor)
@@ -151,7 +151,7 @@ void processDownRequests(ElevatorInformation *elevator)
 		{
 			elevator->someoneInElevator = YES;
 			
-			vTaskDelay(4000);
+			vTaskDelay(500);
 			//get a destination to go to next
 			if(xQueueReceive( xIN_ELEVATOR_BUTTONS_Queue, &elevator->targetFloor, 0 ) == pdPASS )
 			{
@@ -183,14 +183,16 @@ void processDownRequests(ElevatorInformation *elevator)
 	}
 }
 
-void checkForNewRequests(ElevatorInformation *elevator)
+void goHome(ElevatorInformation *elevator)
 {
-	if(elevator->targetFloor != elevator->currentFloor)
+	if(elevator->targetFloor < elevator->currentFloor)
 	{
-		elevator->arrivalStatus = OTW;
+		moveToLowerFloor(elevator);
 	}
-	else
+	
+	if(elevator->targetFloor == elevator->currentFloor)
 	{
+		elevator->arrivalStatus = HOME;
 	}
 }
 

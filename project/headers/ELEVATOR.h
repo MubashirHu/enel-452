@@ -55,7 +55,7 @@ void initGPIOPinsForElevator(void);
 void setLED(int floor);
 void processUpRequests(ElevatorInformation *elevator);
 void processDownRequests(ElevatorInformation *elevator);
-void checkForNewRequests(ElevatorInformation *elevator);
+void goHome(ElevatorInformation *elevator);
 void moveToUpperFloor(ElevatorInformation *elevator);
 void moveToLowerFloor(ElevatorInformation *elevator);
 void updateLCDToNewFloor(ElevatorInformation *elevator);

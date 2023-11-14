@@ -111,11 +111,12 @@ static void vELEVATORCONTROLTask(void * parameters) {
 	elevator.elevatorDirection = IDLE;
 	elevator.arrivalStatus = HOME;
 	elevator.someoneInElevator = NO;
-	uint16_t ELEVATOR_DELAY = 100;
+	uint16_t ELEVATOR_DELAY = 500;
 	
 	while(1)
 	{		
 		//FLOOR REQUESTS
+		// if at the lowest floor (home) and the elevator is idle. wait for a request
 		if(elevator.arrivalStatus == HOME && elevator.elevatorDirection == IDLE)
 		{
 			if(xQueueReceive( xUP_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
@@ -139,6 +140,8 @@ static void vELEVATORCONTROLTask(void * parameters) {
 			{
 				elevator.elevatorDirection = DOWN;
 			}
+			
+			
 		}
 		
 		else if(elevator.arrivalStatus == ARRIVED && elevator.elevatorDirection != IDLE)
@@ -163,30 +166,25 @@ static void vELEVATORCONTROLTask(void * parameters) {
 					// there is no down-request
 					elevator.elevatorDirection = IDLE;
 				}
-				
 			}
 		}
 		
 		//CONTROL LOGIC
 		if (elevator.elevatorDirection == UP) {
         processUpRequests(&elevator);
-				vTaskDelay(ELEVATOR_DELAY);
 				updateLCDToNewFloor(&elevator);
-				vTaskDelay(ELEVATOR_DELAY);
 			
     } else if (elevator.elevatorDirection == DOWN) {
         processDownRequests(&elevator);
-				vTaskDelay(ELEVATOR_DELAY);
 				updateLCDToNewFloor(&elevator);
-				vTaskDelay(ELEVATOR_DELAY);
-			
-    } else {
-        checkForNewRequests(&elevator);
-				vTaskDelay(ELEVATOR_DELAY);
+		
+    } else if(elevator.elevatorDirection == IDLE) {
+				elevator.targetFloor = FIRST;
+        goHome(&elevator);
 				updateLCDToNewFloor(&elevator);
-				vTaskDelay(ELEVATOR_DELAY);
     }
 		
+		vTaskDelay(ELEVATOR_DELAY);
 		if(TIM3_UPDATE_EVENT == 1)
 		{
 			updateStatusWindow(&elevator);
