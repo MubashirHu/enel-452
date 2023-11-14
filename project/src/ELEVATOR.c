@@ -162,8 +162,6 @@ void checkForNewRequests(ElevatorInformation *elevator)
 	}
 	else
 	{
-		//elevator->arrivalStatus = HOME;
-		//elevator->elevatorDirection = IDLE;
 	}
 }
 
