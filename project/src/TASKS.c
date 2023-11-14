@@ -34,39 +34,10 @@ uint8_t my_lcd_addr = 0x3f;
 void createQueues(void)
 {
 	xCLI_Queue = xQueueCreate(CLI_QUEUE_LENGTH, CLI_QUEUE_ITEM_SIZE);
-	if( xCLI_Queue == NULL )
-	{
-		/* The queue could not be created. */
-		led_flash();
-	}
-	
 	xUP_REQUEST_Queue = xQueueCreate(ELEVATOR_UP_QUEUE_LENGTH, ELEVATOR_UP_QUEUE_ITEM_SIZE);
-	if( xUP_REQUEST_Queue == NULL )
-	{
-		/* The queue could not be created. */
-		led_flash();
-	}
-	
 	xDOWN_REQUEST_Queue = xQueueCreate(ELEVATOR_DOWN_QUEUE_LENGTH, ELEVATOR_DOWN_QUEUE_ITEM_SIZE);
-	if( xDOWN_REQUEST_Queue == NULL )
-	{
-		/* The queue could not be created. */
-		led_flash();
-	}
-		
 	xLCD_Queue = xQueueCreate(LCD_QUEUE_LENGTH, LCD_QUEUE_ITEM_SIZE);
-	if( xLCD_Queue == NULL )
-	{
-		/* The queue could not be created. */
-		led_flash();
-	}
-	
 	xIN_ELEVATOR_BUTTONS_Queue = xQueueCreate(IN_ELEVATOR_BUTTONS_QUEUE_LENGTH, IN_ELEVATOR_BUTTONS_QUEUE_ITEM_SIZE);
-	if( xIN_ELEVATOR_BUTTONS_Queue == NULL )
-	{
-		/* The queue could not be created. */
-		led_flash();
-	}
 }
 
 void createTasks(void)
@@ -147,7 +118,7 @@ static void vELEVATORCONTROLTask(void * parameters) {
 	elevator.elevatorDirection = IDLE;
 	elevator.arrivalStatus = HOME;
 	elevator.someoneInElevator = NO;
-	uint16_t ELEVATOR_DELAY = 500;
+	uint16_t ELEVATOR_DELAY = 100;
 	
 	while(1)
 	{		
