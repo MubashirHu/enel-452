@@ -55,16 +55,9 @@ static void vCLITask(void * parameters)
 	
 	while(1)
 	{		
-	 	
-		if( xQueueReceive( xCLI_Queue, &buffer[bufferElementID], 10 ) != pdPASS )
+		if( xQueueReceive( xCLI_Queue, &buffer[bufferElementID], 10 ) == pdPASS )
 		{
-			// no data in queue
-		}
-		else 
-		{
-			// data in queue
-			//buffer now contains the received data
-			CLI_Receive(buffer, &bufferElementID);			
+			CLI_Receive(buffer, &bufferElementID);	
 		}
 	}
 }
