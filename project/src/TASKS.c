@@ -25,7 +25,6 @@
 
 
 QueueHandle_t xCLI_Queue;
-QueueHandle_t xMux_Queue;
 QueueHandle_t xUP_REQUEST_Queue;
 QueueHandle_t xDOWN_REQUEST_Queue;
 QueueHandle_t xCURRENT_FLOOR_Queue;
@@ -37,13 +36,6 @@ void createQueues(void)
 {
 	xCLI_Queue = xQueueCreate(CLI_QUEUE_LENGTH, CLI_QUEUE_ITEM_SIZE);
 	if( xCLI_Queue == NULL )
-	{
-		/* The queue could not be created. */
-		led_flash();
-	}
-	
-	xMux_Queue = xQueueCreate(MUX_QUEUE_LENGTH, MUX_QUEUE_ITEM_SIZE);
-	if( xMux_Queue == NULL )
 	{
 		/* The queue could not be created. */
 		led_flash();
@@ -89,7 +81,6 @@ void createTasks(void)
 {  
 	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+50, NULL, CLI_TASK_PRIORITY, NULL);
 	xTaskCreate(vLCDTask, "LCD task", configMINIMAL_STACK_SIZE+100, NULL, LCD_TASK_PRIORITY, NULL);
-	xTaskCreate(vMUXTask, "MUX task", configMINIMAL_STACK_SIZE+100, NULL, MUX_TASK_PRIORITY, NULL);
 	xTaskCreate(vELEVATORCONTROLTask, "Elevator task", configMINIMAL_STACK_SIZE+100, NULL, ELEVATOR_CONTROL_TASK_PRIORITY, NULL);
 }
 
@@ -151,46 +142,6 @@ static void vLCDTask(void * parameters)
 			
 			//intToLCD(my_lcd_addr, elevator.elevatorDirection); 
 			vTaskDelay(LCD_DELAY);
-		}
-	}
-}
-
-static void vMUXTask(void * parameters)
-{
-	ElevatorInformation elevator;
-	elevator.currentFloor = FIRST;
-	elevator.targetFloor = FIRST;
-	uint16_t MUX_TASK_DELAY = 800;
-	
-	while(1)
-	{
-		//recieves target floor over queue
-		if( xQueueReceive( xMux_Queue, &elevator.targetFloor, 0 ) == pdPASS )
-		{
-			// Move up
-			if(elevator.targetFloor > elevator.currentFloor)
-			{
-				elevator.currentFloor++;
-				vTaskDelay(MUX_TASK_DELAY);
-				setLED(elevator.currentFloor);
-				vTaskDelay(MUX_TASK_DELAY);
-			}
-			
-			// Move down
-			if(elevator.targetFloor < elevator.currentFloor)
-			{
-				elevator.currentFloor--;
-				vTaskDelay(MUX_TASK_DELAY);
-				setLED(elevator.currentFloor);
-				vTaskDelay(MUX_TASK_DELAY);
-			}
-			
-			// Do not move
-			if(elevator.targetFloor == elevator.currentFloor)
-			{
-				setLED(elevator.currentFloor);
-				vTaskDelay(MUX_TASK_DELAY);
-			}
 		}
 	}
 }
