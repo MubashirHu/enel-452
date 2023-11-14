@@ -33,7 +33,13 @@ enum floor {
 enum arrival {
 	ARRIVED,
 	ARRIVED_TO_REQUEST,
-	OTW
+	OTW,
+	HOME
+};
+
+enum someoneInElevator {
+	NO,
+	YES
 };
 
 typedef struct 
@@ -42,6 +48,7 @@ typedef struct
 	enum floor currentFloor;
 	enum floor targetFloor;
 	enum arrival arrivalStatus;
+	enum someoneInElevator someoneInElevator; 
 }ElevatorInformation;
 
 void initGPIOPinsForElevator(void);

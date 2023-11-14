@@ -82,7 +82,7 @@ int parseReceivedData(uint8_t *pData, int Size)
 	ElevatorInformation elevator;
 	elevator.currentFloor = FIRST;
 	elevator.targetFloor = FIRST;
-	elevator.arrivalStatus = ARRIVED;
+	elevator.arrivalStatus = HOME;
 	//enum floor targetFloor = FIRST;
 	
 	if(strncmp((char*)pData, "ledon\r", 6) == 0)
@@ -298,15 +298,25 @@ void updateStatusWindow(ElevatorInformation *elevator)
 		CLI_Transmit(clearBuffer, 20);
 		placeCursor(4,0);
 		
-		if(elevator->arrivalStatus == ARRIVED)
+		if (elevator->arrivalStatus == HOME)
 		{
-			sprintf((char*)bigbuff, "status:Arrived");
+			sprintf((char*)bigbuff, "status:HOME");
 			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
-		} else
+		}		
+		else if (elevator->arrivalStatus == OTW)
 		{
 			sprintf((char*)bigbuff, "status:OTW");
 			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
-			
+		}
+		else if (elevator->arrivalStatus == ARRIVED_TO_REQUEST)
+		{
+			sprintf((char*)bigbuff, "ARRIVED_TO_REQUEST");
+			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
+		}
+		else if(elevator->arrivalStatus == ARRIVED)
+		{
+			sprintf((char*)bigbuff, "status:ARRIVED");
+			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
 		}
 		
 		//display the elevator-state floor
@@ -316,18 +326,34 @@ void updateStatusWindow(ElevatorInformation *elevator)
 		
 		if(elevator->elevatorDirection == IDLE)
 		{
-			sprintf((char*)bigbuff, "elevator-state:IDLE");
+			sprintf((char*)bigbuff, "elevator-dir:IDLE");
 			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
 		} 
 		else if(elevator->elevatorDirection == UP)
 		{
-			sprintf((char*)bigbuff, "elevator-state:UP");
+			sprintf((char*)bigbuff, "elevator-dir:UP");
 			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
 			
 		} 
 		else if(elevator->elevatorDirection == DOWN)
 		{
-			sprintf((char*)bigbuff, "elevator-state:DOWN");
+			sprintf((char*)bigbuff, "elevator-dir:DOWN");
+			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
+		}
+		
+		//display the elevator-state floor
+		placeCursor(6,0);
+		CLI_Transmit(clearBuffer, 20);
+		placeCursor(6,0);
+		
+		if(elevator->someoneInElevator == YES)
+		{
+			sprintf((char*)bigbuff, "Anyone-inside:YES");
+			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
+		}
+		else
+		{
+			sprintf((char*)bigbuff, "Anyone-inside:NO");
 			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
 		}
 	

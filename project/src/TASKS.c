@@ -166,12 +166,13 @@ static void vLCDTask(void * parameters)
 			{
 			stringToLCD(my_lcd_addr, "Dir:IDLE");
 			vTaskDelay(LCD_DELAY);
-			}else 
-			if(elevator.elevatorDirection == UP)
+			}
+			else if(elevator.elevatorDirection == UP)
 			{
 			stringToLCD(my_lcd_addr, "Dir:UP");
 			vTaskDelay(LCD_DELAY);
-			}else if(elevator.elevatorDirection == DOWN)
+			}
+			else if(elevator.elevatorDirection == DOWN)
 			{
 			stringToLCD(my_lcd_addr, "Dir:DOWN");
 			vTaskDelay(LCD_DELAY);
@@ -230,13 +231,26 @@ static void vELEVATORCONTROLTask(void * parameters) {
 	elevator.currentFloor = FIRST;
 	elevator.targetFloor = FIRST;
 	elevator.elevatorDirection = IDLE;
-	elevator.arrivalStatus = ARRIVED;
+	elevator.arrivalStatus = HOME;
+	elevator.someoneInElevator = NO;
 	uint16_t ELEVATOR_DELAY = 200;
 	
 	while(1)
 	{		
 		//FLOOR REQUESTS
-		if(elevator.arrivalStatus == ARRIVED && elevator.elevatorDirection == IDLE)
+		if(elevator.arrivalStatus == HOME && elevator.elevatorDirection == IDLE)
+		{
+			if(xQueueReceive( xUP_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
+			{
+				elevator.elevatorDirection = UP;
+			}
+	
+			if( xQueueReceive( xDOWN_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
+			{
+				elevator.elevatorDirection = DOWN;
+			}
+		}
+		else if(elevator.arrivalStatus == ARRIVED && elevator.elevatorDirection == IDLE)
 		{
 			if(xQueueReceive( xUP_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
 			{

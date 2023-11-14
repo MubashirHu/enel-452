@@ -25,6 +25,7 @@
 #include "queue.h"
 
 extern QueueHandle_t xLCD_Queue;
+extern QueueHandle_t xIN_ELEVATOR_BUTTONS_Queue;
 
 void initGPIOPinsForElevator(void)
 {
@@ -87,35 +88,74 @@ void setLED(int floor)
 
 void processUpRequests(ElevatorInformation *elevator)
 {
-	// if the target floor is above the current floor
-	if(elevator->targetFloor > elevator->currentFloor)
+	if(elevator->someoneInElevator == NO)
 	{
-			moveToUpperFloor(elevator);
+		// if you need to go up
+		if(elevator->targetFloor > elevator->currentFloor)
+		{
+				// go up
+				moveToUpperFloor(elevator);
+		}
+	
+		// if you reached your floor
+		if(elevator->targetFloor == elevator->currentFloor)
+		{
+			//elevator->arrivalStatus = ARRIVED_TO_REQUEST;
+			elevator->someoneInElevator = YES;
+			
+			//get a destination to go to next
+			if(xQueueReceive( xIN_ELEVATOR_BUTTONS_Queue, &elevator->targetFloor, 0 ) == pdPASS )
+			{
+				if(elevator->targetFloor > elevator->currentFloor)
+				{
+					elevator->elevatorDirection = UP;
+				}
+				//we are going up... so choose floor above
+				/*
+				if(elevator->targetFloor > elevator->currentFloor)
+				{
+					elevator->elevatorDirection = UP;
+				}
+				else if(elevator->targetFloor == elevator->currentFloor)
+				{
+					elevator->elevatorDirection = IDLE;
+				}
+				else
+				{
+					elevator->elevatorDirection = DOWN;
+				}
+				*/
+			}
+			// no destination
+			else
+			{
+				//elevator->elevatorDirection = IDLE;
+			}
+		}
+		else
+		{
+			//elevator->arrivalStatus = OTW;
+		}
 	}
 	
-	if(elevator->targetFloor == elevator->currentFloor)
+	else if(elevator->someoneInElevator == YES)
 	{
-		elevator->arrivalStatus = ARRIVED;
-		//elevator->arrivalStatus = ARRIVED_TO_REQUEST;
-		
-		//if(elevator->arrivalStatus == ARRIVED_TO_REQUEST)
-		//{
-			// TODO : Ask the user what floor to go to
-				
-				
-			
-				// CREATE A QUEUE sending from CLI to this point. 
-			
-				// The value passed into that queue will be the new target floor 
-				// has to be greater than the current floor
-			
-		//}		
-	}
-	else
-	{
-		elevator->arrivalStatus = OTW;
-	}
+		// if the target floor is above the current floor
+		if(elevator->targetFloor > elevator->currentFloor)
+		{
+				moveToUpperFloor(elevator);
+		}
 	
+		if(elevator->targetFloor == elevator->currentFloor)
+		{
+			elevator->arrivalStatus = ARRIVED;
+			elevator->someoneInElevator = NO;
+		}
+		else
+		{
+			elevator->arrivalStatus = OTW;
+		}
+	}
 }
 
 void processDownRequests(ElevatorInformation *elevator)
@@ -129,6 +169,7 @@ void processDownRequests(ElevatorInformation *elevator)
 	if(elevator->targetFloor == elevator->currentFloor)
 	{
 		elevator->arrivalStatus = ARRIVED;
+		elevator->someoneInElevator = NO;
 	}
 	else
 	{
@@ -144,8 +185,8 @@ void checkForNewRequests(ElevatorInformation *elevator)
 	}
 	else
 	{
-		elevator->arrivalStatus = ARRIVED;
-		elevator->elevatorDirection = IDLE;
+		//elevator->arrivalStatus = HOME;
+		//elevator->elevatorDirection = IDLE;
 	}
 }
 
