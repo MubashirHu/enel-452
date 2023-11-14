@@ -100,7 +100,6 @@ void processUpRequests(ElevatorInformation *elevator)
 		// if you reached your floor
 		if(elevator->targetFloor == elevator->currentFloor)
 		{
-			//elevator->arrivalStatus = ARRIVED_TO_REQUEST;
 			elevator->someoneInElevator = YES;
 			
 			//get a destination to go to next
@@ -137,20 +136,48 @@ void processUpRequests(ElevatorInformation *elevator)
 
 void processDownRequests(ElevatorInformation *elevator)
 {
-	// if the target floor is below the current floor
-	if(elevator->targetFloor < elevator->currentFloor)
+	if(elevator->someoneInElevator == NO)
 	{
-			moveToLowerFloor(elevator);
+		// if you need to go down
+		if(elevator->targetFloor < elevator->currentFloor)
+		{
+				// go down
+				moveToLowerFloor(elevator);
+		}
+	
+		// if you reached your floor
+		if(elevator->targetFloor == elevator->currentFloor)
+		{
+			elevator->someoneInElevator = YES;
+			
+			//get a destination to go to next
+			if(xQueueReceive( xIN_ELEVATOR_BUTTONS_Queue, &elevator->targetFloor, 0 ) == pdPASS )
+			{
+				if(elevator->targetFloor < elevator->currentFloor)
+				{
+					elevator->elevatorDirection = DOWN;
+				}
+			}
+		}
 	}
 	
-	if(elevator->targetFloor == elevator->currentFloor)
+	else if(elevator->someoneInElevator == YES)
 	{
-		elevator->arrivalStatus = ARRIVED;
-		elevator->someoneInElevator = NO;
-	}
-	else
-	{
-		elevator->arrivalStatus = OTW;
+		// if the target floor is below the current floor
+		if(elevator->targetFloor < elevator->currentFloor)
+		{
+				moveToLowerFloor(elevator);
+		}
+	
+		if(elevator->targetFloor == elevator->currentFloor)
+		{
+			elevator->arrivalStatus = ARRIVED;
+			elevator->someoneInElevator = NO;
+		}
+		else
+		{
+			elevator->arrivalStatus = OTW;
+		}
 	}
 }
 
