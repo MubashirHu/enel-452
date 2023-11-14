@@ -289,3 +289,20 @@ void readElevator(void)
 				}
 }
 
+void initMaintenanceButtonInterrupt(void)
+{
+	// Enable GPIOB and AFIO clocks
+    RCC->APB2ENR |= RCC_APB2ENR_IOPBEN | RCC_APB2ENR_AFIOEN;
+
+    // Map PB8 to EXTI8
+    AFIO->EXTICR[2] &= ~AFIO_EXTICR3_EXTI8; // Clear existing settings
+    AFIO->EXTICR[2] |= AFIO_EXTICR3_EXTI8_PB; // Set for PB8
+
+    // Configure EXTI Line 8 for falling edge trigger
+    EXTI->IMR |= EXTI_IMR_MR8; // Unmask EXTI8
+    EXTI->FTSR |= EXTI_FTSR_TR8; // Falling trigger
+
+    // Enable the EXTI9_5 IRQ in the NVIC
+    NVIC_EnableIRQ(EXTI9_5_IRQn);
+}
+
