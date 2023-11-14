@@ -25,7 +25,6 @@
 
 
 QueueHandle_t xCLI_Queue;
-QueueHandle_t xBlinky_Queue;
 QueueHandle_t xMux_Queue;
 QueueHandle_t xUP_REQUEST_Queue;
 QueueHandle_t xDOWN_REQUEST_Queue;
@@ -38,13 +37,6 @@ void createQueues(void)
 {
 	xCLI_Queue = xQueueCreate(CLI_QUEUE_LENGTH, CLI_QUEUE_ITEM_SIZE);
 	if( xCLI_Queue == NULL )
-	{
-		/* The queue could not be created. */
-		led_flash();
-	}
-	
-	xBlinky_Queue = xQueueCreate(BLINKY_QUEUE_LENGTH, BLINKY_QUEUE_ITEM_SIZE);
-	if( xBlinky_Queue == NULL )
 	{
 		/* The queue could not be created. */
 		led_flash();
@@ -94,28 +86,11 @@ void createQueues(void)
 }
 
 void createTasks(void)
-{
-	xTaskCreate(vBlinkTask, "Blinky", configMINIMAL_STACK_SIZE+10, NULL, BLINKY_TASK_PRIORITY, NULL);  
+{  
 	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+50, NULL, CLI_TASK_PRIORITY, NULL);
 	xTaskCreate(vLCDTask, "LCD task", configMINIMAL_STACK_SIZE+100, NULL, LCD_TASK_PRIORITY, NULL);
 	xTaskCreate(vMUXTask, "MUX task", configMINIMAL_STACK_SIZE+100, NULL, MUX_TASK_PRIORITY, NULL);
 	xTaskCreate(vELEVATORCONTROLTask, "Elevator task", configMINIMAL_STACK_SIZE+100, NULL, ELEVATOR_CONTROL_TASK_PRIORITY, NULL);
-}
-
-static void vBlinkTask(void * parameters) {
-	uint16_t speed = 1000;
-	
-	while(1)
-	{			
-		if( xQueueReceive( xBlinky_Queue, &speed, 0 ) != pdPASS )
-		{
-			//no data in queue
-		}
-		onboardLEDconfig(1);
-		vTaskDelay(speed);
-		onboardLEDconfig(0);
-		vTaskDelay(speed);		
-	}
 }
 
 static void vCLITask(void * parameters)
@@ -135,11 +110,7 @@ static void vCLITask(void * parameters)
 		{
 			// data in queue
 			//buffer now contains the received data
-			CLI_Receive(buffer, &bufferElementID);
-				
-			// send new speed to blinkytask queue
-			uint16_t speed = (uint16_t)200;
-			xQueueSendToFront( xBlinky_Queue, &speed, 10);			
+			CLI_Receive(buffer, &bufferElementID);			
 		}
 	}
 }
