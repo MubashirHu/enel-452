@@ -110,23 +110,9 @@ void processUpRequests(ElevatorInformation *elevator)
 				{
 					elevator->elevatorDirection = UP;
 				}
-				//we are going up... so choose floor above
-				/*
-				if(elevator->targetFloor > elevator->currentFloor)
-				{
-					elevator->elevatorDirection = UP;
-				}
-				else if(elevator->targetFloor == elevator->currentFloor)
-				{
-					elevator->elevatorDirection = IDLE;
-				}
-				else
-				{
-					elevator->elevatorDirection = DOWN;
-				}
-				*/
+				
 			}
-			// no destination
+			// no destination received
 			else
 			{
 				//elevator->elevatorDirection = IDLE;
