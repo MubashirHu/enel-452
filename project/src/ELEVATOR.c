@@ -47,8 +47,11 @@ void initGPIOPinsForElevator(void)
 	GPIOA->CRH |= GPIO_CRH_MODE10;
 	GPIOA->CRH &= ~GPIO_CRH_CNF10;
 	
-	//GPIOA->CRL |= GPIO_CRL_MODE5;
-	//GPIOA->CRL &= ~GPIO_CRL_CNF5;
+	//Configure PA11 for Input mode with Input with pull-up / pull-down 
+	
+	//GPIOA->CRH &= ~GPIO_CRH_MODE11;
+	//GPIOA->CRH |= GPIO_CRH_CNF11_1;
+	GPIOA->CRH |= 0x00008000;
 }
 
 void setLED(int floor)
