@@ -115,12 +115,11 @@ int parseReceivedData(uint8_t *pData, int Size)
 	}
 	else if(strncmp((char*)pData, "help\r", 5) == 0)
 	{
-		uint8_t buffer[] = "Help command Currently the commands available are 'ledon', 'ledoff', 'ledstate'. If a command is typed incorrectly an error prompt of 'invalid command' will show up. If the wrong command is typed, backspacing is available";
+		uint8_t buffer[] = "Current available commands:\n\rledon\n\rledoff\n\rledstate\n\rclear\n\rhelp\n\r\n\nElevator Algorithm is based on a Selective collective operation\n\rWhich is most common, remembers and answers calls in one direction\n\rthen reverses. When trip complete, programmed to return to a home landing.\n\r\n\rElevator Commands:\n\r\n\rFloor Buttons\n\r1u\n\r2u\n\r2d\n\r3u\n\r3d\n\r4u\n\r4d\n\r5u\n\r5d\n\r6u\n\r6d\n\r7u\n\r7d\n\r8d\n\r\nIn-elevator buttons:\n\r\n\r1\n\r2\n\r3\n\r4\n\r5\n\r6\n\r7\n\r8\n\r\n If a command is typed incorrectly an error prompt of 'invalid command' will appear.\n";
 		CLI_Transmit(buffer, sizeof(buffer));
 		return 0;
 	}else if(strncmp((char*)pData, "clear\r", 6) == 0)
 	{
-		sendEscapeAnsi(CLEAR_TERMINAL);
 		prepareTerminal();
 		return 0;
 	}else if(strncmp((char*)pData, "1u\r", 3) == 0)
