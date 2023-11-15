@@ -113,6 +113,13 @@ void processDownRequests(ElevatorInformation *elevator);
 void goHome(ElevatorInformation *elevator);
 
 /**
+ * @brief Moves the current floor towards the target floor
+ *
+ * @param '*elevator' A pointer to the ElevatorInformation structure.
+ */
+void moveTowardsTargetFloor(ElevatorInformation *elevator);
+
+/**
  * @brief Moves the elevator to the upper floor.
  *
  * This function increments the current floor. 

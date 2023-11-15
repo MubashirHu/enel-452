@@ -119,15 +119,7 @@ void processUpRequests(ElevatorInformation *elevator)
 {
 	if(elevator->someoneInElevator == NO)
 	{
-		if(elevator->targetFloor > elevator->currentFloor)
-		{
-				moveToUpperFloor(elevator);
-		}
-		
-		if(elevator->targetFloor < elevator->currentFloor)
-		{
-				moveToLowerFloor(elevator);
-		}
+		moveTowardsTargetFloor(elevator);
 	
 		if(elevator->targetFloor == elevator->currentFloor)
 		{
@@ -146,10 +138,7 @@ void processUpRequests(ElevatorInformation *elevator)
 	
 	else if(elevator->someoneInElevator == YES)
 	{
-		if(elevator->targetFloor > elevator->currentFloor)
-		{
-				moveToUpperFloor(elevator);
-		}
+		moveTowardsTargetFloor(elevator);
 	
 		if(elevator->targetFloor == elevator->currentFloor)
 		{
@@ -168,16 +157,8 @@ void processDownRequests(ElevatorInformation *elevator)
 {
 	if(elevator->someoneInElevator == NO)
 	{
-		if(elevator->targetFloor < elevator->currentFloor)
-		{
-				moveToLowerFloor(elevator);
-		}
+		moveTowardsTargetFloor(elevator);
 		
-		if(elevator->targetFloor > elevator->currentFloor)
-		{
-			moveToUpperFloor(elevator);
-		}
-	
 		if(elevator->targetFloor == elevator->currentFloor)
 		{
 			elevator->someoneInElevator = YES;
@@ -196,10 +177,7 @@ void processDownRequests(ElevatorInformation *elevator)
 	}
 	else if(elevator->someoneInElevator == YES)
 	{
-		if(elevator->targetFloor < elevator->currentFloor)
-		{
-				moveToLowerFloor(elevator);
-		}
+		moveTowardsTargetFloor(elevator);
 	
 		if(elevator->targetFloor == elevator->currentFloor)
 		{
@@ -281,4 +259,17 @@ void messagesLeavingElevator(ElevatorInformation *elevator)
 	elevator->doorMessage = NONE;
 	updateLCDToNewFloor(elevator);
 	vTaskDelay(2000);
+}
+
+void moveTowardsTargetFloor(ElevatorInformation *elevator)
+{
+	if(elevator->targetFloor < elevator->currentFloor)
+	{
+		moveToLowerFloor(elevator);
+	}
+		
+	if(elevator->targetFloor > elevator->currentFloor)
+	{
+		moveToUpperFloor(elevator);
+	}
 }
