@@ -77,7 +77,7 @@ static void vLCDTask(void * parameters)
 		{
 			lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
 			vTaskDelay(LCD_DELAY);
-			stringToLCD(my_lcd_addr, "current-floor: ");
+			stringToLCD(my_lcd_addr, "Current-floor: ");
 			vTaskDelay(LCD_DELAY);
 			intToLCD(my_lcd_addr, elevator.currentFloor+1); 
 			vTaskDelay(LCD_DELAY);
@@ -86,7 +86,7 @@ static void vLCDTask(void * parameters)
 			
 			if(elevator.elevatorDirection == IDLE)
 			{
-			stringToLCD(my_lcd_addr, "Dir:IDLE    ");
+			stringToLCD(my_lcd_addr, "Dir:IDLE        ");
 			vTaskDelay(LCD_DELAY);
 			}
 			else if(elevator.elevatorDirection == UP)
