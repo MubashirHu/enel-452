@@ -48,7 +48,7 @@ void createQueues(void)
 
 void createTasks(void)
 {  
-	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+50, NULL, CLI_TASK_PRIORITY, NULL);
+	xTaskCreate(vCLITask, "CLI task", configMINIMAL_STACK_SIZE+250, NULL, CLI_TASK_PRIORITY, NULL);
 	xTaskCreate(vLCDTask, "LCD task", configMINIMAL_STACK_SIZE+100, NULL, LCD_TASK_PRIORITY, NULL);
 	xTaskCreate(vELEVATORCONTROLTask, "Elevator task", configMINIMAL_STACK_SIZE+100, NULL, ELEVATOR_CONTROL_TASK_PRIORITY, NULL);
 }
