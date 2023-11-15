@@ -186,7 +186,4 @@ void initMaintenanceButtonInterrupt(void);
  */
 void EXTI9_5_IRQHandler(void);
 
-//test - not used
-void readElevator(void);
-
 #endif //ELEVATOR_H

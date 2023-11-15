@@ -1,13 +1,13 @@
 /**
  * @file TIM.c
  *
- * @brief Function Definitions for USART (Universal Synchronous Asynchronous Receiver-Transmitter) Module.
+ * @brief Function Definitions for TIMER Module.
  *
  * This file includes the implementation of functions corresponding to the prototypes defined
  * in the `../headers/TIM.h` header file. This module is responsible for the timings in the sendByte
  * and getByte functions as well as the interrupt timers to update the terminal.
  *
- * @note Functions in this file align with the USART module in `../headers/TIM.h`.
+ * @note Functions in this file align with the the TIMER module in `../headers/TIM.h`.
  *
  * @author Mubashir Hussain
  * @studentID 200396797

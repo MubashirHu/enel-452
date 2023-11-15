@@ -268,7 +268,7 @@ void updateStatusWindow(ElevatorInformation *elevator)
 	
 		uint8_t clearBuffer[20]= "                    ";
 	
-		//display a counter
+		//display a counter - from lab5
 		placeCursor(1,0);
 		CLI_Transmit(clearBuffer, 20);
 		placeCursor(1,0);
@@ -319,7 +319,7 @@ void updateStatusWindow(ElevatorInformation *elevator)
 			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
 		}
 		
-		//display the elevator-state floor
+		//display the elevator-state, direction
 		placeCursor(5,0);
 		CLI_Transmit(clearBuffer, 20);
 		placeCursor(5,0);
@@ -341,19 +341,19 @@ void updateStatusWindow(ElevatorInformation *elevator)
 			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
 		}
 		
-		//display the elevator-state floor
+		//display if there's a passenger or not
 		placeCursor(6,0);
 		CLI_Transmit(clearBuffer, 20);
 		placeCursor(6,0);
 		
 		if(elevator->someoneInElevator == YES)
 		{
-			sprintf((char*)bigbuff, "Anyone-inside:YES");
+			sprintf((char*)bigbuff, "Passengers:YES");
 			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
 		}
 		else
 		{
-			sprintf((char*)bigbuff, "Anyone-inside:NO");
+			sprintf((char*)bigbuff, "Passengers:NO");
 			CLI_Transmit(bigbuff, strlen((char*)(bigbuff)));
 		}
 		

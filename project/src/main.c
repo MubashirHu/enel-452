@@ -52,12 +52,14 @@ int main(void)
 	vTaskStartScheduler();
 }
 
-void TIM3_IRQHandler(void) {
+void TIM3_IRQHandler(void) 
+{
 	TIM3_UPDATE_EVENT = 1;
 	TIM3->SR &= ~(TIM_SR_UIF); // reset update event flag
 }
 
-void USART2_IRQHandler(void) {
+void USART2_IRQHandler(void) 
+{
 	DATA_RECEIVED_FLAG = 1;
 	USART2->SR &= ~(USART_SR_RXNE);	
 	uint8_t characterReceived = USART2->DR;
@@ -65,16 +67,17 @@ void USART2_IRQHandler(void) {
 	DATA_RECEIVED_FLAG = 0;
 }
 
-void EXTI9_5_IRQHandler(void) {
-    // Check if EXTI line 8 triggered the interrupt
+void EXTI9_5_IRQHandler(void) 
+{
 		enum maintenanceMode mode = TRUE;
 	
-    if (EXTI->PR & EXTI_PR_PR8) {
+		// Check if EXTI line 8 triggered the interrupt
+    if (EXTI->PR & EXTI_PR_PR8) 
+		{
         // Clear the interrupt pending bit for EXTI line 8
         EXTI->PR = EXTI_PR_PR8;
 
-        //button pressed
-				//send the elevator into maintenance mode
+        //button pressed, send the elevator into maintenance mode
 				xQueueSendToFrontFromISR( xMAINTENANCE_MODE_Queue, &mode, NULL);
     }
 }

@@ -1,11 +1,15 @@
 /**
  * @file TASKS.c
  *
- * @brief Function Definitions for USART (Universal Synchronous Asynchronous Receiver-Transmitter) Module.
+ * @brief Function Definitions for TASKS Module.
  *
- * This file includes the implementation of functions corresponding to the prototypes defined
- * in the `../headers/Tasks.h` header file. This module is responsible for making all the queue connections
- * between tasks. As well as creating the various tasks that are to be used. 
+ * This file contains all of:
+ * <1> Queue creation
+ * <2> Task Creation
+ * 
+ * Which are used to achieve the objective of simulating a 2- Selective collective operation elevator.
+ * 
+ * Reference : http://www.electrical-knowhow.com/2012/04/elevator-control-system.html
  *
  * @author Mubashir Hussain
  * @studentID 200396797
@@ -51,7 +55,6 @@ void createTasks(void)
 
 static void vCLITask(void * parameters)
 {
-	
 	uint8_t buffer[50];
 	int bufferElementID = 0;
 	
@@ -70,7 +73,6 @@ static void vLCDTask(void * parameters)
 	uint16_t LCD_DELAY = 50;
 	while(1)
 	{
-		
 		if( xQueueReceive( xLCD_Queue, &elevator, 0 ) == pdPASS )
 		{
 			lcd_write_cmd(my_lcd_addr, LCD_LN1);	// Position cursor at beginning of line 1
@@ -84,7 +86,7 @@ static void vLCDTask(void * parameters)
 			
 			if(elevator.elevatorDirection == IDLE)
 			{
-			stringToLCD(my_lcd_addr, "Dir:IDLE");
+			stringToLCD(my_lcd_addr, "Dir:IDLE    ");
 			vTaskDelay(LCD_DELAY);
 			}
 			else if(elevator.elevatorDirection == UP)
@@ -97,7 +99,6 @@ static void vLCDTask(void * parameters)
 			stringToLCD(my_lcd_addr, "Dir:DOWN");
 			vTaskDelay(LCD_DELAY);
 			}
-			
 			
 			switch(elevator.doorMessage)
 			{
@@ -137,15 +138,14 @@ static void vLCDTask(void * parameters)
 					
 				case NONE:
 					break;
-				
 			}
 			vTaskDelay(LCD_DELAY);
 		}
 	}
 }
 
-static void vELEVATORCONTROLTask(void * parameters) {
-	
+static void vELEVATORCONTROLTask(void * parameters) 
+{
 	// default values
 	ElevatorInformation elevator;
 	elevator.currentFloor = FIRST;
@@ -158,10 +158,9 @@ static void vELEVATORCONTROLTask(void * parameters) {
 	
 	while(1)
 	{		
-		
+		//MAINTENANCE-MODE-INTERRUPT
 		if( xQueueReceive( xMAINTENANCE_MODE_Queue, &elevator.maintenanceStatus, 10 ) == pdPASS )
 		{
-			//received an interrupt
 		}
 		
 		if(elevator.maintenanceStatus == TRUE)
@@ -169,14 +168,13 @@ static void vELEVATORCONTROLTask(void * parameters) {
 			elevator.elevatorDirection = IDLE;
 		}
 		
-		//FLOOR REQUESTS
+		//MANAGING-FLOOR-REQUESTS - MANAGING-DIRECTION-OF-ELEVATOR
 		if(elevator.arrivalStatus == HOME && elevator.elevatorDirection == IDLE)
 		{
 			if(elevator.maintenanceStatus == FALSE)
 			{
 				determineElevatorDirection(&elevator);
 			}
-			
 		}
 		else if(elevator.arrivalStatus == ARRIVED && elevator.elevatorDirection == IDLE)
 		{
@@ -184,35 +182,27 @@ static void vELEVATORCONTROLTask(void * parameters) {
 			{
 				determineElevatorDirection(&elevator);
 			}
-			
 		}
-		
 		else if(elevator.arrivalStatus == ARRIVED && elevator.elevatorDirection != IDLE)
 		{
-			// if there is a up-request
 			if(xQueueReceive( xUP_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
 			{
-				//then you set the direction to up
 				elevator.elevatorDirection = UP;
 			} 
 			else
 			{
-				// there is no up-request 
-				// if there is a down-request
 				if( xQueueReceive( xDOWN_REQUEST_Queue, &elevator.targetFloor, 0 ) == pdPASS )
 				{
-					//then you set the direction to down
-				elevator.elevatorDirection = DOWN;
+					elevator.elevatorDirection = DOWN;
 				} 
 				else
 				{
-					// there is no down-request
 					elevator.elevatorDirection = IDLE;
 				}
 			}
 		}
 		
-		//CONTROL LOGIC
+		// ELEVATOR-CONTROL-LOGIC
 		if (elevator.elevatorDirection == UP) 
 		{
         processUpRequests(&elevator);
@@ -236,7 +226,7 @@ static void vELEVATORCONTROLTask(void * parameters) {
 			updateStatusWindow(&elevator);
 			TIM3_UPDATE_EVENT = 0;
 		}
-		
+	
 		vTaskDelay(ELEVATOR_DELAY);
 	}
 }
