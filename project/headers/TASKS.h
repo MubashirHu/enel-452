@@ -15,19 +15,11 @@
 
 //PRIORITIES
 
-#define BLINKY_TASK_PRIORITY 5
-
-//INPUTS
 #define CLI_TASK_PRIORITY 15
-
-//OUTPUTS
 #define LCD_TASK_PRIORITY 15
-#define MUX_TASK_PRIORITY 15
-
-//CONTROL LOGIC
 #define ELEVATOR_CONTROL_TASK_PRIORITY 15
 
-// QUEUE SIZES
+//QUEUE-SIZES
 #define CLI_QUEUE_LENGTH 1
 #define CLI_QUEUE_ITEM_SIZE sizeof(uint8_t)
 	
@@ -47,9 +39,9 @@
 #define MAINTENANCE_MODE_QUEUE_ITEM_SIZE sizeof(uint16_t)
 
 /**
- * @brief Creating Task function
+ * @brief Creating Queue function
  *
- * Creates queues for tasks communication with length and item size defined in this header file
+ * Creates queues for inter-task and interrupt communication. 
  */
 void createQueues(void);
 
@@ -71,19 +63,28 @@ void createTasks(void);
 static void vCLITask(void * parameters);
 
 /**
- * @brief CLI Task Function
+ * @brief LCD task that displays elevators current position and direction.
  *
- * This function represents the tasks for blinking an LED at a defined speed. Speed can be
- * changed through task communication between vCLITask and vBlinkTask.
- *
- * @param parameters A pointer to task-specific parameters (if needed).
+ * @param void pointer that is passed in. Task prototype syntax.
  */
-static void vBlinkTask(void * parameters);
-
 static void vLCDTask(void * parameters);
 
-static void vMUXTask(void * parameters);
-
+/**
+ * @brief This Task is continously trying to manage the requests passed through the command line. 
+ *
+ * This task contains the buffer of type elevatorInformation that stores the relevant information 
+ * for determining how to manage the requests from different floors.
+ *
+ * Responsible for the elevator logic. 
+ * such as 
+ * <1> Serving Up Requests
+ * <2> Serving Down Requests
+ * <3> Determining when to change direction
+ * <4> Opening/Closing door sequence
+ * <5> Send the elevator to the ground floor when maintenance/emergency button is pressed
+ *
+ * @param void pointer that is passed in. Task prototype syntax.
+ */
 static void vELEVATORCONTROLTask(void * parameters);
 
 #endif //TIM_H
