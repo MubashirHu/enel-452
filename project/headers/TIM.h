@@ -40,10 +40,4 @@ prototype for the NVIC TIM3 handler
 */
 void TIM3_IRQHandler(void);
 
-/**
-prototype for the NVIC TIM4 handler
-*/
-void TIM4_IRQHandler(void);
-
 #endif //TIM_H
-

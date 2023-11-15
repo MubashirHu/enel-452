@@ -23,7 +23,6 @@
 #define RESTORE_CURSOR_POSITION 2
 #define SET_SCROLLABLE_ROW 3
 #include "../headers/ELEVATOR.h"
-
 #include <stdint.h>
 
 /**

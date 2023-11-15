@@ -54,7 +54,6 @@ enum maintenanceMode {
 	FALSE
 };
 
-
 typedef struct 
 {
 	enum direction elevatorDirection;
