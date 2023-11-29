@@ -1,3 +1,5 @@
+Video: https://youtu.be/Eui5fza6MCg?si=KaEy0JwEA-kWafKM
+
 Elevator control system
 
 - based on Selective collective operation (Reference : http://www.electrical-knowhow.com/2012/04/elevator-control-system.html).
